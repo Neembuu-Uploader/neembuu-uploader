@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nu_javafx_sample.SampleController">
+   <children>
+      <Label layoutX="14.0" layoutY="14.0" text="Select file which you would like to upload " />
+      <Label layoutX="14.0" layoutY="35.0" text="FilePath : " />
+      <Label fx:id="filepath" layoutX="85.0" layoutY="35.0" prefHeight="21.0" prefWidth="328.0" style="-fx-background-color: #cccccc;" />
+      <Button fx:id="browseButton" layoutX="425.0" layoutY="30.0" mnemonicParsing="false" onAction="#browse" text="Browse" />
+      <Button fx:id="start" layoutX="425.0" layoutY="68.0" mnemonicParsing="false" onAction="#startUpload" prefHeight="31.0" prefWidth="68.0" text="Start" />
+      <ProgressBar fx:id="progress" layoutX="86.0" layoutY="72.0" prefHeight="23.0" prefWidth="328.0" progress="0.0" />
+      <TextField fx:id="downloadLink" editable="false" layoutX="134.0" layoutY="119.0" prefHeight="31.0" prefWidth="279.0" />
+      <Label fx:id="downloadLinkLabel" layoutX="14.0" layoutY="124.0" text="Download Link : " />
+      <Label layoutX="14.0" layoutY="73.0" text="Progress: " />
+      <Label fx:id="deleteLinkLabel" layoutX="14.0" layoutY="165.0" text="Delete Link :" />
+      <TextField fx:id="deleteLink" editable="false" layoutX="134.0" layoutY="160.0" prefHeight="31.0" prefWidth="279.0" />
+      <Button fx:id="copyDownloadLink" layoutX="425.0" layoutY="119.0" mnemonicParsing="false" onAction="#copyDownloadLink" prefHeight="31.0" prefWidth="68.0" text="Copy" />
+      <Button fx:id="copyDeleteLink" layoutX="425.0" layoutY="160.0" mnemonicParsing="false" onAction="#copyDeleteLink" prefHeight="31.0" prefWidth="68.0" text="Copy" />
+   </children>
+</AnchorPane>

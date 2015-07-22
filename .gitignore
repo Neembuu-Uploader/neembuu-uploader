@@ -1,12 +1,50 @@
-*.class
+# Neembuu Uploader JavaFX Demo #
+/modules/NU_JavaFX_Demo/nbproject/private/
+/modules/NU_JavaFX_Demo/build/
+/modules/NU_JavaFX_Demo/dist/
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# Neembuu Uploader API #
+/modules/neembuu-uploader-api/nbproject/private/
+/modules/neembuu-uploader-api/build/
+/modules/neembuu-uploader-api/dist/
 
-# Package Files #
-*.jar
-*.war
-*.ear
+# Neembuu Uploader Utils #
+/modules/neembuu-uploader-utils/nbproject/private/
+/modules/neembuu-uploader-utils/build/
+/modules/neembuu-uploader-utils/dist/
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+# Neembuu Uploader Interfaces AbstractImpl #
+/modules/neembuu-uploader-interfaces-abstractimpl/nbproject/private/
+/modules/neembuu-uploader-interfaces-abstractimpl/build/
+/modules/neembuu-uploader-interfaces-abstractimpl/dist/
+
+# Neembuu Uploader Uploaders #
+/modules/neembuu-uploader-uploaders/nbproject/private/
+/modules/neembuu-uploader-uploaders/build/
+/modules/neembuu-uploader-uploaders/dist/
+
+# Neembuu Uploader #
+/modules/NeembuuUploader/nbproject/private/
+/modules/NeembuuUploader/build/
+/modules/neembuu-uploaders-external/nbproject/private/
+/modules/shashaank-smallmodule/nbproject/private/
+/modules/neembuu-rus/nbproject/private/
+/modules/neembuu-rus/build/
+/modules/neembuu-rus/dist/
+/modules/shashaank-smallmodule/build/
+/modules/shashaank-smallmodule/dist/
+/modules/neembuu-uploaders-external/build/
+/modules/neembuu-uploaders-external/dist/
+/modules/NeembuuUploader/dist/
+/modules/nu-small-modules-generator/nbproject/private/
+/modules/nu-mega-co-nz/nbproject/private/
+/modules/nu-small-modules-generator/build/
+/modules/nu-small-modules-generator/dist/
+/modules/nu-translations/nbproject/private/
+/modules/nu-dependencycarrying-uploaders/nbproject/private/
+/modules/nu-translations/build/
+/modules/CmdLineNU/nbproject/private/
+/modules/nu-cmd/nbproject/private/
+/modules/neembuu-uploader-cmd/nbproject/private/
+/modules/neembuu-uploader-cmd/build/
+/modules/neembuu-uploader-cmd/dist/

@@ -1,0 +1,426 @@
+==== v x.y.z ====
+* Updated Uploaded.net (now generates descriptive links instead of the short ul.to links).
+* FEATURE: added a new "upload folder" feature wherein users can now select a particular folder and, 
+NU will detect and select all files within it, and therefore, 
+enable the users to seamlessly upload all files within a given folder (including all files within sub-directories).
+* GUI: Replaced the previously used "plain" buttons for selecting files (and folders) with two, new, visually appealing images.
+* GUI: Adjusted the size and placement of the "LOG" button and fixed some display issues.
+* Fixed a bug with the newly added "upload folder" feature (no longer affects the select files option negatively).
+* Updated RockFile.eu (increased max. filesize limit per file from 1GB to 2GB).
+* Added JheBerg.net (with and without account).
+* Updated RapidU.net (changed upload status detecting logic).
+* Added FilesTent.com (with and without account).
+* Added MinhaTeca.com.br (account only).
+* Added FilesBomb.in (with and without account).
+* Added IguanaShare.com (account only).
+* Added BeStream.tv (account only).
+* Added FilePack.pl (account only).
+
+==== v 3.3.0 ====
+* Fixed NitroFlare.com (plugin was outdated)
+* Fixed MediaFire.com (outdated plugin ... re-written from scratch)
+* Updated LineStorage.com (added premium account support and fixed bugs)
+* Added SendFile.su (with and without account)
+* Added 2Drive.net (account only)
+* Added OpenLoad.io (with and without account)
+* Updated Uploaded.net (increased max. filesize limit per file from 1GB to 5GB)
+* Updated TurboBit.net (plugin now yields long/descriptive download links)
+* Added ShareSix.com (with and without account)
+* GUI: Removed extra buttons for each action and replaced it with a simple "tabbed" interface.
+* GUI: Added a new theme which can be selected if needed (optional).
+* GUI: Added two separate buttons leading to our Official Forum and our Official Facebook account.
+* Added RapidSonic.com (migrated host; removed FileParadox.in)
+* Temporarily removed the new theme from being set as the default theme (based on user feedback).
+* Fixed the background of the top right module.
+* FEATURE: added a feature wherein the user can copy the nu.log file to the clipboard at the click of a button.
+* Fixed Load.to (plugin was outdated).
+* Added CloudCorner.com (account only).
+* Added FileOwn.com (account only).
+* Added Upple.it (account only).
+* Added dl.free.fr (free user only, accounts not supported).
+* Updated and fixed dl.free.fr (added custom retry logic while retrieving the download link).
+* Added CloudSix.me (account only).
+* Added WorldBytez.com (with and without account).
+* Fixed RapidU.net (fixed wrong upload status bug).
+* Updated changes.txt with the missing changelog information & preparing for version 3.3
+
+==== v 3.2.0 ====
+* Fixed a concurrent modification error which would occur whenever de-activating
+  a particular plugin (credits: Shashaank)
+* Added NosLocker.com (with and without account)
+* Fixed Go4Up.com (anonymous upload was broken)
+* Disabled dead file-host: BillionUploads.com
+* Added TopUpload1.com (with and without account)
+* Added PutStream.com (account only)
+* Added Ex-Load.com (account only)
+* Added TurboVideos.net (account only)
+* Added 24Uploading.com (with and without account)
+* Disabled dead file-host: Badongo.com
+* Modify FileFactory.com (increased max filesize from 2 to 5 GB)
+* Disabled dead file-host: RapidShare.com
+* Added DropVideo.com (account only)
+* Fixed 4UpFiles.com (outdated plugin)
+* Added BDUpload.net (with and without account)
+* Testing HiVe.im (WIP)
+* Added MegaIron.net (with and without account)
+* Added LetWatch.us (account only)
+* Added YaVideo.tv (account only)
+* Fixed all bugs within the Ex-Load.com plugin (uses custom logic!)
+* Added Up4.im (account only)
+* Added LunaticFiles.com (with and without account)
+* Added GameFront.com (with and without account)
+* Added Shared.sx (account only)
+* Feature Addition: Users can now STOP uploads which are REUPLOADING.
+* Feature Addition: Users can now RETRY uploads which have the status as RETRYFAILED.
+* Feature Addition: Users can now RETRY uploads even if they have completed successfully (UPLOADFINISHED).
+* Bug Fix: Fixed the column sorting bug (credits: Shashaank)
+(http://www.neembuu.com/uploader/forum/bug-reports-f4/bugs-column-sorting-t122.html)
+* Bug Fix: Fixed the system tray bug (credits: Shashaank)
+(http://www.neembuu.com/uploader/forum/bug-reports-f4/the-system-tray-not-supported-the-current-platform-t137.html)
+* Feature Addition: Added a "close" button to the HostsPanel window
+(http://www.neembuu.com/uploader/forum/bug-reports-f4/close-buttons-t130.html)
+* Added UpLea.com (with and without account)
+
+==== v 3.1.0 ====
+* Feature : All successful uploads are written in
+  a text file located <userhome>\.neembuuuploader\successfullyUploadedFilesList.txt
+  As per user mailseb's request in the NU forums.
+* Changed the translation system. Now it is simpler.
+  Now java interfaces are mapped to strings, instead of strings to strings.
+  This avoids spelling mistakes, and also allows easy checking
+  of default values, and also variable usage (using netbeans)
+* Long translation strings are automatically broken into 
+  one or more lines.
+* Fixed bug : ReentrantLock$Sync.tryRelease 
+  PoolingClientConnectionManager.leaseConnection
+* Created a tool which automatically generates translations for
+  untranslated strings using google translate. (My sincere gratitude to Google).
+  Machine (Google) translated strings are marked (g).
+  (g) means these strings have not been checked by human for sanity.
+  Some google translations are total nonsense. We have no clue
+  of what google has done. So to let users know, these have been
+  marked as (g).
+* Translation entirey machine generated for many new languages have 
+  been done. In total 67 language translations are hence available.
+* Program version is now saved in a file "version" instead of in the code.
+* Added BeStreams.net (account only)
+* Fixed YourVideoHost.com (account login was broken)
+* Modify UploadAble.ch (download links now contain file-name)
+*** Implemented Column Sorting (credits: Shashaank) ***
+* Fixed all visual bugs related to column sorting.
+
+==== v 3.0.2 ====
+
+* Added Polish Language (translation provided by "bigFan")
+* Added Played.to (account only)
+* Added TheVideo.me (account only)
+* Added CloudZilla.to (account only)
+* Fixed CloudZilla.to (filehost doesn't give links, but added special changes to get a link)
+* Disabled dead file-hosts: CloudZer.net and Oron.com
+
+==== v 3.0.1 ====
+
+* Fix UploadBoy.com (outdated plugin)
+* Remove FileInz.com (moved to VoOwl.com)
+* Added LineStorage.com (with and without account)
+* Disabled dead file-host: LomaFile.com
+* Added IndiShare.com (with and without account)
+* Disabled dead file-host: PrivateFiles.com
+* Premium account support added for SafeSharing.eu
+* Fixed SafeSharing.eu
+* Added ExaShare.com (account only)
+* Added UsersCloud.com (with and without account)
+* Added CatShare.net (account only)
+* Added FileShark.pl (with and without account)
+* Added Go4Up.com (with and without account)
+* Added PogoPlug.com (account only)
+* Added OzoFiles.com (account only)
+
+==== v 3.0.0 ====
+
+* Fix 1Fichier.com (links were not being retrieved)
+* Fix DataFile.com (changed to account only)
+* Fix FileCloud.io (plugin re-written - was heavily broken and outdated)
+* Fix FileParadox.com (moved from FileParadox.in)
+* Modified BillionUploads.com (still not working because of InCapsula blocking us)
+* Added RealVid.net (account only)
+* Added TheFile.me (account only)
+* Fix RealVid.net (updated allowed file extensions)
+* Added FileNuke.com (with and without account)
+* Added HitFile.net (account only)
+* Added UsersFiles.com (with and without account)
+* Disabled dead file-hosts: UseFile.com, BL.ST and CloudFly.us
+* Disabled dead file-hosts: FileOM.com, MyDisc.net and Xerver.co
+* Fix Streamin.to (bug/error)
+
+==== v 2.9.6 ====
+* Added YouWatch.org (with and without account).
+* Added Streamin.to.
+* Added Xerver.co.
+* Added VozUpload.com (with and without account).
+* ImageShack: now the account is necessary.
+* LomaFile: now the account is necessary.
+* Added ultramegabit.com.
+* Added FileHoot.com (with and without account).
+* Added MyDisc.net (with and without account).
+* Added Bl.st (with and without account).
+* Added 180Upload.com (with and without account).
+* Added VShare.eu (with and without account).
+* Fix FileOM.com delete url.
+* Fix VShare.eu :: added extension check.
+* Added UploadHero.co (with and without account).
+* Remove/Disable host ZShare.ma.
+* Depositfiles: fix anonymous upload.
+* Added NowVideo.sx (with and without account).
+* Added UpStore.net (with and without account).
+* Added FileParadox.in.
+* Added UploadBoy.com (with and without account).
+* Added XvidStage.com (with and without account).
+* Added Verzend.be (with and without account).
+* Added UseFile.com (with and without account).
+* Added YourVideoHost.com.
+* Added PrivateFiles.com (with and without account).
+* Fix Box.com.
+* Added Shared.com.
+* Cleaned up Shared.com.
+* Fix restart via right click and in some particular circumstances.
+* Added TeraFile.co (with and without account).
+* Added Oboom.com.
+* Changed: Uploaded.to/Ul.to -> now shows download links with filename.
+* Added Load.To (free only/host doesn't have accounts).
+* Added NowDownload.ch (with and without account).
+* Added VidXden.com (with and without account).
+* Added PromptFile.com (with and without account).
+* EasyBytez.com: now the account is necessary.
+* Fix PrivateFiles.com -member upload only/guest upload disabled.
+
+==== v 2.9.5 ====
+* Added Updown.bz.
+* Add an overall upload progress to the title.
+* Improve performance.
+* Change the limit for FileOM from 1025 MB to 2100 MB for anonymous and from 1025 MB to 10240 MB for registered users.
+* Fix TusFiles.net delete url.
+
+==== v 2.9.4 ====
+* Added AllMyVideos.net (with and without account).
+* ArabLoads: fix (from .com to .net).
+* SecureUpload: fix login and upload.
+* Add BitShare.com (with, without account and premium support).
+* Add FormBodyPartUtils to create custom form body part.
+* Remove/Disable host HotFile.com.
+* Add DataFile.com (with, without account and premium support).
+* Add TusFiles.net (with and without account).
+* Readd FreakShare.com (with, without account and premium support).
+* Add JunoCloud.me (with, without account and premium support).
+* Add MegaCache.net (with and without account).
+* Fixed TurboBit.net login.
+* Add EasyBytez.com (with and without account).
+* RapidGator: fix UI (from .com to .net).
+* Remove/Disable host Cloudzer.net.
+* Add Megashares.com (with and without account).
+* Added a notification mechanism which shows for maximum duration of 24hrs.
+
+==== v 2.9.3 ====
+* KeepTwoShareAccount: ask for captcha only if it is necessary.
+* KeepTwoShare: fixed upload and edit maxFileSizeLimit from 500 MB to 5000 MB.
+* Added Kingfiles.net (with and without account).
+* Changed PutLocker.com to FireDrive.com.
+* FireDrive: fixed login and upload and added premium support.
+* Added FilesFlash.com (with and without account).
+* Added Lomafile.com (with and without account).
+* Added Asfile.com.
+* Added some methods to delete chars from start and end of a string.
+* KeepTwoShare: fixed maxFileSizeLimit.
+* Use the result of an operation for all file sizes, with final "l" (of long).
+* Lomafile: added premium support.
+* Add the buffer size in Settings.
+* Add default buffer size: 4096 bytes.
+* Uploaded.net: edit download link from ul.net to ul.to.
+
+==== v 2.9.2 ====
+* Added basic test for UploadingDotCom.
+* Changed localhostr.com to hostr.co.
+* Fixed hostr.co uploader.
+* Fixed FileFactory login.
+* Fixed FileFactory uploader.
+* PutLocker: enable auto streaming for the accounts.
+* Fixed FileCloud double file upload.
+* Added Ge.tt (with and without account).
+* Added RyuShare (with and without account).
+* Added gettingLink() method to AbstractUploader.
+* Added Secureupload.
+* Added NULockedAccountException.
+* Added TurboBit (with and without account).
+* Added KeepTwoShare.
+* Added NUBannedIpException.
+* Added FileOM (with and without account).
+* Fixed DepositFiles login.
+* Removed FileDen.
+* Added checkFileExtension(ArrayList<String> extensions, File file) in FileUtils class.
+* Added NUFileExtensionException.
+* Added AnonFiles.
+* UploadedDotToAccount: improved error handling, fix login in certain circumstances.
+* Fixed UploadedDotTo uploader and added premium support.
+* Exceptions: remove first parameter.
+* Standardize errors of the file formats not supported.
+* Added MultiUpload.nl.
+* Added MultiUpload.biz (with and without account).
+* Added LuckyShare.net (with and without account).
+* Added DDLStorage.com.
+* Fixed file size in FileCloud.io (max and min).
+* DdlStorageAccount to DDLStorageAccount and DdlStorage to DDLStorage.
+* Added YouTube.com.
+* Added NUHttpClientUtils.getDataQuietly(String url, HttpContext httpContext).
+* Added CookieUtils.getCookieValueWithExactName(HttpContext httpContext, String name).
+* Added FileRio.in (with and without account).
+* Add upload speed for all files in the queue.
+* MonitoredFileEntity and MonitoredFileBody forced to be called with 3 parameters.
+* Fixed Letitbit uploader (now you can upload only with account).
+* Added createMonitoredFileBody() and createMonitoredFileEntity() to AbstractUploader.
+* Added FilePost.com.
+* Added BillionUploads.com (with and without account).
+* Added premium support for Uptobox.com.
+* Fixed Uptobox uploader and max file size.
+* Ability to remove the upload failed to retry from the list.
+* Added ArabLoads.com (with and without account).
+* Fixed and Reactivate Bayfiles (with and without account).
+* Added MassMirror.com (with and without account).
+* Added UploadDrive.com (with and without account).
+* Added UppIT.com (with and without account).
+* Fixing some KEY_USERNAME and KEY_PASSWORD due to an error in generator.
+* Added HugeFiles.net (with and without account).
+* Added ShareFlare.net.
+
+==== v 2.9.1 ====
+* Added Solidfiles (with and without account).
+* Added a "Register New" button in the AccountsManager section, to allow users to create new accounts
+* Better use of resources for RapidGator.
+* Added SockShare (with and without account).
+* Added Uptobox (with and without account).
+* Created test for StringUtils methods.
+* Added Auto-Retry failed uploads option.
+* Added www.share-online.biz (with and without account).
+* Added CloudZer.net (with and without account).
+* Added basic test for ZShare and Uptobox.
+* Added TurtleShare (with and without account).
+* Added MixtureCloud (with and without account).
+* Added UpBooth (with and without account with premium support).
+
+==== v 2.9 ====
+* Added account for zippyshare.com.
+* Fixed italian translation.
+* Added max size file control to: FileCloud, FileDropper, Letitbit and UploadMB (improved).
+* Small code improvements (max size file add in a variable in every uploaders).
+* Fixed crocko.com (with and without account).
+* Added savecurrentpath to save last used path.
+* Added JSON format support.
+* Fixed depositfiles.com (with and without account).
+* Added a class for commons operations with strings.
+* Added a new Exception class (now the errors shown to the user are more specific).
+* Added minimum size limit for crocko.com and depositfiles.com.
+* Fixed localhostr.com account.
+* Added some Exception classes for better error handling.
+* Refixed depositfiles.com account login and upload.
+* Fixed zshare.ma (with and without account).
+* Changed the child window's type to Modal JDialog window instead of JFrame.
+* Fixed retry upload option's bug.
+* Added PutLocker (with and without account).
+* Added some classes for setting the Header of Http Request.
+* Added one singleton class for HttpClient.
+* Added CookieUtils for commons operation with Cookies.
+* Changed the Captcha form with a border.
+* Fixed the upload limit problem for HotFile (premium and not).
+* Fixed consecutive uploads to filecloud.io.
+* Added jsoup: a parser for HTML with JQuery-like methods.
+* Added Uploadiz (with and without account).
+* Fixed uploading.com.
+* Use only HttpClient for connections in BoxDotComAccount.
+* Use only HttpClient for connections in BayFilesAccount.
+* Use only HttpClient for connections in UploadedDotToAccount.
+* Updated HttpComponent.
+* Use only HttpClient for connections in DepositFilesAccount.
+* Added new methods in CookieUtils.
+* Added file size limit to PutLocker.com.
+* Use only HttpClient for connections in DropBoxAccount.
+* Use only HttpClient for connections in DropBox.
+* Use only HttpClient for connections in FileCloudAccount.
+* Use only HttpClient for connections in FileDenAccount.
+* Added some Exception classes for better error handling for the login.
+* Use only HttpClient for connections in FileFactoryAccount.
+* Use only HttpClient for connections in OneFichierAccount.
+* Added a translation for a particular error.
+* Use only HttpClient for connections in TwoSharedAccount.
+* Use only HttpClient for connections in FileServeAccount.
+* Delete FileSonicAccount from the list in Account Manager.
+* Delete BadongoAccount from the list in Account Manager.
+* Use only HttpClient for connections in GigaSizeAccount.
+* Use only HttpClient for connections in HotFileAccount.
+* Use only HttpClient for connections in ImageShackAccount.
+* Use only HttpClient for connections in LetitbitAccount.
+* Use only HttpClient for connections in LocalhostrAccount.
+* Fixed localhostr.com (now hostr.co).
+* Added some Exception classes for better error handling for the login.
+* In LocalHostr uploader use filesizelimit of the account if the user is logged.
+* In LocalHostr uploader use dailyUploadAllowance.
+* Create an API static class for exception handling for locahostr.com (hostr.co).
+* Use only HttpClient for connections in MediaFireAccount.
+* Use only HttpClient for connections in NetLoadAccount.
+* Use only HttpClient for connections in OronAccount.
+* Delete OronAccount from the list in Account Manager.
+* Use only HttpClient for connections in PutLockerAccount.
+* Use only HttpClient for connections in RapidGatorAccount.
+* Use only HttpClient for connections in RapidShareAccount.
+* Use only HttpClient for connections in ScribdAccount.
+* Use only HttpClient for connections in SendSpaceAccount.
+* Use only HttpClient for connections in SugarSyncAccount.
+* Use only HttpClient for connections in UploadingDotComAccount.
+* Use only HttpClient for connections in UploadizAccount.
+* Delete WuploadAccount from the list in Account Manager.
+* Use only HttpClient for connections in ZippyShareAccount.
+* Use only HttpClient for connections in ZShareAccount.
+* Use only HttpClient for connections in ZohoDocsAccount.
+* Delete BayFilesAccount from the list in Account Manager and from hosts.
+* Use only HttpClient for connections in OneFichier.
+* Use only HttpClient for connections in TwoShared.
+* Use only HttpClient for connections in FourShared.
+* Use only HttpClient for connections in BoxDotCom.
+* Fixed BoxDotComAccount check isn't good: everyone is good.
+* Use only HttpClient for connections in Crocko.
+* Use only HttpClient for connections in DepositFiles.
+* Use only HttpClient for connections in FileCloud.
+* Use only HttpClient for connections in FileDen.
+* Use only HttpClient for connections in FileDropper.
+* Use only HttpClient for connections in FileFactory.
+* Use only HttpClient for connections in FileServe.
+* Use only HttpClient for connections in GigaSize.
+* Fixed GigaSize.com upload.
+* Use only HttpClient for connections in HotFile.
+* Use only HttpClient for connections in ImageShack.
+* Use only HttpClient for connections in Letitbit.
+* Fixed LetitBit Uploader without account.
+* Use only HttpClient for connections in Localhostr.
+* Use only HttpClient for connections in MediaFire.
+* Use only HttpClient for connections in NetLoad.
+* Use only HttpClient for connections in RapidShare.
+* Use only HttpClient for connections in Scribd.
+* Use only HttpClient for connections in SendSpace.
+* Fixed SendSpace.com upload.
+* Use only HttpClient for connections in ShareSend.
+* Use only HttpClient for connections in SpeedyShare.
+* Use only HttpClient for connections in SugarSync.
+* Use only HttpClient for connections in Uploadiz.
+* Use only HttpClient for connections in UploadMB.
+* Use only HttpClient for connections in UploadingDotCom.
+* Use only HttpClient for connections in ZShare.
+* Create an API static class for commons operation for ZShare and ZShareAccount.
+* Use only HttpClient for connections in ZippyShare.
+* Use only HttpClient for connections in ZohoDocs.
+* Fixed ZohoDocs upload.
+* Use only HttpClient for connections in CrockoApi.
+* Fixed SlingFile.
+* Added custom redirect strategy.
+* Added URIUtils.
+* Added basic proxy support.
+* Updated JUnit to 4.11 version.
+* Created some classes that uses new feature of JUnit (Temporary Files).
+* [Uploadiz] failing for uploading with and without account (disabled because it is down).

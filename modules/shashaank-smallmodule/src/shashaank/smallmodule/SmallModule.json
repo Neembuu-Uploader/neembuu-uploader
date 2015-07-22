@@ -1,0 +1,14 @@
+{
+    "SmallModule": 1,
+    "name": "SampleHoster.com",
+    "exports" : [
+        {
+            "interface": "shashaank.smallmodule.Uploader",
+            "implementation": "shashaank.smallmodule.SampleHosterPlugin"
+        },
+        {
+            "interface": "shashaank.smallmodule.Account",
+            "implementation": "shashaank.smallmodule.SampleAccount"
+        }
+    ]
+}

@@ -1,0 +1,27 @@
+{
+    "description":"some RFC standard number and description kind of reference",
+    "version":1,
+    "basepath":"http://neembuu.com/uploader/updates/v3/",
+    "timezone" : "IST",
+    "hashalgorithm" : "MD5",
+    "smallmodules" : [
+        {
+            "name" : "SampleHoster.com",
+            "relpth" : "./sm/SampleHoster.com.zip",
+            "exports" : [
+                "shashaank.smallmodule.Uploader",
+                "shashaank.smallmodule.Account"
+            ],
+            "dead" : false,
+            "hash" : "21a57f2fe765e1ae4a8bf15d73fc1bf2a533f547f2343d12a499d9c0592044d4",
+            "timestamp" : 1417021894981
+        },
+        {
+            "name" : "AUploader.com",
+            "relpth" : "AUploader.com.zip",
+            "dead" : true,
+            "timestamp" : 14170218912321
+        }
+    ]
+    
+}

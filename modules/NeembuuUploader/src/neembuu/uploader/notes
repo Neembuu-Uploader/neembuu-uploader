@@ -1,0 +1,230 @@
+---------------------------------------
+These notes are old please refer to
+Checklist.xlsx .
+It is a nice excel sheet, in which you can
+mark, done/todo to ensure that you don't miss
+any step while making new releases.
+
+Also ===Site Account Unique Keys=== section
+may or may not be maintained. It is not 
+critical.
+---------------------------------------
+
+
+===NeembuuUploader.java===
+1. Don't forget to change the static variable for version no
+2. See if the tables are not editable if they shouldn't be.
+
+===Uploader Implementation===
+0. Refer other classes first.
+1. Must have the field AtomicInteger uploadProgress = new AtomicInteger();
+2. Implemented methods must never return null
+3. Get username and password correctly
+4. If user disables an acct at runtime, disablelogin is called. Make sure you clear any cookies within that. The next upload should not go to his acct.
+5. See if you have added CommonUploaderTasks.uploadFinished and CommonUploaderTasks.uploadFailed(within catch) at the end.
+6. There should be only one overall exception catch. All other method calls should throw into this catch.
+7. Ensure you've put proper status assignments at appropriate places.
+8. See if your error messages are correct.
+9. You must add file size check code.
+10.You must verify if multiple simultaneous uploads work for the site with and without login enabled.
+11.Run multiple uploads with login. Stop one upload while it's in progress. Verify that other uploads to login doesn't fail.
+12.Open accounts and give correct details and login successfully. Then open accounts and give wrong details. Must get error.
+13.Delete the properties file everytime you add a new host.
+
+
+
+
+===Move host from Free & Account to Account Only===
+
+Uploader class: (Refer RapidShare.java for this.)
+* Make the Uploader class implement 'UploaderAccountNecessary' interface.
+* If "<rapidGator>Account.loginsuccessful" is false, call 'uploadFailed()' and 'return' from the method.
+
+UploaderAccount class:  (Refer RapidShareAccount.java for this)
+* Add these lines
+<snip>
+//These code are necessary for account only sites.
+HostsPanel.getInstance().<rapidShare>CheckBox.setEnabled(false);
+HostsPanel.getInstance().<rapidShare>CheckBox.setSelected(false);
+NeembuuUploader.getInstance().updateSelectedHostsLabel();
+
+NULogger.getLogger().log(Level.INFO, "{0} account disabled", getHOSTNAME());
+</snip>
+to "disableLogin()" method.
+* Add this line
+<snip>
+HostsPanel.getInstance().<rapidShare>CheckBox.setEnabled(true);
+</snip>
+where you make the login as successful. (tip: look for the "loginsuccessful = true;" line.)
+
+Gotta make design better.
+
+
+
+
+
+
+===Site Account Unique Keys===
+180Upload.com                   - oneeightyup
+1fichier.com                    - of
+24Uploading.com                 - tfuplding
+2Drive.net                      - twodrv
+2Shared.com                     - ts
+4Shared.com                     - 4s
+AllMyVideos.net                 - allmvds
+ArabLoads.net                   - arblds
+Asfile.com                      - asfl
+Badongo.com                     - bog
+BayFiles.com                    - bf
+BDUpload.net                    - bdup
+BeStreams.net                   - bestrms
+BeStream.tv                     - bstrmtv
+BillionUploads.com              - bllnu
+BitShare.com                    - btshr
+Bl.st                           - blst
+Box.com                         - box
+CatShare.net                    - catshr
+CloudCorner.com                 - cldcrnr
+CloudSix.me                     - cldsix
+CloudZer.net                    - cz
+CloudZilla.to                   - cldzla
+Crocko.com                      - cr
+DataFile.com                    - dtfl
+DDLStorage.com                  - ds
+DepositFiles.com                - df
+DropBox.com                     - db
+DropVideo.com                   - drpvid
+EasyBytez.com                   - esybytz
+Easy-Share.com                  - es
+EnterUpload.com                 - eu
+Ex-Load.com                     - exload
+ExaShare.com                    - exashr
+Extabit.com                     - eb
+FileCloud.io                    - fc
+FileFactory.com                 - ff
+FileHoot.com                    - flht
+FileNuke.com                    - flnuke
+FileOM.com                      - flom
+FileOwn.com                     - flown
+FilePack.pl                     - flpack
+FilePost.com                    - flpst
+FileRio.in                      - flr
+FileServe.com                   - fsrv
+FilesBomb.in                    - flsbmb
+FilesFlash.com                  - flsflsh
+FileShark.pl                    - flshrk
+FileSonic.com                   - fsnc
+FilesTent.com                   - flstnt
+FireDrive.com (ex PutLocker.com)- pl
+FreakShare.com                  - frkshr
+GameFront.com                   - gmfrnt
+Ge.tt                           - gt
+GigaSize                        - gs
+Go4Up.com                       - gofourup
+GRupload.com                    - gru
+HitFile.net                     - hitfl
+HiVe.im                         - hive
+Hostr.co                        - lhr
+HotFile.com                     - hf
+HugeFiles.net                   - hgfls
+IFile.it                        - if
+IguanaShare.com                 - igshr
+ImageShack.us                   - is
+IndiShare.com                   - indishr
+JheBerg.net                     - jheberg
+JunoCloud.me                    - jncld
+Keep2Share.cc                   - kpts
+KingFiles.net                   - kngfls
+Letitbit.net                    - lib
+LetWatch.us                     - letwtch
+LineStorage.com                 - lnstrg
+LomaFile.com                    - lmfl
+LuckyShare.net                  - lsn
+LunaticFiles.com                - lntcfl
+MassMirror.com                  - mssmrr
+MediaFire.com                   - mf
+MegaCache.net                   - mgcch
+MegaIron.net                    - megairon
+Megashares.com                  - mgshrs
+MegaUp.me                       - mum
+MegaUpload.com                  - mu
+MinhaTeca.com.br                - mhatca
+MixtureCloud.com                - mc
+MultiUpload.biz                 - mudb
+MyDisc.net                      - mydsc
+Netload.in                      - nl
+NosLocker.com                   - noslckr
+NowDownload.ch                  - nwdn
+NowVideo.sx                     - novi
+Oboom.com                       - obo
+OpenLoad.io                     - opnld
+Oron.com                        - or
+OzoFiles.com                    - ozofls
+Played.to                       - plydto
+PogoPlug.com                    - pogoplg
+PromptFile.com                  - prmptfl
+PrivateFiles.com                - pvtfiles
+PutStream.com                   - putstrm
+RapidGator.com                  - rg
+RapidShare.com                  - rs
+RapidSonic.com                  - rpdsnc
+RealVid.net                     - rlvid
+RyuShare.com                    - rys
+Scribd.com                      - sc
+Secureupload.eu                 - scru
+SendFile.su                     - sndfl
+SendSpace.com                   - ss
+Shared.com                      - shared
+Shared.sx                       - shrdsx
+ShareFlare.net                  - shrflr
+ShareSix.com                    - shrsix
+Share-Online.biz                - so
+SlingFile.com                   - sf
+SockShare.com                   - scks
+Solidfiles.com                  - sldf
+Streamin.to                     - strmin
+TeraFile.co                     - teraf
+TheFile.me                      - thefl
+TheVideo.me                     - thevid
+TopUpload1.com                  - tplckrone
+TurboBit.net                    - trbb
+TurboVideos.net                 - trbovids
+TurtleShare.com                 - ts
+TusFiles.net                    - tsfls
+UGotFile.com                    - ugf
+UltraMegaBit.com                - ultrmgbt
+Up4.im                          - upfourim
+UpBooth.com                     - ubth
+Updown.bz                       - udwnbz
+UpLea.com                       - uplea
+UploadBoy.com                   - upboy
+UploadBox.com                   - ub
+UploadDrive.com                 - upldrv
+Uploadeddotto                   - udt
+UploadHero.co                   - uphero
+Uploadingdotcom                 - udc
+Uploadiz                        - ui
+UppIT.com                       - uppit
+Upple.it                        - uppleit
+UpStore.net                     - upstore
+Uptobox                         - utb
+UseFile                         - usefile
+UsersCloud.com                  - usrscld
+UsersFiles.com                  - usrsfls
+Verzend.be                      - verzend
+VidXden.com                     - vixd
+VozUpload.com                   - vozu
+VReer.com                       - vr
+VShare.eu                       - vshare
+WorldBytez.com                  - wrldbytz
+Wupload.com                     - wu
+Xerver.co                       - xerv
+XvidStage.com                   - xvid
+YaVideo.tv                      - yavid
+YouTube.com                     - yt
+YouWatch.org                    - ywtch
+YourVideoHost.com               - yrvh
+ZippyShare.com                  - zips
+ZohoDocs.com                    - zd
+ZShare.net                      - zs
+
