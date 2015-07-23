@@ -17,6 +17,7 @@ enable the users to seamlessly upload all files within a given folder (including
 * Added FilePack.pl (account only).
 * Implemented an advertisement to help support the project.
 * Changed the update notification URLs.
+* Updated version number and preparing for v3.4 release.
 
 ==== v 3.3.0 ====
 * Fixed NitroFlare.com (plugin was outdated)
