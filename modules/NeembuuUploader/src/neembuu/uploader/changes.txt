@@ -1,4 +1,7 @@
 ==== v x.y.z ====
+
+
+==== v 3.4.0 ====
 * Updated Uploaded.net (now generates descriptive links instead of the short ul.to links).
 * FEATURE: added a new "upload folder" feature wherein users can now select a particular folder and, 
 NU will detect and select all files within it, and therefore, 
@@ -18,6 +21,7 @@ enable the users to seamlessly upload all files within a given folder (including
 * Implemented an advertisement to help support the project.
 * Changed the update notification URLs.
 * Updated version number and preparing for v3.4 release.
+* Updated changes.txt
 
 ==== v 3.3.0 ====
 * Fixed NitroFlare.com (plugin was outdated)
