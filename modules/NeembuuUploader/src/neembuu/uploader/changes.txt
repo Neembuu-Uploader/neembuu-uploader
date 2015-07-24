@@ -22,6 +22,7 @@ enable the users to seamlessly upload all files within a given folder (including
 * Changed the update notification URLs.
 * Updated version number and preparing for v3.4 release.
 * Updated changes.txt
+* Implemented a hotfix for SSL validation errors (fixed SSLHandshakeException errors).
 
 ==== v 3.3.0 ====
 * Fixed NitroFlare.com (plugin was outdated)

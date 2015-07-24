@@ -34,10 +34,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
@@ -63,6 +65,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.net.ssl.HttpsURLConnection;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
@@ -111,6 +114,7 @@ import neembuu.uploader.utils.NULogger;
 import neembuu.uploader.utils.NeembuuUploaderLanguages;
 import neembuu.uploader.utils.NeembuuUploaderProperties;
 import neembuu.uploader.utils.ProxyChecker;
+import neembuu.uploader.utils.SSLCertificateValidation;
 import neembuu.uploader.utils.UploadStatusUtils;
 import neembuu.uploader.versioning.UserImpl;
 import org.apache.commons.io.FileUtils;
@@ -161,6 +165,7 @@ public class NeembuuUploader extends javax.swing.JFrame {
     private TrayIcon trayIcon = null;
     private Document doc;
     private String clickURL = "";
+    private HttpsURLConnection con;
     
     private final MainComponent mainComponent;
 
@@ -385,10 +390,20 @@ public class NeembuuUploader extends javax.swing.JFrame {
     }
     
     private String getAdType() throws Exception{
-        String adHtmlPage = "", adImgURL = "";
+        StringBuilder content = new StringBuilder();
+        String adHtmlPage = "", adImgURL = "", line = "";
+        URL url;
         try {
             adHtmlPage = NUHttpClientUtils.getData("http://neembuu.com/uploader/donate/ads/location");
-            adHtmlPage = NUHttpClientUtils.getData(adHtmlPage);
+            url = new URL(adHtmlPage);
+            SSLCertificateValidation.disable();
+            con = (HttpsURLConnection)url.openConnection();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            while ((line = bufferedReader.readLine()) != null) {
+                content.append(line + "\n");
+            }
+            bufferedReader.close();
+            adHtmlPage = content.toString();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -404,13 +419,17 @@ public class NeembuuUploader extends javax.swing.JFrame {
     }
     
     private void prepareImgAd(String adImgURL){
-        Image adImg = null;
         String imgAdClickURL = "";
+        URL url;
+        BufferedImage adImg = null;
         
         adImgURL = "https:" +adImgURL;
         
         try {
-            adImg = ImageIO.read(new URL(adImgURL));
+            url = new URL(adImgURL);
+            SSLCertificateValidation.disable();
+            con = (HttpsURLConnection)url.openConnection();
+            adImg = ImageIO.read(con.getInputStream());
         } catch (Exception e) {
             e.printStackTrace();
         }
