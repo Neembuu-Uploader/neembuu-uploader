@@ -44,7 +44,8 @@ import neembuu.uploader.interfaces.UploaderAccountNecessary;
 @SmallModule(
     exports={TwoDrive.class,TwoDriveAccount.class},
     interfaces={Uploader.class,Account.class},
-    name="2Drive.net"
+    name="2Drive.net",
+    ignore = true
 )
 public class TwoDrive extends AbstractUploader implements UploaderAccountNecessary{
     

@@ -38,7 +38,8 @@ import neembuu.uploader.uploaders.common.StringUtils;
 @SmallModule(
     exports={Shared.class,SharedAccount.class},
     interfaces={Uploader.class,Account.class},
-    name="Shared.com"
+    name="Shared.com",
+    ignore = true
 )
 public class Shared extends AbstractUploader implements UploaderAccountNecessary{
     

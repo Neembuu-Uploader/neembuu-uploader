@@ -45,7 +45,8 @@ import java.util.Random;
 @SmallModule(
     exports={SafeSharing.class,SafeSharingAccount.class},
     interfaces={Uploader.class,Account.class},
-    name="SafeSharing.eu"
+    name="SafeSharing.eu",
+    ignore = true
 )
 public class SafeSharing extends AbstractUploader{
     

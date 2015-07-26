@@ -43,7 +43,8 @@ import java.util.Random;
 @SmallModule(
     exports={ClickToWatch.class,ClickToWatchAccount.class},
     interfaces={Uploader.class,Account.class},
-    name="ClickToWatch.net"
+    name="ClickToWatch.net",
+    ignore = true
 )
 public class ClickToWatch extends AbstractUploader implements UploaderAccountNecessary{
     

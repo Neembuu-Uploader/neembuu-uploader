@@ -45,7 +45,8 @@ import java.util.Random;
 @SmallModule(
     exports={DogeFile.class,DogeFileAccount.class},
     interfaces={Uploader.class,Account.class},
-    name="DogeFile.com"
+    name="DogeFile.com",
+    ignore = true
 )
 public class DogeFile extends AbstractUploader{
     

@@ -40,7 +40,8 @@ import org.jsoup.nodes.Element;
 @SmallModule(
     exports={UltraMegaBit.class,UltraMegaBitAccount.class},
     interfaces={Uploader.class,Account.class},
-    name="UltraMegaBit.com"
+    name="UltraMegaBit.com",
+    ignore = true
 )
 public class UltraMegaBit extends AbstractUploader implements UploaderAccountNecessary{
     

@@ -45,7 +45,8 @@ import java.util.Random;
 @SmallModule(
     exports={UpaFile.class,UpaFileAccount.class},
     interfaces={Uploader.class,Account.class},
-    name="UpaFile.com"
+    name="UpaFile.com",
+    ignore = true
 )
 public class UpaFile extends AbstractUploader{
     

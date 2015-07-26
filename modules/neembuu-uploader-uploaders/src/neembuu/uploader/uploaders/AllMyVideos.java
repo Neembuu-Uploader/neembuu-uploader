@@ -48,7 +48,8 @@ import org.jsoup.nodes.Document;
 @SmallModule(
     exports={AllMyVideos.class,AllMyVideosAccount.class},
     interfaces={Uploader.class,Account.class},
-    name="AllMyVideos.net"
+    name="AllMyVideos.net",
+    ignore = true
 )
 public class AllMyVideos extends AbstractUploader{
     

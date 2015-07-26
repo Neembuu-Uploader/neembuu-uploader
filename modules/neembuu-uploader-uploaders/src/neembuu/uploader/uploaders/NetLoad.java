@@ -39,7 +39,8 @@ import org.apache.http.util.EntityUtils;
 @SmallModule(
     exports={NetLoad.class,NetLoadAccount.class},
     interfaces={Uploader.class,Account.class},
-    name="Netload.in"
+    name="Netload.in",
+    ignore = true
 )
 public class NetLoad extends AbstractUploader {
 

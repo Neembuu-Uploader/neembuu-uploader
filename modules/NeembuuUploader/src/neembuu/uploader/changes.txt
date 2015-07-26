@@ -1,5 +1,5 @@
 ==== v x.y.z ====
-
+* Disabled several (18) dead file-hosts from NU's interface.
 
 ==== v 3.4.0 ====
 * Updated Uploaded.net (now generates descriptive links instead of the short ul.to links).

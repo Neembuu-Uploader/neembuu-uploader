@@ -42,7 +42,8 @@ import java.util.regex.Pattern;
 @SmallModule(
     exports={UploadHero.class,UploadHeroAccount.class},
     interfaces={Uploader.class,Account.class},
-    name="UploadHero.co"
+    name="UploadHero.co",
+    ignore = true
 )
 public class UploadHero extends AbstractUploader{
     

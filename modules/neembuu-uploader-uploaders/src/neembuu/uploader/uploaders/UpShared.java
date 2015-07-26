@@ -44,7 +44,8 @@ import org.jsoup.nodes.Document;
 @SmallModule(
     exports={UpShared.class,UpSharedAccount.class},
     interfaces={Uploader.class,Account.class},
-    name="UpShared.com"
+    name="UpShared.com",
+    ignore = true // website now redirects to http://www.storedrives.com/
 )
 public class UpShared extends AbstractUploader implements UploaderAccountNecessary{
     
