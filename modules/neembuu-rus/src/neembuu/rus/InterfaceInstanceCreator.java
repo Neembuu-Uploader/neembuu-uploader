@@ -27,8 +27,8 @@ import java.util.Map;
  * @author Shashank
  */
 public final class InterfaceInstanceCreator implements InvocationHandler{
-    public static final <E> E getDefault(Class<E>clazz){
-        return create(initializeDefaults(clazz),clazz);
+    public static final <E> E create(Class<E>clazz){
+        return InterfaceInstanceCreator.create(initializeDefaults(clazz),clazz);
     }
     public static final <E> E create(Map values,Class<E>clazz){
         return (E)Proxy.newProxyInstance(InterfaceInstanceCreator.class.getClassLoader(),
@@ -68,6 +68,7 @@ public final class InterfaceInstanceCreator implements InvocationHandler{
         Method[]ms = clazz.getDeclaredMethods();
         for (Method m : ms) {
             DefaultValue dv = (DefaultValue)m.getAnnotation(DefaultValue.class);
+            if(dv==null)continue;
             dvs.put(m.getName(), dv.s());
         }
         return dvs;

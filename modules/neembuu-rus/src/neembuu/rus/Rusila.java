@@ -27,6 +27,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -78,6 +79,10 @@ public final class Rusila {
         return this;
     }
     
+    public static <E> SyncMap<E> s(Rus r,Class<E> template){
+        return new SyncedMapImpl(r,template);
+    }
+    
     public <E> E I(Class<E>interfaceDefinition){
         if(!interfaceDefinition.isInterface()){
             throw new IllegalStateException("Only interfaces supported " + interfaceDefinition);
@@ -88,6 +93,12 @@ public final class Rusila {
     
     public static <E> E I(Rus r,Class<E>interfaceDefinition){
         return I(r, interfaceDefinition, new DefaultTypeHandlerProvider());
+    }
+    
+    public static <E> E put(Rus r,Class<E>interfaceDefinition,E value){
+        Copier.overwrite(r, interfaceDefinition, value, new DefaultTypeHandlerProvider(),null);
+        E e = I(r, interfaceDefinition);
+        return e;
     }
     
     public static <E> E cast(Map m, Class<E>interfaceDefinition){
@@ -230,4 +241,31 @@ public final class Rusila {
         dp.write(bb);
         try{dp.close();}catch(Exception a){a.printStackTrace();}
     }
+    
+    
+    public static boolean isWhiteList(Class x){
+        return checkContains(x, whiteList);
+    }
+    
+    public static boolean isWhiteListAr(Class x){
+        return checkContains(x, whiteListAr);
+    }
+    
+    private static boolean checkContains(Class x, Class[]s){
+        if(x==null)return false;
+        for (Class cz : s) {
+            if(cz == x || cz.equals(x) || x.isAssignableFrom(cz) ){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    static final Class[] whiteList = 
+        new Class[]{int.class,long.class,double.class,
+            float.class,char.class,boolean.class,String.class};
+    
+    static final Class[] whiteListAr = 
+        new Class[]{int[].class,long[].class,double[].class,
+            float[].class,char[].class,boolean[].class,String[].class};
 }

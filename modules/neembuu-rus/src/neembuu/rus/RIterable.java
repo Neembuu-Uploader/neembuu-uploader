@@ -16,7 +16,6 @@
 package neembuu.rus;
 
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
@@ -27,22 +26,20 @@ import neembuu.rus.type.TypeHandlerProvider;
  *
  * @author Shashank
  */
-public final class RIterable implements Iterable {
-    private final Path p;
+final class RIterable implements Iterable {
     private final Rus r;
     private final DefaultValue dv;
     private final TypeHandlerProvider thp;
 
-    public RIterable(Rus r, DefaultValue dv, TypeHandlerProvider thp) {
+    RIterable(Rus r, DefaultValue dv, TypeHandlerProvider thp) {
         this.r = r;
         this.dv = dv;
         this.thp = thp; 
-        p = ((RusImpl)r).p;
     }
 
     public boolean add(Object e) {
         try {
-            Rusila.set(r, Integer.toString((int)(Math.random()*Integer.MAX_VALUE)), e);
+            Rusila.set(r, String.valueOf(e.hashCode()), e);
             return true;
         } catch (Exception ex) {
             throw new RuntimeException(ex);
@@ -66,41 +63,38 @@ public final class RIterable implements Iterable {
 
     @Override
     public Iterator iterator(){
-        try (final DirectoryStream<Path> ds = Files.newDirectoryStream(p)) {
-            return new Iterator() {
-                Path p = null;
-                final Iterator<Path> it = ds.iterator();
+        return new Iterator() {
+            Path p = null;
+            final Iterator<String> it = r.iterator();
 
-                @Override
-                public boolean hasNext() {
-                    return it.hasNext();
-                }
+            @Override
+            public boolean hasNext() {
+                return it.hasNext();
+            }
 
-                @Override
-                public Object next() {
-                    p = it.next();
-                    RusImpl ri = new RusImpl(p);
-                    if (Files.isDirectory(p)) {
-                        Rusila r1 = Rusila.newInstance();
-                        r1.thp(thp);
-                        return r1.r(ri).I(dv.subElementType());
-                    } else {
-                        return get(r, p.getFileName().toString())
-                                .o(dv, r, p.getFileName().toString(), thp);
-                    }
+            @Override
+            public Object next() {
+                String n = it.next(); if(n==null)return null;
+                Rus ri = r.r(it.next());
+                if (Files.isDirectory(p)) {
+                    Rusila r1 = Rusila.newInstance();
+                    r1.thp(thp);
+                    Class subElementType = dv==null?String.class:dv.subElementType();
+                    return r1.r(ri).I(subElementType);
+                } else {
+                    return get(r, p.getFileName().toString())
+                            .o(dv, r, p.getFileName().toString(), thp);
                 }
+            }
 
-                @Override
-                public void remove() {
-                    if(p!=null)try {
-                        Files.delete(p);
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
+            @Override
+            public void remove() {
+                if(p!=null)try {
+                    Files.delete(p);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
                 }
-            };
-        }catch(IOException ioe){
-            throw new RuntimeException(ioe);
-        }
+            }
+        };
     }
 }

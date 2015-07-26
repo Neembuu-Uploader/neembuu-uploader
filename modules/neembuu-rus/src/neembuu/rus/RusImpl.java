@@ -20,9 +20,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
+import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -39,6 +43,42 @@ final class RusImpl implements Rus{
     
     @Override public boolean isDirectory(String name) {
         return Files.isDirectory(p.resolve(name));
+    }
+
+    @Override
+    public Iterator<String> iterator() {
+        try (final DirectoryStream<Path> d = Files.newDirectoryStream(p)) {
+            return new Iterator<String>() {
+                private final Iterator<Path> ix = d.iterator();
+                @Override public boolean hasNext() {
+                    try {
+                        return ix.hasNext();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }return false;
+                }
+                @Override public String next() {
+                    try{
+                        return ix.next().toString(); 
+                    }catch(Exception a){
+                        a.printStackTrace();
+                    }return null;
+                }
+            };
+        }finally {
+            return new java.util.LinkedList<String>().iterator();
+        }
+    }
+
+    @Override
+    public boolean isEmpty() {
+        boolean rs = false;
+        try (DirectoryStream d = Files.newDirectoryStream(p)) {
+            rs = d.iterator().hasNext();
+        }catch (IOException ex) {
+            Logger.getLogger(RusImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rs;
     }
     
     @Override

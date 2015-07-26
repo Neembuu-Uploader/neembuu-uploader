@@ -37,8 +37,12 @@ import java.nio.file.OpenOption;
  * </pre>
  * @author Shashank
  */
-public interface Rus extends Closeable {
+public interface Rus extends Closeable,Iterable<String> {
     Rus r(String name);
     SeekableByteChannel p(String name,OpenOption ... openOptions)throws IOException;
     boolean isDirectory(String name);
+    /**
+     * @return true if empty. False if unknown, or not empty.
+     */
+    boolean isEmpty();
 }

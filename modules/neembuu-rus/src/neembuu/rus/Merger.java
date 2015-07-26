@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Shashank Tulsyan.
+ * Copyright 2015 Shashank Tulsyan <shashaank at neembuu.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,12 @@
  * limitations under the License.
  */
 
-package neembuu.rus.type;
-
-import neembuu.rus.DefaultValue;
-import neembuu.rus.Rus;
+package neembuu.rus;
 
 /**
  *
- * @author Shashank
+ * @author Shashank Tulsyan <shashaank at neembuu.com>
  */
-public interface TypeHandler {
-    Class type();
-    /**
-     * Say this is a list. Then default value NOT of the list,
-     * but of the elements present in the list.
-     * @param r 
-     * @param dv may be null
-     * @return 
-     */
-    Object handle(Rus r,DefaultValue dv);
-    Object put(Rus r, Object value,DefaultValue dv);
+public interface Merger<E> {
+    void merge(Rus r, Class<E> template, E newValue);
 }

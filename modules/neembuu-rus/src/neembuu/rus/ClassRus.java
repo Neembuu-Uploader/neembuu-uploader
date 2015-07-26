@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.OpenOption;
 import static java.nio.file.StandardOpenOption.*;
+import java.util.Iterator;
 
 
 /**
@@ -45,6 +46,17 @@ public  final class ClassRus implements Rus {
         return new ClassRus(c, name+"/");
     }
 
+    @Override
+    public Iterator<String> iterator() {
+        throw new UnsupportedOperationException();
+    }
+    
+    @Override
+    public boolean isEmpty() {
+        return false; // there is no way to check and also the class is here
+        // so very likely that this path has that class atleast
+    }
+    
     @Override public SeekableByteChannel p(String name, OpenOption... openOptions) throws IOException {
         OpenOption[]whiteList = {READ};//create is ignored
         for (OpenOption openOption : openOptions) {

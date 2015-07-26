@@ -116,44 +116,49 @@ public final class TypeImplementor<E> implements InvocationHandler{
             return handleGettersArrays(proxy, m, retType,dv,v);
         }
         ValueHandler vh = thp.provideFor(retType,dv);
-        return vh.handle(v.s(dv==null?"":dv.s()), r, m.getName(), dv);
+        String tempValue; String dval = dv==null?"":dv.s();
+        if(v==null){
+            return null;
+        }
+        tempValue = v.s(dval);
+        return vh.handle(tempValue, r, m.getName(), dv);
     }
     
-    private Object handleGettersArrays(Object proxy, Method m,Class retType,
+    static Object handleGettersArrays(Object proxy, Method m,Class retType,
             DefaultValue dv,V v){
         String values = v.s("");
         String[]valA = values.replaceAll("\r", "").split("\n");
         
         if(retType.isAssignableFrom(double[].class)){
-            if(v.isNull())return dv.da();
+            if(v.isNull())return dv==null?new double[0]:dv.da();
             double[]array = (double[]) Array.newInstance(double.class, valA.length);
             for (int i = 0; i < valA.length; i++) {
                 array[i] = Double.parseDouble(valA[i]);
             }
             return array;
         }else if(retType.isAssignableFrom(int[].class)){
-            if(v.isNull())return dv.ia();
+            if(v.isNull())return dv==null?new int[0]:dv.ia();
             int[]array = (int[]) Array.newInstance(int.class, valA.length);
             for (int i = 0; i < valA.length; i++) {
                 array[i] = Integer.parseInt(valA[i]);
             }
             return array;
         }else if(retType.isAssignableFrom(long[].class)){
-            if(v.isNull())return dv.la();
+            if(v.isNull())return dv==null?new long[0]:dv.la();
             long[]array = (long[]) Array.newInstance(long.class, valA.length);
             for (int i = 0; i < valA.length; i++) {
                 array[i] = Long.parseLong(valA[i]);
             }
             return array;
         }else if(retType.isAssignableFrom(boolean[].class)){
-            if(v.isNull())return dv.ba();
+            if(v.isNull())return dv==null?new boolean[0]:dv.ba();
             boolean[]array = (boolean []) Array.newInstance(boolean.class, valA.length);
             for (int i = 0; i < valA.length; i++) {
                 array[i] = Boolean.parseBoolean(valA[i]);
             }
             return array;
         }else if(retType.isAssignableFrom(String[].class)){
-            if(v.isNull())return dv.sa();
+            if(v.isNull())return dv==null?new String[0]:dv.sa();
             return valA;
         }
         return null;

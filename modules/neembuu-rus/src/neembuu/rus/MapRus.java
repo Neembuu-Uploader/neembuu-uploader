@@ -18,7 +18,11 @@ package neembuu.rus;
 
 import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
 import java.nio.file.OpenOption;
+import java.nio.file.Path;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -35,6 +39,27 @@ public class MapRus implements Rus{
     
     public static MapRus wrap(Map m){
         return new MapRus(m, null);
+    }
+    
+    @Override
+    public boolean isEmpty() {
+        return m.isEmpty();
+    }
+
+    @Override
+    public Iterator<String> iterator() {
+        return new Iterator<String>() {
+            private final Iterator<Path> ix = m.values().iterator();
+            @Override
+            public boolean hasNext() {
+                return ix.hasNext();
+            }
+
+            @Override
+            public String next() {
+                return ix.next().toString();
+            }
+        };
     }
     
     public static MapRus wrap(Map m,MapFactory mf1){

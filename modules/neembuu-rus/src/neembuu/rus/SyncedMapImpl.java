@@ -16,38 +16,28 @@
 
 package neembuu.rus;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author Shashank Tulsyan <shashaank at neembuu.com>
  */
-public class SyncedMap implements Map<String,V>{
-    private final RusImpl r;
-
-    public SyncedMap(RusImpl r) {
-        this.r = r;
+public class SyncedMapImpl<E> implements /*Map<String,V>,*/ SyncMap<E>{
+    private final Rus r;
+    private final Class<E> template;
+    
+    SyncedMapImpl(Rus r,Class<E> template) {
+        this.r = r; this.template = template;
     }
     
-    private final HashMap<String,V> hm = new HashMap<>();
+    private final HashMap<String,E> hm = new HashMap<>();
 
-    @Override public int size() {throw new UnsupportedOperationException();}
     @Override public boolean isEmpty() {
-        boolean x = hm.isEmpty();
-        if(x)return true;
-        try {
-            return Files.newDirectoryStream(r.p).iterator().hasNext();
-            //return Files.list(r.p).findAny().isPresent();
-        } catch (IOException ex) {
-            Logger.getLogger(SyncedMap.class.getName()).log(Level.SEVERE, null, ex);
-        }return false;
+        synchronized (hm){
+            boolean x = hm.isEmpty();
+            if(x)return true;
+            return r.isEmpty();
+        }
     }
     
     private String asStr(Object key){
@@ -57,33 +47,46 @@ public class SyncedMap implements Map<String,V>{
         return s;
     }
     
-    @Override public V get(Object key) {
-        if(key==null)return null;
-        String s = asStr(key);
-        
-        V v = hm.get(key);
-        if(v!=null)return v;
-        
-        return Rusila.get(r, s);
-    }
-    @Override public boolean containsKey(Object key) {
-        if(key==null)return false;
-        String s = asStr(key);
-        
-        boolean x = hm.containsKey(key);
-        if(x)return true;
-        V v = Rusila.get(r, s);
-        return !v.isNull();
-    }
-    @Override public V put(String key, V value) {
-        V x = hm.put(key, value);
-        try{Rusila.set(r, key, value);}
-        catch(Exception a){
-            a.printStackTrace();
+    @Override public E get(String key) {
+        synchronized (hm){
+            if(key==null)return null;//String s = asStr(key);
+
+            E e = hm.get(key);
+            if(e!=null)return e;
+
+            e = Rusila.I(r.r(key), template);
+            hm.put(key, e);
+            return e;
         }
-        return x;
+    }
+    @Override public boolean containsKey(String key,NullChecker<E> nc) {
+        synchronized (hm){
+            if(key==null)return false;//String s = asStr(key);
+
+            boolean x = hm.containsKey(key);
+            if(x)return true;
+
+            E e = Rusila.I(r.r(key), template);
+            hm.put(key, e);
+            return !nc.isNull(e);
+        }
+    }
+    @Override public E put(String key, E value) {
+        synchronized (hm){
+            E x = hm.put(key, value);
+            try{
+                x = Rusila.put(r.r(key), template,value);
+                //Rusila.set(r, key, value);
+            }
+            catch(Exception a){
+                a.printStackTrace();
+            }
+            x = hm.put(key, x);
+            return x;
+        }
     }
 
+    /*@Override public int size() {throw new UnsupportedOperationException();}
     @Override public void putAll(Map<? extends String, ? extends V> m) {
         throw new UnsupportedOperationException();
     }
@@ -110,6 +113,6 @@ public class SyncedMap implements Map<String,V>{
 
     @Override public Set<Entry<String, V>> entrySet() {
         throw new UnsupportedOperationException();
-    }
+    }*/
     
 }

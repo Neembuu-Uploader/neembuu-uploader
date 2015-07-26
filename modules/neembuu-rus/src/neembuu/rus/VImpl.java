@@ -41,6 +41,7 @@ public class VImpl implements V{
     @Override public boolean isNull() { return v == null; }
 
     @Override public Object o(DefaultValue dv,Rus r,String name,TypeHandlerProvider thp) {
+        if(dv==null)return s(null);
         if(dv.subElementType().isAssignableFrom(int.class)){
             return i(dv.i());
         }else if(dv.subElementType().isAssignableFrom(double.class)){

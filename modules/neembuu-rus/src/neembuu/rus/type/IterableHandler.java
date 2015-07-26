@@ -16,6 +16,8 @@
 
 package neembuu.rus.type;
 
+import java.util.Iterator;
+
 import neembuu.rus.DefaultValue;
 import neembuu.rus.Rus;
 import neembuu.rus.Rusila;
@@ -38,5 +40,40 @@ public class IterableHandler implements TypeHandler{
     @Override public Object handle(Rus r,DefaultValue dv) {
         return Rusila.i(r,dv,thp);
     }
-    
+
+    @Override
+    public Object put(Rus r, Object value,DefaultValue dv) {
+        if(!(value instanceof Iterable)){
+            throw new IllegalStateException(value+" type not "+Iterable.class);
+        }
+        
+        Iterable i = (Iterable)value;
+        Iterator it = i.iterator();
+        
+        Class subeletype = dv==null?String.class:dv.subElementType();
+        
+        
+        if(subeletype.isInstance(value)){
+            throw new IllegalStateException("Weird element type "+value+ " "+subeletype);
+        }
+        
+        while(it.hasNext()){
+            Object n = it.next();
+            boolean whitelist = Rusila.isWhiteList
+                    (subeletype);
+            if(whitelist){
+                try{
+                    Rusila.set(r, 
+                            String.valueOf(n.hashCode()),
+                            n);
+                }catch(Exception a){
+                    a.printStackTrace();
+                }
+                return value;
+            }
+            Rusila.put(r, subeletype, value);
+        }
+        
+        return handle(r, null);
+    }    
 }
