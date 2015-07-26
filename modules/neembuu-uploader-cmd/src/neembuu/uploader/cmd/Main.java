@@ -1,0 +1,311 @@
+/* 
+ * Copyright (C) 2015 Shashank Tulsyan <shashaank at neembuu.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package neembuu.uploader.cmd;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.logging.Level;
+import neembuu.release1.api.ui.MainComponent;
+import neembuu.uploader.AppLocation;
+import neembuu.uploader.FindVersion;
+import neembuu.uploader.accountgui.AccountManagerWorker;
+import neembuu.uploader.accountgui.Callbacks;
+import neembuu.uploader.api.UserLanguageCodeProvider;
+import neembuu.uploader.api.accounts.AccountSelectionUI;
+import neembuu.uploader.api.accounts.AccountsProvider;
+import neembuu.uploader.api.accounts.UpdateSelectedHostsCallback;
+import neembuu.uploader.api.queuemanager.StartNextUploadIfAnyCallback;
+import neembuu.uploader.captcha.Captcha;
+import neembuu.uploader.captcha.CaptchaServiceProvider;
+import neembuu.uploader.external.SmallModuleEntry;
+import neembuu.uploader.external.UpdatesAndExternalPluginManager;
+import neembuu.uploader.external.UploaderPlugin;
+import neembuu.uploader.httpclient.NUHttpClient;
+import neembuu.uploader.interfaces.Account;
+import neembuu.uploader.interfaces.Uploader;
+import neembuu.uploader.interfaces.abstractimpl.AbstractAccount;
+import neembuu.uploader.interfaces.abstractimpl.AbstractUploader;
+import neembuu.uploader.paralytics_tests.Utils;
+import neembuu.uploader.settings.Application;
+import neembuu.uploader.settings.Settings;
+import neembuu.uploader.uploaders.common.CommonUploaderTasks;
+import neembuu.uploader.utils.NULogger;
+import neembuu.uploader.utils.NeembuuUploaderProperties;
+import neembuu.uploader.utils.PluginUtils;
+import neembuu.uploader.versioning.ProgramVersionProvider;
+import neembuu.uploader.versioning.ShowUpdateNotification;
+import neembuu.uploader.versioning.UserImpl;
+
+/**
+ *
+ * @author Shashank Tulsyan <shashaank at neembuu.com>
+ */
+public class Main {
+    private static void logging(Settings settings){
+        if (settings.logging()) {
+            NULogger.getLogger().setLevel(Level.INFO);
+            NULogger.getLogger().info("Logger turned on");
+        } else {
+            NULogger.getLogger().info("Turning off logger");
+            NULogger.getLogger().setLevel(Level.OFF);
+        }
+    }
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) throws Exception{
+        Application.init();
+        NULogger.initializeFileHandler(Application.getNeembuuHome().resolve("nu.log").normalize().toString());
+        Settings settings = Application.get(Settings.class);
+        logging(settings);
+        
+        try {
+            nuInstanceAndRelated();
+            updatesAndExternalPluginManager();
+            //checkBoxes(); unessential
+            firstLaunchAndAccountCheck();
+            checkTamil();
+            //Finally start the update checking thread.
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            NULogger.getLogger().severe(ex.toString());
+        }
+        
+        work(args);
+        
+    }
+        
+    private static void updatesAndExternalPluginManager()throws Exception{
+        UpdatesAndExternalPluginManager uaepm
+                 = new UpdatesAndExternalPluginManager(
+                        Application.getNeembuuHome(),
+                        AppLocation.appLocationProvider(), 
+                        sun, ap,new UpdateProgressCmdI());
+        amw.uaepm(uaepm);
+        PluginUtils.uaepm(uaepm);
+        uaepm.initIndex();        
+        uaepm(uaepm);
+        pa.checkBoxOperations();
+        
+        /*for (SmallModuleEntry sme : pa.getAllPlugins() ) {
+            ap.getAccount(sme.getName());// so that something shows 
+            // up in the accounts manager window
+        }*/
+        
+        
+        //amw.initAccounts();
+        // since the ui is not there, nothing to initialize
+    }
+    
+    private static  void nuInstanceAndRelated(){
+        //Initialize the instance..
+        //Actually this statement was used to initialize for sometime.
+        //But the TranslationProvider.changeLanguage() method few lines above will do that for us.
+        //This will just return the already initialized instance. :)
+        NeembuuUploaderProperties.setUp();
+
+        // initialize httpclient
+        NUHttpClient.getHttpClient();        
+        
+        //initialize all who require access to NeembuuUploader instance
+        init_CommonUploaderTasks();
+        //NUException.init(NeembuuUploader.getInstance());
+        initEnvironmentForPlugins();
+    }
+    
+    private static void initEnvironmentForPlugins(){
+        initEnvironmentForPlugins(null);
+    }
+    private static void initEnvironmentForPlugins(MainComponent mainComponent){
+        NULogger.getLogger().info("Setting abstract uploader getaccount");
+        AbstractUploader.init(UserImpl.getUserProvider(),mainComponent,
+            ap,NeembuuUploaderProperties.getNUProperties());
+        AbstractAccount.init(NeembuuUploaderProperties.getNUProperties(),mainComponent,
+            new AccountSelectionUI() { @Override public void setVisible(boolean f) { 
+                amw.setVisible(f); }},
+            new UpdateSelectedHostsCallback() {
+                @Override public void updateSelectedHostsLabel() {
+                    pa.updateSelectedHostsLabel();}},
+                Utils.getFakeHostsAccountUI(),new CaptchaServiceProvider() {
+                @Override public Captcha newCaptcha() {return DummyCaptcha.INSTANCE;}}
+        );
+    }
+    
+    private static void checkTamil()throws FileNotFoundException{
+        //The following code is to write the fallback location to the Readme_for_Tamil_Locale.txt file
+        File readmetamil = new File(AppLocation.getLocation(), "Readme_for_Tamil_Locale.txt");
+        if (!readmetamil.exists()) {
+            NULogger.getLogger().info("Writing Readme_for_Tamil_Locale.txt");
+            PrintWriter out = new PrintWriter(readmetamil);
+            out.write("If you don't use Tamil language, ignore this file."
+                    + "\r\n\r\nTamil is not one of the officially supported locale by Java. But there is a workaround for this."
+                    + "\r\n\r\nIf you wish to use Neembuu Uploader in Tamil, kindly copy the included 'LATHA.TTF' font to"
+                    + "\r\n\"<JRE_INSTALL_DIR>/jre/lib/fonts/fallback\""
+                    + "\r\n\r\nLocation to paste the fallback font for your pc is:\r\n\"" + System.getProperty("java.home") + File.separator
+                    + "lib" + File.separator + "fonts" + File.separator + "fallback"
+                    + File.separator + "\"");
+            out.close();
+            NULogger.getLogger().log(Level.INFO, "Fallback location: {0}{1}lib{2}fonts{3}fallback", new Object[]{System.getProperty("java.home"), File.separator, File.separator, File.separator});
+        }
+    }
+    
+    private static void firstLaunchAndAccountCheck(){
+        Thread t = new Thread("First Launch Check") {
+            @Override public void run() {
+                try {
+                    //If this is the firstlaunch(set by the NeembuuUploaderProperties class),
+                    //then display AccountsManager
+                    //and set the key back to false
+                    if (NeembuuUploaderProperties.isPropertyTrue("firstlaunch")) {
+                        NULogger.getLogger().info("First launch.. Display Language cannot be changed as cmd mode..");
+                        //NeembuuUploader.displayLanguageOptionDialog();
+                        NULogger.getLogger().info("First launch.. Display Accounts Manager.."
+                                + " accounts manager cannot be shown in cmd mode");
+                        //amw.setVisible(true);
+                        NeembuuUploaderProperties.setProperty("firstlaunch", "false");
+                    } else {
+                        //If it is not the first launch, then
+                        //start login process for enabled accounts
+                        amw.loginEnabledAccounts();
+                    }
+                } catch (Exception ex) {
+                    NULogger.getLogger().log(Level.WARNING, "{0}: Exception while logging in", getClass().getName());
+                    System.err.println(ex);
+                }
+            }
+        }; t.start();
+    }
+    
+    private static void init_CommonUploaderTasks(){
+        //UploadListTextFile ultf = new UploadListTextFile(Application.getNeembuuHome());
+        CommonUploaderTasks.init(
+            new StartNextUploadIfAnyCallback() {
+                @Override public void startNextUploadIfAny() {
+                    System.out.println("THERE IS NO CONCEPT OF QUEUE IN COMMAND LINE, do nothing");
+                    
+                }
+            },pvp,UserImpl.getUserProvider()
+            ,new UserLanguageCodeProvider() {
+                @Override public String getUserLanguageCode() {
+                    return "en";//cmd version only in english! localization 
+                    // would be complex to build up on cmd
+                    //return NeembuuUploaderLanguages.getUserLanguageCode();
+                }
+            }//,ultf
+        );
+    }
+    
+    private static ShowUpdateNotification sun = new ShowUpdateNotification() {
+        @Override public void showNotification(final long notificationdate) {
+            System.out.println("notification date "+notificationdate);
+        }
+        @Override public void showUpdate(float availablever) {
+            System.out.println("update -> "+availablever+"/"+pvp.getVersion());
+        }
+        @Override public ProgramVersionProvider pvp() {return pvp;}
+    };
+
+    private static float version = -1f;
+    static float version(){
+        if(version < 0) version = FindVersion.version();
+        return version;
+    }
+    
+    private static volatile UpdatesAndExternalPluginManager uaepm;
+    static void uaepm(UpdatesAndExternalPluginManager uaepm){
+        Main.uaepm = uaepm;
+    }
+    
+    private static AccountManagerWorker amw = new AccountManagerWorker(new Callbacks() {
+        @Override public void initAccounts() {}
+    });
+    
+    private static final ProgramVersionProvider pvp
+            = new ProgramVersionProvider() {
+                @Override public String getVersionForProgam() {
+                    return Float.toString(version());
+                }@Override public float getVersion() { 
+                    return version(); 
+                }
+            };
+    
+    private static final AccountsProvider ap =
+            new AccountsProvider() {
+                @Override public Account getAccount(String hostname) {
+                    return amw.getAccount(hostname);
+                }@Override public Account getAccount(Class<Account> accountClass) {
+                    throw new UnsupportedOperationException("this is how we could do it.");
+                }
+                
+            };
+
+    private static final PluginActivation pa =
+            new PluginActivation(new PACallback() {
+                @Override public UpdatesAndExternalPluginManager uaepm(){
+                    return Main.uaepm;
+                }
+        });
+    
+    private static void work(String[]args)throws InstantiationException,IllegalAccessException{
+        String fileName,hostname;//,userName,password;
+        if(args.length<4){
+            System.out.println("syntax fileName hostname "
+                    //+ "userName password"
+            );
+            
+            fileName = "F:\\tempimages\\mecon.png";
+            hostname = //"mediafire.com"; 
+                        "Solidfiles.com";
+                        //"4Shared.com";
+            System.out.println("assuming for test purpose"
+                    + fileName + " and host " + hostname);
+        }else{
+            fileName = args[0]; hostname=args[1]; //userName=args[2]; password=args[3]; 
+        }
+        
+        System.out.println("===Listing all active and non-active plugins===");
+        for (SmallModuleEntry sme : pa.getAllPlugins()) {
+            System.out.println(sme.getName());
+            
+        }
+        System.out.println("===============================================");
+        
+        SmallModuleEntry sme = pa.getPluginByName(hostname);
+        UploaderPlugin up = pa.activatePlugin(sme);
+        
+        Class<? extends Uploader> uClass = up.getUploader(DummyPluginDestructionListener
+        .make(hostname+"-uploader"));
+        
+        Class<? extends Account> aClass = up.getAccount(DummyPluginDestructionListener
+        .make(hostname+"-account"));
+        
+        Account a = amw.getAccount(hostname);
+        System.out.println("account = "+a);
+        
+        Uploader u = uClass.newInstance();
+        u.setFile(new File(fileName));
+        //u.startUpload();
+        u.run(); // upload in same thread
+        
+        System.out.println("Delete URL="+u.getDeleteURL());
+        System.out.println("Download URL="+u.getDownloadURL());
+        
+        System.exit(0);
+    }
+}
