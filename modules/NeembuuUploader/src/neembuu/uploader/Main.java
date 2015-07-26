@@ -27,6 +27,7 @@ import javax.swing.JCheckBox;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import neembuu.release1.api.ui.MainComponent;
+import neembuu.release1.api.ui.Message;
 import static neembuu.uploader.NeembuuUploader.getMainComponent;
 import neembuu.uploader.accountgui.AccountsManager;
 import neembuu.uploader.versioning.ProgramVersionProvider;
@@ -180,7 +181,8 @@ public class Main {
         NeembuuUploader.getInstance();
         //initialize all who require access to NeembuuUploader instance
         init_CommonUploaderTasks();
-        NUException.init(NeembuuUploader.getInstance());
+
+        NUException.init(getMainComponent());
         initEnvironmentForPlugins();
     }
     

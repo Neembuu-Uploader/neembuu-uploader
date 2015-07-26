@@ -6,7 +6,7 @@ package neembuu.uploader.exceptions.proxy;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
+
 
 import neembuu.uploader.exceptions.NUException;
 import neembuu.uploader.translation.Translation;
@@ -32,6 +32,6 @@ public class NUProxyPortException extends NUException{
 
     public void printError() {
         Logger.getLogger(getClass().getName()).log(Level.SEVERE, this.getMessage());
-        JOptionPane.showMessageDialog(parent, "<html>"+Translation.T(this.getMessage())+" "+ this.proxyPort + "</html>", Translation.T(this.getMessage()), JOptionPane.WARNING_MESSAGE);
+        showMessageDialog( "<html>"+Translation.T(this.getMessage())+" "+ this.proxyPort + "</html>", Translation.T(this.getMessage()));
     }
 }

@@ -6,7 +6,7 @@ package neembuu.uploader.exceptions.accounts;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
+
 
 import neembuu.uploader.exceptions.NUException;
 import neembuu.uploader.translation.Translation;
@@ -33,6 +33,6 @@ public class NUInvalidPasswordException extends NUAccountException {
     @Override
     public void printError() {
         Logger.getLogger(getClass().getName()).log(Level.SEVERE, this.getMessage());
-        JOptionPane.showMessageDialog(parent, "<html><b>" + userName+ ":<br/>"+Translation.T(this.getMessage())+"</html>", this.hostName, JOptionPane.WARNING_MESSAGE);
+        showMessageDialog( "<html><b>" + userName+ ":<br/>"+Translation.T(this.getMessage())+"</html>", this.hostName);
     }
 }

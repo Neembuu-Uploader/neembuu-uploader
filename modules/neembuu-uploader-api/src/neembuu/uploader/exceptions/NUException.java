@@ -5,6 +5,8 @@
 package neembuu.uploader.exceptions;
 
 import javax.swing.JFrame;
+import neembuu.release1.api.ui.MainComponent;
+import neembuu.release1.api.ui.Message;
 
 /**
  * This handles all other exceptions within the classes of NU.
@@ -157,11 +159,16 @@ public abstract class NUException extends Exception {
      */
     public abstract void printError();
     
-    protected static JFrame parent = null;
-    public static void init(JFrame parent){
-        if(NUException.parent!=null){throw new IllegalStateException("already initialized");}
-        NUException.parent = parent;
+    protected static MainComponent mc ;
+    
+    public static void init(MainComponent mc){
+        if(NUException.mc!=null){throw new IllegalStateException("already initialized");}
+        NUException.mc = mc;
+    }
+    
+    protected static void showMessageDialog(String message, String title){
+        mc.newMessage().setMessage(message).setTitle(title).setTimeout(1000*10).show();
     }
     
     
-    }
+}

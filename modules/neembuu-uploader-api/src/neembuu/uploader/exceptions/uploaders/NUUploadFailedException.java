@@ -6,7 +6,7 @@ package neembuu.uploader.exceptions.uploaders;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
+
 
 import neembuu.uploader.exceptions.NUException;
 import neembuu.uploader.translation.Translation;
@@ -34,6 +34,6 @@ public class NUUploadFailedException extends NUFileException {
     @Override
     public void printError() {
         Logger.getLogger(getClass().getName()).log(Level.SEVERE, this.getMessage());
-        JOptionPane.showMessageDialog(parent, "<html><b>" + fileName+ ":<br/>"+Translation.T(this.getMessage())+"</html>", this.hostName, JOptionPane.WARNING_MESSAGE);
+        showMessageDialog( "<html><b>" + fileName+ ":<br/>"+Translation.T(this.getMessage())+"</html>", this.hostName);
     }
 }
