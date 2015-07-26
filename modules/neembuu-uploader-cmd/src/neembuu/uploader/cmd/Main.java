@@ -52,6 +52,13 @@ import neembuu.uploader.utils.PluginUtils;
 import neembuu.uploader.versioning.ProgramVersionProvider;
 import neembuu.uploader.versioning.ShowUpdateNotification;
 import neembuu.uploader.versioning.UserImpl;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 
 /**
  *
@@ -266,9 +273,22 @@ public class Main {
                 }
         });
     
-    private static void work(String[]args)throws InstantiationException,IllegalAccessException{
-        String fileName,hostname;//,userName,password;
-        if(args.length<4){
+    private static void work(String[] args)throws InstantiationException,IllegalAccessException, ParseException{
+        Options options = new Options();
+        Option file = new Option("f", true, "File to upload.");
+        file.setRequired(true);
+        Option filehost = new Option("h", true, "Filehost domain");
+        filehost.setRequired(true);
+        options.addOption(file);
+        options.addOption(filehost);
+        //options.addOption("u", true, "Username");
+        //options.addOption("p", true, "Password");
+        options.addOption("help", false, "Display help");
+        
+        
+        
+        String fileName = null,hostname = null;//,userName,password;
+        if(args.length<1){
             System.out.println("syntax fileName hostname "
                     //+ "userName password"
             );
@@ -280,7 +300,15 @@ public class Main {
             System.out.println("assuming for test purpose"
                     + fileName + " and host " + hostname);
         }else{
-            fileName = args[0]; hostname=args[1]; //userName=args[2]; password=args[3]; 
+            CommandLineParser parser = new DefaultParser();
+            CommandLine cmd = parser.parse( options, args);
+            if(cmd.hasOption("help")){
+                HelpFormatter formatter = new HelpFormatter();
+                formatter.printHelp( "help", options );
+                System.exit(0);
+            }else{
+                fileName = cmd.getOptionValue("f"); hostname=cmd.getOptionValue("h"); //userName=args[2]; password=args[3]; 
+            }
         }
         
         System.out.println("===Listing all active and non-active plugins===");
@@ -294,12 +322,13 @@ public class Main {
         UploaderPlugin up = pa.activatePlugin(sme);
         
         Class<? extends Uploader> uClass = up.getUploader(DummyPluginDestructionListener
-        .make(hostname+"-uploader"));
+        .make(sme.getName()+"-uploader"));
         
         Class<? extends Account> aClass = up.getAccount(DummyPluginDestructionListener
-        .make(hostname+"-account"));
+        .make(sme.getName()+"-account"));
         
-        Account a = amw.getAccount(hostname);
+        Account a = amw.getAccount(sme.getName());
+        
         System.out.println("account = "+a);
         
         Uploader u = uClass.newInstance();

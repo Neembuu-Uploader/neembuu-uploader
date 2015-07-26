@@ -88,7 +88,8 @@ public class PluginActivation {
         
         name = name.trim();
         for (SmallModuleEntry sme : allPlugins) {
-            if(sme.getName().equalsIgnoreCase(name)){
+            //toLowerCase to fix upper case misspelling
+            if(sme.getName().toLowerCase().equalsIgnoreCase(name)){
                 //activatePlugin(sme);
                 return sme;
             }
