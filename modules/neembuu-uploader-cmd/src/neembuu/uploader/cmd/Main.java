@@ -21,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
 import neembuu.release1.api.ui.MainComponent;
+import neembuu.release1.ui.mc.NonUIMainComponent;
 import neembuu.uploader.AppLocation;
 import neembuu.uploader.FindVersion;
 import neembuu.uploader.accountgui.AccountManagerWorker;
@@ -32,6 +33,7 @@ import neembuu.uploader.api.accounts.UpdateSelectedHostsCallback;
 import neembuu.uploader.api.queuemanager.StartNextUploadIfAnyCallback;
 import neembuu.uploader.captcha.Captcha;
 import neembuu.uploader.captcha.CaptchaServiceProvider;
+import neembuu.uploader.exceptions.NUException;
 import neembuu.uploader.external.SmallModuleEntry;
 import neembuu.uploader.external.UpdatesAndExternalPluginManager;
 import neembuu.uploader.external.UploaderPlugin;
@@ -125,6 +127,8 @@ public class Main {
         
         //initialize all who require access to NeembuuUploader instance
         init_CommonUploaderTasks();
+        MainComponent mc = new NonUIMainComponent();
+        NUException.init(mc);
         //NUException.init(NeembuuUploader.getInstance());
         initEnvironmentForPlugins();
     }
