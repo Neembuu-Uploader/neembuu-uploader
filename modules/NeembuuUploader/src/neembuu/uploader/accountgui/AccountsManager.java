@@ -49,7 +49,7 @@ public class AccountsManager extends javax.swing.JDialog {
     //Singleton instance
     private static AccountsManager INSTANCE = new AccountsManager(NeembuuUploader.getInstance(), true);
     //This is the list of accounts to be displayed in Table
-    private static Map<String, Account> accounts;
+    
     //Reference to table model.
     private static DefaultTableModel model;
     //Reference to Column index. Use this instead of explicitly using index no.
@@ -65,31 +65,18 @@ public class AccountsManager extends javax.swing.JDialog {
     //This renderer+editor is to allow a "Register" button along with host name to exist in the table
     HostNameRendererEditor hostNameRendererEditor = new HostNameRendererEditor();
 
-    public static Account getAccount(final String hostname) {
-        Account a = accounts.get(hostname);
-        if(a!=null)return a;
-        
-        UploaderPlugin plugin = uaepm.load(uaepm.getIndex().get(Uploader.class, hostname));
-        Class<? extends Account> accountClass =  plugin.getAccount(new PluginDestructionListener() {
-            @Override public void destroyed() {
-                accounts.remove(hostname);
+    AccountManagerWorker amw = new AccountManagerWorker(new Callbacks() {
+        @Override public void initAccounts() {
+            AccountsManager.this.initAccounts();
             }
         });
-        if(accountClass!=null){
-            boolean dead = AccountsManager.INSTANCE.loadAccountClass(accountClass,hostname);
-            if(dead)return null;
-        }else {
-            NULogger.getLogger().log(Level.INFO, "no account for {0}", hostname);
-            return null;
-        }
         
-        return getAccount(hostname);
+    public static Account getAccount(final String hostname) {
+        return INSTANCE.amw.getAccount(hostname);
     }
     
-    private static volatile UpdatesAndExternalPluginManager uaepm;
     public static void uaepm(UpdatesAndExternalPluginManager uaepm){
-        if(AccountsManager.uaepm!=null)throw new IllegalStateException();
-        AccountsManager.uaepm = uaepm;
+        INSTANCE.amw.uaepm(uaepm);
     }
     
 
@@ -109,35 +96,12 @@ public class AccountsManager extends javax.swing.JDialog {
      * after the save button in accounts table is clicked.
      */
     public static void loginEnabledAccounts() {
-
-        //Create a separate thread for responsiveness of the save button
-        new Thread() {
-            @Override
-            public void run() {
-                //Iterate through each account
-                for (Account account : accounts.values()) {
-                    loginAccount(account);
+        INSTANCE.amw.loginEnabledAccounts();
                 }
-            }
-        }.start();
-    }
     
     public static void loginAccount(Account account){
-        //May need to add additional conditions if premium accts have different login mechanism
-        //But that'll be in future..
-        if (account.getUsername().isEmpty() || account.getPassword().isEmpty()) {
-            //If either one field is empty, disable the account if logged in already.
-            //In fact it's enough to check one condition 
-            //as the AccountsManager won't let you save with one field empty
-            account.disableLogin();
-        } else {
-            //If both fields are present, login that account
-            NULogger.getLogger().log(Level.INFO, "Logging in to {0}", account.getHOSTNAME());
-            if (account.canLogin()) {
-                account.login();
+        INSTANCE.amw.loginAccount(account);
             }
-        }
-    }
 
     /**
      * Private method to update the current language everytime the window is
@@ -191,7 +155,6 @@ public class AccountsManager extends javax.swing.JDialog {
         //////////Dynamic add all accounts///////
         
         NULogger.getLogger().info("Adding accounts to accounts table()");
-        accounts = new TreeMap<String, Account>();
         
     }
     
@@ -220,40 +183,10 @@ public class AccountsManager extends javax.swing.JDialog {
     }
     
     public void destroyAnythingFrom(UploaderPlugin up){
-        accounts.remove(up.getSme().getName());
+        INSTANCE.amw.destroyAnythingFrom(up);
     }
     
-    private boolean loadAccountClass(Class<? extends Account> account,String hostname){
-        if(accounts.containsKey(hostname))return true;
         
-        Constructor<? extends Account> constructor;
-        try {
-            constructor = account.getConstructor();
-            Account instance = constructor.newInstance();
-            if(!instance.isDead()){
-                accounts.put(instance.getHOSTNAME(), instance);
-                return true;
-            }else {
-                return false;
-            }
-        } catch(IllegalAccessException ex){
-            NULogger.getLogger().log(Level.SEVERE, null, ex);
-        } catch (IllegalArgumentException ex) {
-            NULogger.getLogger().log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            NULogger.getLogger().log(Level.SEVERE, null, ex);
-        } catch (NoSuchMethodException ex) {
-            NULogger.getLogger().log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
-            NULogger.getLogger().log(Level.SEVERE, null, ex);
-        } catch (InvocationTargetException ex) {
-            NULogger.getLogger().log(Level.SEVERE, null, ex);
-        }
-        
-        initAccounts();
-        return true;
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -403,7 +336,7 @@ public class AccountsManager extends javax.swing.JDialog {
 
         //Iterate through each row..
         //int row = 0;
-        for (Account account : accounts.values()) {
+        for (Account account : amw.getAccounts().values()) {
             //Declare local variables to store the username and password
             //If none present, empty "" is stored.
             
@@ -469,7 +402,7 @@ public class AccountsManager extends javax.swing.JDialog {
         model.setRowCount(0);
         
         //Iterate through each account
-        for (Account account : accounts.values()) {
+        for (Account account : amw.getAccounts().values()) {
             //Get the values and update the rows.
             model.addRow(new Object[]{
                 account.getHOSTNAME(),
