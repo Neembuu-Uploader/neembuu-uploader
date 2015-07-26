@@ -45,7 +45,8 @@ import java.util.Random;
 @SmallModule(
     exports={PlayedTo.class,PlayedToAccount.class},
     interfaces={Uploader.class,Account.class},
-    name="Played.to"
+    name="Played.to",
+    ignore = true
 )
 public class PlayedTo extends AbstractUploader implements UploaderAccountNecessary{
     

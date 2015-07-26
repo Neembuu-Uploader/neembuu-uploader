@@ -38,7 +38,8 @@ import neembuu.uploader.uploaders.common.StringUtils;
 @SmallModule(
     exports={CloudZilla.class,CloudZillaAccount.class},
     interfaces={Uploader.class,Account.class},
-    name="CloudZilla.to"
+    name="CloudZilla.to",
+    ignore = true // redirects to http://neodrive.co/
 )
 public class CloudZilla extends AbstractUploader implements UploaderAccountNecessary{
     

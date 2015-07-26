@@ -38,7 +38,8 @@ import org.json.JSONObject;
 @SmallModule(
     exports={UpdownBz.class,UpdownBzAccount.class},
     interfaces={Uploader.class,Account.class},
-    name="Updown.bz"
+    name="Updown.bz",
+    ignore = true
 )
 public class UpdownBz extends AbstractUploader implements UploaderAccountNecessary {
 

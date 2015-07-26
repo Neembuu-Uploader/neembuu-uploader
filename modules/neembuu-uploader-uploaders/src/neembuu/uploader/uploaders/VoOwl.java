@@ -45,7 +45,8 @@ import java.util.Random;
 @SmallModule(
     exports={VoOwl.class,VoOwlAccount.class},
     interfaces={Uploader.class,Account.class},
-    name="VoOwl.com"
+    name="VoOwl.com",
+    ignore = true
 )
 public class VoOwl extends AbstractUploader{
     

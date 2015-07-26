@@ -7,8 +7,6 @@ package neembuu.uploader.uploaders;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import neembuu.uploader.accounts.AsfileAccount;
@@ -25,13 +23,10 @@ import neembuu.uploader.utils.CookieUtils;
 import neembuu.uploader.utils.NUHttpClientUtils;
 import neembuu.uploader.utils.NULogger;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
@@ -47,7 +42,8 @@ import org.jsoup.nodes.Element;
 @SmallModule(
     exports={Asfile.class,AsfileAccount.class},
     interfaces={Uploader.class,Account.class},
-    name="Asfile.com"
+    name="Asfile.com",
+    ignore = true
 )
 public class Asfile extends AbstractUploader implements UploaderAccountNecessary {
     

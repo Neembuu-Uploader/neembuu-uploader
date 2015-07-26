@@ -96,7 +96,11 @@ public class CatShare extends AbstractUploader implements UploaderAccountNecessa
             uploadURL = StringUtils.stringStartingFromString(uploadURL, "http://");
             uploadURL = StringUtils.stringUntilString(uploadURL, "/upload");
 
+            httpPost.setHeader("Accept", "text/*");
+            httpPost.removeHeaders("Accept-Charset");
+            httpPost.removeHeaders("Accept-Language");
             httpPost.setHeader("Host", uploadURL);
+            httpPost.removeHeaders("Pragma");
             httpPost.setHeader("User-Agent", "Shockwave Flash");
             
             MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
@@ -109,7 +113,7 @@ public class CatShare extends AbstractUploader implements UploaderAccountNecessa
             NULogger.getLogger().log(Level.INFO, "executing request {0}", httpPost.getRequestLine());
             NULogger.getLogger().info("Now uploading your file into CatShare.net");
             uploading();
-            httpResponse = httpclient.execute(httpPost, httpContext);
+            httpResponse = httpclient.execute(httpPost);
             responseString = EntityUtils.toString(httpResponse.getEntity());
             
             //Read the links
@@ -134,7 +138,6 @@ public class CatShare extends AbstractUploader implements UploaderAccountNecessa
             uploadInvalid();
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, e);
-
             uploadFailed();
         }
     }

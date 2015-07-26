@@ -50,7 +50,8 @@ public class NotifyUpdate extends javax.swing.JFrame {
         NULogger.getLogger().log(Level.INFO, "{0}Setting Editor Pane", NotifyUpdate.class.getName());
         //Set the editor pane to display the newfeatures.html page.
         try {
-            htmlPane.setPage("http://neembuuuploader.sourceforge.net/newfeatures.html");
+            htmlPane.setPage("http://www.neembuu.com/uploader/newfeatures.html");
+            // http://neembuuuploader.sourceforge.net/newfeatures.html
         } catch (IOException ex) {
             Logger.getLogger(NotifyUpdate.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -151,7 +152,8 @@ public class NotifyUpdate extends javax.swing.JFrame {
             return;
         try {
             NULogger.getLogger().log(Level.INFO, "{0}: Link clicked.. Opening the homepage..", getClass().getName());
-            Desktop.getDesktop().browse(new URI("http://neembuuuploader.sourceforge.net/"));
+            Desktop.getDesktop().browse(new URI("http://neembuu.com/uploader/downloads.html"));
+            // http://neembuuuploader.sourceforge.net/
         } catch (Exception ex) {
             NULogger.getLogger().severe(ex.toString());
         }

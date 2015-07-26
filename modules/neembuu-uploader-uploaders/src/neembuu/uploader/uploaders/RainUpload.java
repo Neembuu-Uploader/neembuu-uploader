@@ -46,7 +46,8 @@ import neembuu.uploader.uploaders.common.StringUtils;
 @SmallModule(
     exports={RainUpload.class,RainUploadAccount.class},
     interfaces={Uploader.class,Account.class},
-    name="RainUpload.net"
+    name="RainUpload.net",
+    ignore = true
 )
 public class RainUpload extends AbstractUploader{
     

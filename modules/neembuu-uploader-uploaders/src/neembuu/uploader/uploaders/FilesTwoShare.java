@@ -43,7 +43,8 @@ import java.util.Random;
 @SmallModule(
     exports={FilesTwoShare.class,FilesTwoShareAccount.class},
     interfaces={Uploader.class,Account.class},
-    name="Files2Share.ch"
+    name="Files2Share.ch",
+    ignore = true
 )
 public class FilesTwoShare extends AbstractUploader implements UploaderAccountNecessary{
     
