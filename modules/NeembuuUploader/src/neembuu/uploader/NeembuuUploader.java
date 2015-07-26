@@ -2080,7 +2080,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
       */
      public static String getVersionForProgam(){
          return Float.toString(version);
-}
+    }
      
      /**
       * This should be used only for user interface.
@@ -2156,7 +2156,7 @@ private void formWindowIconified(java.awt.event.WindowEvent evt) {//GEN-FIRST:ev
     static final float version(){return version;}//package-private
 
     public static float initVersion(){
-        float version_tmp = Rusila.get(ClassRus.I(NeembuuUploader.class), "version").f(-1);
+        float version_tmp = FindVersion.version();
         if(version_tmp<0){
             ThemeCheck.apply(null);
             JOptionPane.showMessageDialog(null, "Severe error",

@@ -23,7 +23,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Level;
-import neembuu.uploader.NeembuuUploader;
+import neembuu.uploader.FindVersion;
+//import neembuu.uploader.NeembuuUploader;
 import neembuu.uploader.settings.Application;
 
 /** This class is used to store the user specific properties like his username
@@ -91,7 +92,10 @@ public class NeembuuUploaderProperties {
         loadProperties();
         
         //If version doesn't match the current one, then..
-        if (!getProperty("version").equals(NeembuuUploader.getVersionForProgam())) {
+        if (!getProperty("version").equals(
+                Float.toString(FindVersion.version())
+                //NeembuuUploader.getVersionForProgam()
+        )) {
             //Clear the properties object
             properties.clear();
             
@@ -105,7 +109,10 @@ public class NeembuuUploaderProperties {
      */
     private static void setDefaultProperties() {
         //Version will be needed
-        setProperty("version", NeembuuUploader.getVersionForProgam());
+        setProperty("version", 
+                Float.toString(FindVersion.version())
+                //NeembuuUploader.getVersionForProgam()
+        );
         
         //"firstlaunch" property will be needed to open the Accounts panel
         setProperty("firstlaunch", "true");

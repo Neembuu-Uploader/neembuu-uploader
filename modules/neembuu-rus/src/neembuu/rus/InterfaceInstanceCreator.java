@@ -27,7 +27,7 @@ import java.util.Map;
  * @author Shashank
  */
 public final class InterfaceInstanceCreator implements InvocationHandler{
-    public static final <E> E create(Class<E>clazz){
+    public static final <E> E getDefault(Class<E>clazz){
         return InterfaceInstanceCreator.create(initializeDefaults(clazz),clazz);
     }
     public static final <E> E create(Map values,Class<E>clazz){

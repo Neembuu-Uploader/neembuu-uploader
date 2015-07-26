@@ -196,7 +196,7 @@ public class Utils {
         };
     }
     
-    private static final HostsAccountUI getFakeHostsAccountUI(){
+    public static final HostsAccountUI getFakeHostsAccountUI(){
         return new HostsAccountUI() {
             @Override
             public EnableHostCallback hostUI(String name) {
