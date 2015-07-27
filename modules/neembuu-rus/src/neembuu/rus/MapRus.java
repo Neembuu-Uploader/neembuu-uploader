@@ -56,6 +56,11 @@ public class MapRus implements Rus{
             }
 
             @Override
+            public void remove() {
+                ix.remove();
+            }
+            
+            @Override
             public String next() {
                 return ix.next().toString();
             }
