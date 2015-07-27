@@ -64,6 +64,9 @@ final class RusImpl implements Rus{
                         a.printStackTrace();
                     }return null;
                 }
+                @Override public void remove() {
+                    ix.remove();
+                }
             };
         }finally {
             return new java.util.LinkedList<String>().iterator();
