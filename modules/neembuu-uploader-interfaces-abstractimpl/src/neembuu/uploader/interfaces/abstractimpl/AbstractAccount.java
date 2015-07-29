@@ -142,5 +142,11 @@ public abstract class AbstractAccount implements Account {
     public boolean isDead(){
         return isDead;
     }
+    
+    @Override
+    public void setOverridingCredentials(String username, String password){
+        this.properties.setProperty(KEY_USERNAME, username);
+        this.properties.setEncryptedProperty(KEY_PASSWORD, password);
+    }
    
 }

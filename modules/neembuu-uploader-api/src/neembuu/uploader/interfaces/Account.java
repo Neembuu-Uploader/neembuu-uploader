@@ -78,5 +78,11 @@ public interface Account {
      */
     public boolean isDead();
     
+    /**
+     * Override default credentials for cli usage
+     * @param username
+     * @param password 
+     */
+    public void setOverridingCredentials(String username, String password);
 }
 
