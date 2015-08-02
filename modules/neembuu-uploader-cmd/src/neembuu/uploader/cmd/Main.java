@@ -19,6 +19,7 @@ package neembuu.uploader.cmd;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
 import java.util.logging.Level;
 import neembuu.release1.api.ui.MainComponent;
 import neembuu.release1.ui.mc.NonUIMainComponent;
@@ -26,6 +27,7 @@ import neembuu.uploader.AppLocation;
 import neembuu.uploader.FindVersion;
 import neembuu.uploader.accountgui.AccountManagerWorker;
 import neembuu.uploader.accountgui.Callbacks;
+import neembuu.uploader.api.SuccessfulUploadsListener;
 import neembuu.uploader.api.UserLanguageCodeProvider;
 import neembuu.uploader.api.accounts.AccountSelectionUI;
 import neembuu.uploader.api.accounts.AccountsProvider;
@@ -42,9 +44,10 @@ import neembuu.uploader.interfaces.Account;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.abstractimpl.AbstractAccount;
 import neembuu.uploader.interfaces.abstractimpl.AbstractUploader;
-import neembuu.uploader.paralytics_tests.Utils;
 import neembuu.uploader.settings.Application;
 import neembuu.uploader.settings.Settings;
+import neembuu.uploader.translation.LanguageChangedCallback;
+import neembuu.uploader.translation.Translation;
 import neembuu.uploader.uploaders.common.CommonUploaderTasks;
 import neembuu.uploader.utils.NULogger;
 import neembuu.uploader.utils.NeembuuUploaderProperties;
@@ -76,6 +79,18 @@ public class Main {
         }
     }
 
+    private static void translation(){
+        Translation/*Provider*/.init(AppLocation.appLocationProvider(),new LanguageChangedCallback() {
+
+            @Override public void updateGUI() {
+                throw new IllegalStateException("gui update not required");
+            }
+        },Application.getNeembuuHome());
+        //NeembuuUploaderLanguages.init(AppLocation.appLocationProvider(),Application.getNeembuuHome());
+        //Update selected Language on GUI components
+        Translation.changeLanguage("en");
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -84,13 +99,14 @@ public class Main {
         NULogger.initializeFileHandler(Application.getNeembuuHome().resolve("nu.log").normalize().toString());
         Settings settings = Application.get(Settings.class);
         logging(settings);
-
+        translation();
+        
         try {
             nuInstanceAndRelated();
             updatesAndExternalPluginManager();
             //checkBoxes(); unessential
             firstLaunchAndAccountCheck();
-            checkTamil();
+            //checkTamil();
             //Finally start the update checking thread.
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -133,12 +149,17 @@ public class Main {
 
         //initialize all who require access to NeembuuUploader instance
         init_CommonUploaderTasks();
-        MainComponent mc = new NonUIMainComponent();
+        Main.mc = new NonUIMainComponent();
         NUException.init(mc);
         //NUException.init(NeembuuUploader.getInstance());
         initEnvironmentForPlugins();
     }
-
+    private static MainComponent mc;
+    
+    static MainComponent getMainComponent(){
+        return mc;
+    }
+    
     private static void initEnvironmentForPlugins() {
         initEnvironmentForPlugins(null);
     }
@@ -167,24 +188,6 @@ public class Main {
                     }
                 }
         );
-    }
-
-    private static void checkTamil() throws FileNotFoundException {
-        //The following code is to write the fallback location to the Readme_for_Tamil_Locale.txt file
-        File readmetamil = new File(AppLocation.getLocation(), "Readme_for_Tamil_Locale.txt");
-        if (!readmetamil.exists()) {
-            NULogger.getLogger().info("Writing Readme_for_Tamil_Locale.txt");
-            PrintWriter out = new PrintWriter(readmetamil);
-            out.write("If you don't use Tamil language, ignore this file."
-                    + "\r\n\r\nTamil is not one of the officially supported locale by Java. But there is a workaround for this."
-                    + "\r\n\r\nIf you wish to use Neembuu Uploader in Tamil, kindly copy the included 'LATHA.TTF' font to"
-                    + "\r\n\"<JRE_INSTALL_DIR>/jre/lib/fonts/fallback\""
-                    + "\r\n\r\nLocation to paste the fallback font for your pc is:\r\n\"" + System.getProperty("java.home") + File.separator
-                    + "lib" + File.separator + "fonts" + File.separator + "fallback"
-                    + File.separator + "\"");
-            out.close();
-            NULogger.getLogger().log(Level.INFO, "Fallback location: {0}{1}lib{2}fonts{3}fallback", new Object[]{System.getProperty("java.home"), File.separator, File.separator, File.separator});
-        }
     }
 
     private static void firstLaunchAndAccountCheck() {
@@ -231,6 +234,13 @@ public class Main {
                         return "en";//cmd version only in english! localization 
                         // would be complex to build up on cmd
                         //return NeembuuUploaderLanguages.getUserLanguageCode();
+                    }
+                },  new SuccessfulUploadsListener() {
+                    @Override public void success(Uploader u) throws Exception {
+                        System.out.println("successfully uploaded from u="+u+ 
+                                " file-"+u.getFileName()+
+                                " downloadurl="+u.getDownloadURL()+
+                                " deleteurl="+u.getDeleteURL());
                     }
                 }//,ultf
         );
@@ -309,7 +319,9 @@ public class Main {
                 }
             });
 
-    private static void work(String[] args) throws InstantiationException, IllegalAccessException, ParseException {
+    private static void work(String[] args) throws 
+            InstantiationException, IllegalAccessException, 
+            ParseException, URISyntaxException {
         Options options = new Options();
         Option file = new Option("f", true, "File to upload.");
         file.setRequired(true);
@@ -349,7 +361,7 @@ public class Main {
                 }
             }
         }
-
+        
         System.out.println("===Listing all active and non-active plugins===");
         for (SmallModuleEntry sme : pa.getAllPlugins()) {
             System.out.println(sme.getName());
@@ -366,10 +378,13 @@ public class Main {
         Class<? extends Account> aClass = up.getAccount(DummyPluginDestructionListener
                 .make(sme.getName() + "-account"));
 
+        Account a = aClass==null?null:aClass.newInstance();
+        Utils.init(hostname, a, username, password);
+        
         /*
          Call getAccounts twice because the first time is only registering the account into the manager and not returning the insance
          */
-        Account a = amw.getAccount(sme.getName());
+        //Account a = amw.getAccount(sme.getName());
         if (username != null && password != null) {
             a = amw.getAccount(sme.getName());
             a.setOverridingCredentials(username, password);

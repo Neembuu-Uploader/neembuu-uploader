@@ -42,6 +42,7 @@ public class AppLocation {
             String urlpth = src.getLocation().toString();
             urlpth = urlpth.substring(0, urlpth.lastIndexOf('/'));
             urlpth = urlpth.substring(0, urlpth.lastIndexOf('/'));
+            urlpth = urlpth.substring(0, urlpth.lastIndexOf('/')); 
             urlpth = urlpth.substring(0, urlpth.lastIndexOf('/') + 1);
             try{return Paths.get(new URL(urlpth).toURI());}
             catch(Exception a){throw new IllegalStateException(a);}

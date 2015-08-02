@@ -42,7 +42,9 @@ final class RusImpl implements Rus{
     }
     
     @Override public boolean isDirectory(String name) {
-        return Files.isDirectory(p.resolve(name));
+        Path relpth = p.resolve(name);
+        boolean  ret = Files.isDirectory(relpth);
+        return ret;
     }
 
     @Override
@@ -89,7 +91,7 @@ final class RusImpl implements Rus{
         if(name.contains(File.separator)){
             throw new IllegalArgumentException("name should be simple name, not a relative path. For name give="+name);
         }
-        return new RusImpl(p.resolve(name));
+        return new RusImpl(p.resolve(name).toAbsolutePath());
     }
 
     @Override
@@ -105,6 +107,12 @@ final class RusImpl implements Rus{
         synchronized (resources){
             resources.close();
         }
+    }
+
+    @Override
+    public String toString() {
+        return super.toString()+"{"+p.toString()
+                + "}";
     }
     
 }

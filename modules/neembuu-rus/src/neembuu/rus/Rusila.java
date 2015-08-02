@@ -85,7 +85,7 @@ public final class Rusila {
     
     public <E> E I(Class<E>interfaceDefinition){
         if(!interfaceDefinition.isInterface()){
-            throw new IllegalStateException("Only interfaces supported " + interfaceDefinition);
+            throw new IllegalStateException("Only interfaces supported " + interfaceDefinition+ r.toString());
         }
         return (E)Proxy.newProxyInstance(Rusila.class.getClassLoader(), new Class[]{interfaceDefinition}, 
                 new TypeImplementor(r,thp));
