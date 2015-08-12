@@ -122,7 +122,7 @@ public class Main {
                 = new UpdatesAndExternalPluginManager(
                         Application.getNeembuuHome(),
                         AppLocation.appLocationProvider(),
-                        sun,  new UpdateProgressCmdI());
+                        sun, null, new UpdateProgressCmdI());
         amw.uaepm(uaepm);
         PluginUtils.uaepm(uaepm);
         uaepm.initIndex();

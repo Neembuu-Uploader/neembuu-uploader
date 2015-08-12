@@ -36,7 +36,7 @@ public class UpdatesAndExternalPluginManager {
     private final Path updateLocation;
     private final AppLocationProvider alp;
     private final ShowUpdateNotification sun;
-    private final AccountsProvider ap;
+    //private final AccountsProvider ap;
     private final UpdateProgressUI upui;
     
     private volatile Index i;
@@ -46,7 +46,7 @@ public class UpdatesAndExternalPluginManager {
             ShowUpdateNotification sun,final AccountsProvider ap,
             final UpdateProgressUI upui) {
         this.updateLocation = home.resolve("external");
-        this.sun = sun; this.alp = alp; this.ap = ap;
+        this.sun = sun; this.alp = alp; //this.ap = ap;
         this.upui = upui;
     }
     
