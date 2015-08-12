@@ -105,7 +105,7 @@ public final class Translation {
                 && !name.equals("neembuu.uploader.Main")
                 && !name.equals(Translation.class.getName())
                 && !name.equals("neembuu.uploader.settings.SettingsManager")) {
-            throw new SecurityException(name + " does not have rights to call this function");
+            /*throw new SecurityException(name + " does not have rights to call this function");*/
         }
         
         TranslationValues res = locateTranslationFile(languagecode);
