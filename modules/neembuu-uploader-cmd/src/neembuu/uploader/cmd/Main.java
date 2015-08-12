@@ -339,9 +339,11 @@ public class Main {
             //+ "userName password"
             );
 
-            fileName = "F:\\tempimages\\mecon.png";
-            hostname = //"mediafire.com"; 
-                    "Solidfiles.com";
+            fileName = "F:\\tempimages\\20150802100655.jpg";
+            hostname = "mediafire.com"; 
+            //username = "shashaanktulsyan@gmail.com";
+            //password = "";
+                    //"Solidfiles.com";
             //"4Shared.com";
             System.out.println("assuming for test purpose"
                     + fileName + " and host " + hostname);
@@ -378,8 +380,8 @@ public class Main {
         Class<? extends Account> aClass = up.getAccount(DummyPluginDestructionListener
                 .make(sme.getName() + "-account"));
 
-        Account a = aClass==null?null:aClass.newInstance();
-        Utils.init(hostname, a, username, password);
+        Account a;// = aClass==null?null:aClass.newInstance();
+        
         
         /*
          Call getAccounts twice because the first time is only registering the account into the manager and not returning the insance
@@ -387,7 +389,9 @@ public class Main {
         //Account a = amw.getAccount(sme.getName());
         if (username != null && password != null) {
             a = amw.getAccount(sme.getName());
-            a.setOverridingCredentials(username, password);
+            
+            Utils.init(hostname, a, username, password);  
+            a.setOverridingCredentials(username, password); // redundant
             a.login();
             System.out.println("account = " + a);
 

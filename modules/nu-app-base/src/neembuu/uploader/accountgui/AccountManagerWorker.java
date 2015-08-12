@@ -132,8 +132,8 @@ public class AccountManagerWorker {
             }
         });
         if(accountClass!=null){
-            boolean dead = loadAccountClass(accountClass,hostname);
-            if(dead)return null;
+            boolean ok = loadAccountClass(accountClass,hostname);
+            if(!ok)return null;
         }else {
             NULogger.getLogger().log(Level.INFO, "no account for {0}", hostname);
             return null;

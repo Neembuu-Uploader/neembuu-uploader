@@ -72,7 +72,7 @@ public class Utils {
     private static AccountsProvider makeAccountsProvider(final String hostname1,final Account account){
         return new AccountsProvider() {
             @Override public Account getAccount(String hostname) {
-                if(hostname1.equals(hostname))return account;
+                if(hostname1.trim().equalsIgnoreCase(hostname.trim()))return account;
                 return null;
             }
             @Override public Account getAccount(Class<Account> accountClass) {
@@ -127,11 +127,11 @@ public class Utils {
                 return new EnableHostCallback() {
 
                     @Override public void setEnabled(boolean f) {
-                        new Throwable("this is not an error").printStackTrace();
+                        new Throwable("this is not an error, just printstack").printStackTrace();
                     }
 
                     @Override public void setSelected(boolean f) {
-                        new Throwable("this is not an error").printStackTrace();
+                        new Throwable("this is not an error, just printstack").printStackTrace();
                     }
                 };
             }
