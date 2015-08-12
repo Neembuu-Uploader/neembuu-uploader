@@ -83,7 +83,7 @@ public class Main {
         Translation/*Provider*/.init(AppLocation.appLocationProvider(),new LanguageChangedCallback() {
 
             @Override public void updateGUI() {
-                throw new IllegalStateException("gui update not required");
+                //throw new IllegalStateException("gui update not required");
             }
         },Application.getNeembuuHome());
         //NeembuuUploaderLanguages.init(AppLocation.appLocationProvider(),Application.getNeembuuHome());
@@ -122,7 +122,7 @@ public class Main {
                 = new UpdatesAndExternalPluginManager(
                         Application.getNeembuuHome(),
                         AppLocation.appLocationProvider(),
-                        sun, ap, new UpdateProgressCmdI());
+                        sun,  new UpdateProgressCmdI());
         amw.uaepm(uaepm);
         PluginUtils.uaepm(uaepm);
         uaepm.initIndex();
@@ -166,8 +166,8 @@ public class Main {
 
     private static void initEnvironmentForPlugins(MainComponent mainComponent) {
         NULogger.getLogger().info("Setting abstract uploader getaccount");
-        AbstractUploader.init(UserImpl.getUserProvider(), mainComponent,
-                ap, NeembuuUploaderProperties.getNUProperties());
+        /*AbstractUploader.init(UserImpl.getUserProvider(), mainComponent,
+                ap, NeembuuUploaderProperties.getNUProperties());*/
         AbstractAccount.init(NeembuuUploaderProperties.getNUProperties(), mainComponent,
                 new AccountSelectionUI() {
                     @Override
@@ -297,7 +297,7 @@ public class Main {
                 }
             };
 
-    private static final AccountsProvider ap
+    /*private static final AccountsProvider ap
             = new AccountsProvider() {
                 @Override
                 public Account getAccount(String hostname) {
@@ -309,7 +309,7 @@ public class Main {
                     throw new UnsupportedOperationException("this is how we could do it.");
                 }
 
-            };
+            };*/
 
     private static final PluginActivation pa
             = new PluginActivation(new PACallback() {
