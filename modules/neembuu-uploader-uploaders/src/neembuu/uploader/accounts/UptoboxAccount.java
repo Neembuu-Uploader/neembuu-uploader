@@ -60,7 +60,7 @@ public class UptoboxAccount extends AbstractAccount{
             initialize();
 
             NULogger.getLogger().info("Trying to log in to uptobox.com");
-            httpPost = new NUHttpPost("http://uptobox.com/");
+            httpPost = new NUHttpPost("https://login.uptobox.com/logarithme");
 
             List<NameValuePair> formparams = new ArrayList<NameValuePair>();
             formparams.add(new BasicNameValuePair("op", "login"));
@@ -72,16 +72,16 @@ public class UptoboxAccount extends AbstractAccount{
             httpResponse = httpclient.execute(httpPost, httpContext);
             NULogger.getLogger().info(httpResponse.getStatusLine().toString());
 
-            if (!CookieUtils.getCookieValue(httpContext, "xfss").isEmpty() && !CookieUtils.getCookieValue(httpContext, "login").isEmpty()) {
+            if (!CookieUtils.getCookieValue(httpContext, "xfss").isEmpty() /*&& !CookieUtils.getCookieValue(httpContext, "login").isEmpty()*/) {
                 EntityUtils.consume(httpResponse.getEntity());
                 loginsuccessful = true;
                 username = getUsername();
                 password = getPassword();
                 
                 //Getting user type
-                stringResponse = NUHttpClientUtils.getData("http://uptobox.com/?op=my_account", httpContext);
+                stringResponse = NUHttpClientUtils.getData("https://uptobox.com/?op=my_account", httpContext);
                 Document doc = Jsoup.parse(stringResponse);
-                String userType = doc.select(".filename").first().text();
+                String userType = doc.select(".files").first().text();
                 premium = !userType.contains("Free member");
                 
                 NULogger.getLogger().log(Level.INFO, "Uptobox premium: {0}", premium);
