@@ -8,46 +8,33 @@ import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import neembuu.uploader.accounts.ToutBoxAccount;
 import neembuu.uploader.exceptions.NUException;
-import neembuu.uploader.exceptions.uploaders.NUFileExtensionException;
 import neembuu.uploader.exceptions.uploaders.NUMaxFileSizeException;
 import neembuu.uploader.httpclient.NUHttpClient;
 import neembuu.uploader.httpclient.httprequest.NUHttpPost;
 import neembuu.uploader.interfaces.UploadStatus;
 import neembuu.uploader.interfaces.abstractimpl.AbstractUploader;
-import neembuu.uploader.uploaders.common.FileUtils;
-import neembuu.uploader.uploaders.common.StringUtils;
-import neembuu.uploader.utils.CookieUtils;
 import neembuu.uploader.utils.NUHttpClientUtils;
 import neembuu.uploader.utils.NULogger;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 /**
  *
- * @author davidepastore
+ * @author Valentin Lafranca
  */
 @SmallModule(
         exports = {ToutBox.class, ToutBoxAccount.class},
@@ -134,10 +121,14 @@ public class ToutBox extends AbstractUploader {
             JSONObject uploadJSon = new JSONObject(responseString);
             JSONObject results = (JSONObject) uploadJSon.getJSONArray("files").get(0);
             String fileId = (String) results.getString("url");
+            
             downloadlink = baseUrl + fileId;
+            deletelink = UploadStatus.NA.getLocaleSpecificString();
 
             NULogger.getLogger().log(Level.INFO, "Download link : {0}", downloadlink);
+            NULogger.getLogger().log(Level.INFO, "Delete link : {0}", deletelink);
             downURL = downloadlink;
+            delURL = deletelink;
 
             uploadFinished();
         } catch (NUException ex) {
@@ -145,15 +136,7 @@ public class ToutBox extends AbstractUploader {
             uploadInvalid();
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, e);
-
             uploadFailed();
         }
-    }
-
-    public static void main(String[] args) {
-        neembuu.uploader.paralytics_tests.GenericPluginTester.test(
-                ToutBox.class,
-                neembuu.uploader.accounts.ToutBoxAccount.class
-        );
     }
 }
