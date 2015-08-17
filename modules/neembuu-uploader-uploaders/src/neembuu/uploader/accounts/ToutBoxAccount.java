@@ -13,6 +13,7 @@ import neembuu.uploader.exceptions.accounts.NUInvalidLoginException;
 import neembuu.uploader.httpclient.NUHttpClient;
 import neembuu.uploader.httpclient.httprequest.NUHttpPost;
 import neembuu.uploader.interfaces.abstractimpl.AbstractAccount;
+import neembuu.uploader.utils.CookieUtils;
 import neembuu.uploader.utils.NUHttpClientUtils;
 import neembuu.uploader.utils.NULogger;
 import org.apache.http.Header;
@@ -33,18 +34,18 @@ import org.jsoup.nodes.Document;
  *
  * @author davidepastore
  */
-public class AllMyVideosAccount extends AbstractAccount{
-    
+public class ToutBoxAccount extends AbstractAccount{
+     
     private final HttpClient httpclient = NUHttpClient.getHttpClient();
     private HttpResponse httpResponse;
     private NUHttpPost httpPost;
     private CookieStore cookieStore;
     private String responseString;
 
-    public AllMyVideosAccount() {
-        KEY_USERNAME = "allmvdsusername";
-        KEY_PASSWORD = "allmvdspassword";
-        HOSTNAME = "AllMyVideos.net";
+    public ToutBoxAccount() {
+        KEY_USERNAME = "toutbusername";
+        KEY_PASSWORD = "toutbpassword";
+        HOSTNAME = "ToutBox.fr";
     }
 
     @Override
@@ -59,26 +60,30 @@ public class AllMyVideosAccount extends AbstractAccount{
         try {
             initialize();
 
-            NULogger.getLogger().info("Trying to log in to AllMyVideos.net");
-            httpPost = new NUHttpPost("http://allmyvideos.net");
+            NULogger.getLogger().info("Trying to log in to ToutBox.fr");
+            httpPost = new NUHttpPost("http://toutbox.fr/action/login/login");
 
             List<NameValuePair> formparams = new ArrayList<NameValuePair>();
-            formparams.add(new BasicNameValuePair("op", "login"));
-            formparams.add(new BasicNameValuePair("login", getUsername()));
-            formparams.add(new BasicNameValuePair("password", getPassword()));
-            
+            formparams.add(new BasicNameValuePair("RedirectUrl", ""));
+            formparams.add(new BasicNameValuePair("Login", getUsername()));
+            formparams.add(new BasicNameValuePair("Password", getPassword()));
+            formparams.add(new BasicNameValuePair("Redirect", "True"));
+            formparams.add(new BasicNameValuePair("FileId", "0"));
+            formparams.add(new BasicNameValuePair("__RequestVerificationToken", "undefined"));
+
+
             UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
             httpPost.setEntity(entity);
             httpResponse = httpclient.execute(httpPost, httpContext);
             NULogger.getLogger().info(httpResponse.getStatusLine().toString());
-            Header lastHeader = httpResponse.getLastHeader("Location");
-
-            if (lastHeader != null && lastHeader.getValue().contains("op=my_files")) {
+            
+            
+            if (CookieUtils.getCookieValue(httpContext, "RememberMe") != null) {
                 EntityUtils.consume(httpResponse.getEntity());
                 loginsuccessful = true;
                 username = getUsername();
                 password = getPassword();
-                NULogger.getLogger().info("AllMyVideos.net login successful!");
+                NULogger.getLogger().info("ToutBox.fr login successful!");
 
             } else {
                 //Get error message
@@ -112,8 +117,8 @@ public class AllMyVideosAccount extends AbstractAccount{
         cookieStore = new BasicCookieStore();
         httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
 
-        //NULogger.getLogger().info("Getting startup cookies & link from AllMyVideos.net");
-        //responseString = NUHttpClientUtils.getData("http://allmyvideos.net", httpContext);
+        //NULogger.getLogger().info("Getting startup cookies & link from ToutBox.fr");
+        //responseString = NUHttpClientUtils.getData("http://toutbox.fr", httpContext);
     }
     
     private void resetLogin(){

@@ -4,6 +4,7 @@
 * NU-CMD: Developed a minimalist command-line version of NU (WIP).
 * NU-CMD: Added new command-line arguments -f file, -h host, -help
 * Fixed some project property entries (changed target Java version back to 1.7).
+* Adding support for ToutBox.fr
 
 ==== v 3.4.0 ====
 * Updated Uploaded.net (now generates descriptive links instead of the short ul.to links).

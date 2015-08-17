@@ -8,10 +8,12 @@ import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import neembuu.uploader.accounts.AllMyVideosAccount;
+import neembuu.uploader.accounts.ToutBoxAccount;
 import neembuu.uploader.exceptions.NUException;
 import neembuu.uploader.exceptions.uploaders.NUFileExtensionException;
 import neembuu.uploader.exceptions.uploaders.NUMaxFileSizeException;
@@ -38,6 +40,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -46,15 +50,14 @@ import org.jsoup.nodes.Document;
  * @author davidepastore
  */
 @SmallModule(
-    exports={AllMyVideos.class,AllMyVideosAccount.class},
-    interfaces={Uploader.class,Account.class},
-    name="AllMyVideos.net",
-    ignore = true
+        exports = {ToutBox.class, ToutBoxAccount.class},
+        interfaces = {Uploader.class, Account.class},
+        name = "ToutBox.fr"
 )
-public class AllMyVideos extends AbstractUploader{
-    
-    AllMyVideosAccount allMyVideosAccount = (AllMyVideosAccount) getAccountsProvider().getAccount("AllMyVideos.net");
-    
+public class ToutBox extends AbstractUploader {
+
+    ToutBoxAccount toutBoxAccount = (ToutBoxAccount) getAccountsProvider().getAccount("ToutBox.fr");
+
     private final HttpClient httpclient = NUHttpClient.getHttpClient();
     private HttpContext httpContext = new BasicHttpContext();
     private HttpResponse httpResponse;
@@ -64,63 +67,51 @@ public class AllMyVideos extends AbstractUploader{
     private Document doc;
     private String uploadURL;
     private String userType;
-    private String sessionID = "";
-    
+    private String accNo = "";
+    private String baseUrl = "http://toutbox.fr";
     private String downloadlink = "";
     private String deletelink = "";
-    
+
     private ArrayList<String> allowedVideoExtensions = new ArrayList<String>();
 
-    public AllMyVideos() {
+    public ToutBox() {
         downURL = UploadStatus.PLEASEWAIT.getLocaleSpecificString();
-        delURL = UploadStatus.PLEASEWAIT.getLocaleSpecificString();
-        host = "AllMyVideos.net";
-        if (allMyVideosAccount.loginsuccessful) {
-            host = allMyVideosAccount.username + " | AllMyVideos.net";
+        delURL = UploadStatus.NA.getLocaleSpecificString();
+        host = "ToutBox.fr";
+        if (toutBoxAccount.loginsuccessful) {
+            host = toutBoxAccount.username + " | ToutBox.fr";
         }
-        maxFileSizeLimit = 524288000l; //500 MB
-        
+        maxFileSizeLimit = 1047527424L; // 999 MB
     }
 
     private void initialize() throws Exception {
-        responseString = NUHttpClientUtils.getData("http://allmyvideos.net/?op=upload", httpContext);
-        
+        responseString = NUHttpClientUtils.getData("http://toutbox.fr/", httpContext);
         doc = Jsoup.parse(responseString);
-        uploadURL = doc.select("form[name=file]").first().attr("action");
-        
-        String uploadId = StringUtils.uuid(12, 10);
-        
-        uploadURL += uploadId + "&X-Progress-ID=" + uploadId + "&js_on=1&utype=" + userType + "&upload_type=file";
+        accNo = doc.select("input[name=__accno]").attr("value");
+
+        httpPost = new NUHttpPost("http://toutbox.fr/action/Upload/GetUrl/");
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        mpEntity.addPart("accountId", new StringBody(accNo));
+        mpEntity.addPart("folderId", new StringBody("0"));
+        mpEntity.addPart("__RequestVerificationToken", new StringBody("undefined"));
+        httpPost.setEntity(mpEntity);
+        httpResponse = httpclient.execute(httpPost, httpContext);
+        responseString = EntityUtils.toString(httpResponse.getEntity());
+        JSONObject jSon = new JSONObject(responseString);
+
+        uploadURL = jSon.getString("Url") + "&ms=" + System.currentTimeMillis();
     }
 
     @Override
     public void run() {
         try {
-            if (allMyVideosAccount.loginsuccessful) {
-                userType = "reg";
-                httpContext = allMyVideosAccount.getHttpContext();
-                sessionID = CookieUtils.getCookieValue(httpContext, "xfss");
-                
-                if(allMyVideosAccount.isPremium()){
-                     maxFileSizeLimit = 5368709120l; //5 GB
-                }
-                else{
-                    maxFileSizeLimit = 1048576000l; //1000 MB
-                }
-                
-                
+            if (toutBoxAccount.loginsuccessful) {
+                httpContext = toutBoxAccount.getHttpContext();
+
             } else {
-                userType = "anon";
-                cookieStore = new BasicCookieStore();
-                httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
-                maxFileSizeLimit = 524288000l; //500 MB
-            }
-            
-            addExtensions();
-            
-            //Check extension
-            if(!FileUtils.checkFileExtension(allowedVideoExtensions, file)){
-                throw new NUFileExtensionException(file.getName(), host);
+                host = "ToutBox.fr";
+                uploadInvalid();
+                return;
             }
 
             if (file.length() > maxFileSizeLimit) {
@@ -129,51 +120,27 @@ public class AllMyVideos extends AbstractUploader{
             uploadInitialising();
             initialize();
 
-            
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-            mpEntity.addPart("upload_type", new StringBody("file"));
-            mpEntity.addPart("sess_id", new StringBody(sessionID));
-            mpEntity.addPart("file_0", createMonitoredFileBody());
-            mpEntity.addPart("tos", new StringBody("1"));
-            mpEntity.addPart("submit_btn", new StringBody("Upload!"));
-            httpPost.setEntity(mpEntity);
-            
+            MultipartEntity uploadMpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+            uploadMpEntity.addPart("files[]", createMonitoredFileBody());
+            httpPost.setEntity(uploadMpEntity);
+
             NULogger.getLogger().log(Level.INFO, "executing request {0}", httpPost.getRequestLine());
-            NULogger.getLogger().info("Now uploading your file into AllMyVideos.net");
+            NULogger.getLogger().info("Now uploading your file into ToutBox.fr");
             uploading();
             httpResponse = httpclient.execute(httpPost, httpContext);
-            responseString = EntityUtils.toString(httpResponse.getEntity());
-            
-            doc = Jsoup.parse(responseString);
-            final String fn = doc.select("textarea[name=fn]").first().text();
-            
-            //Read the links
             gettingLink();
-            httpPost = new NUHttpPost("http://allmyvideos.net");
-            List<NameValuePair> formparams = new ArrayList<NameValuePair>();
-            formparams.add(new BasicNameValuePair("op", "upload_result"));
-            formparams.add(new BasicNameValuePair("st", "OK"));
-            formparams.add(new BasicNameValuePair("fn", fn));
-            
-            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
-            httpPost.setEntity(entity);
-            httpResponse = httpclient.execute(httpPost, httpContext);
             responseString = EntityUtils.toString(httpResponse.getEntity());
-            
-            //FileUtils.saveInFile("AllMyVideos.html", responseString);
-            
-            doc = Jsoup.parse(responseString);
-            downloadlink = doc.select("textarea").first().val();
-            deletelink = doc.select("textarea").eq(3).val();
-            
-            NULogger.getLogger().log(Level.INFO, "Delete link : {0}", deletelink);
+            JSONObject uploadJSon = new JSONObject(responseString);
+            JSONObject results = (JSONObject) uploadJSon.getJSONArray("files").get(0);
+            String fileId = (String) results.getString("url");
+            downloadlink = baseUrl + fileId;
+
             NULogger.getLogger().log(Level.INFO, "Download link : {0}", downloadlink);
             downURL = downloadlink;
-            delURL = deletelink;
-            
+
             uploadFinished();
-        } catch(NUException ex){
+        } catch (NUException ex) {
             ex.printError();
             uploadInvalid();
         } catch (Exception e) {
@@ -182,31 +149,11 @@ public class AllMyVideos extends AbstractUploader{
             uploadFailed();
         }
     }
-    
-    
-    /**
-     * Add all the allowed extensions.
-     */
-    private void addExtensions(){
-        allowedVideoExtensions.add("3gp");
-        allowedVideoExtensions.add("3g2");
-        allowedVideoExtensions.add("asx");
-        allowedVideoExtensions.add("asf");
-        allowedVideoExtensions.add("avi");
-        allowedVideoExtensions.add("m4v");
-        allowedVideoExtensions.add("mpegts");
-        allowedVideoExtensions.add("mp4");
-        allowedVideoExtensions.add("mkv");
-        allowedVideoExtensions.add("flv");
-        allowedVideoExtensions.add("mpg");
-        allowedVideoExtensions.add("mpeg");
-        allowedVideoExtensions.add("mov");
-        allowedVideoExtensions.add("ogv");
-        allowedVideoExtensions.add("ogg");
-        allowedVideoExtensions.add("rm");
-        allowedVideoExtensions.add("wmv");
-        allowedVideoExtensions.add("webm");
-        allowedVideoExtensions.add("torrent");
+
+    public static void main(String[] args) {
+        neembuu.uploader.paralytics_tests.GenericPluginTester.test(
+                ToutBox.class,
+                neembuu.uploader.accounts.ToutBoxAccount.class
+        );
     }
-    
 }
