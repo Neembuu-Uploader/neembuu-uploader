@@ -3,12 +3,22 @@
  * and open the template in the editor.
  */
 package neembuu.uploader.uploaders;
-
+import java.net.URI;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import neembuu.uploader.accounts.SendSpaceAccount;
 import neembuu.uploader.exceptions.NUException;
 import neembuu.uploader.exceptions.uploaders.NUMaxFileSizeException;
@@ -17,14 +27,18 @@ import neembuu.uploader.httpclient.httprequest.NUHttpGet;
 import neembuu.uploader.httpclient.httprequest.NUHttpPost;
 import neembuu.uploader.interfaces.UploadStatus;
 import neembuu.uploader.interfaces.abstractimpl.AbstractUploader;
+import neembuu.uploader.uploaders.common.SSLUtils;
 import neembuu.uploader.uploaders.common.StringUtils;
 import neembuu.uploader.utils.CookieUtils;
+import neembuu.uploader.utils.NUHttpClientUtils;
 import neembuu.uploader.utils.NULogger;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
@@ -73,11 +87,69 @@ public class SendSpace extends AbstractUploader {
             //  login = true;
             host = sendSpaceAccount.username + " | SendSpace.com";
         }
+        //setupSsl();
+        //disableCertificateValidation();
     }
+    
+    public static void disableCertificateValidation() {
+        // Create a trust manager that does not validate certificate chains
+        TrustManager[] trustAllCerts = new TrustManager[] { 
+          new X509TrustManager() {
+              @Override
+            public X509Certificate[] getAcceptedIssuers() { 
+              return new X509Certificate[0]; 
+            }
+              @Override
+            public void checkClientTrusted(X509Certificate[] certs, String authType) {}
+              @Override
+            public void checkServerTrusted(X509Certificate[] certs, String authType) {}
+        }};
 
+        // Ignore differences between given hostname and certificate hostname
+        HostnameVerifier hv = new HostnameVerifier() {
+            @Override
+          public boolean verify(String hostname, SSLSession session) { 
+              return true; }
+        };
+
+        // Install the all-trusting trust manager
+        try {
+          SSLContext sc = SSLContext.getInstance("TLS");
+          sc.init(null, trustAllCerts, new SecureRandom());
+          HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+          HttpsURLConnection.setDefaultHostnameVerifier(hv);
+        } catch (Exception e) {}
+    }
+    
+        private void setupSsl() {
+        SSLSocketFactory sf = null;
+        SSLContext sslContext = null;
+
+        try {
+            sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, null, null);
+        } catch (NoSuchAlgorithmException e) {
+            NULogger.getLogger().log(Level.SEVERE, "FileCloud.io -> SSL error", e);
+        } catch (KeyManagementException e) {
+            NULogger.getLogger().log(Level.SEVERE, "FileCloud.io -> SSL error", e);
+        }
+
+        try {
+            sf = new SSLSocketFactory(sslContext, SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+            
+        } catch (Exception e) {
+            NULogger.getLogger().log(Level.SEVERE, "FileCloud.io -> SSL error", e);
+        }
+
+        Scheme scheme = new Scheme("https", 443, sf);
+        httpclient.getConnectionManager().getSchemeRegistry().register(scheme);
+    }
+        
     private void initialize() throws Exception {
         NULogger.getLogger().info("Getting startup cookie from sendspace.com");
-        httpGet = new NUHttpGet("http://www.sendspace.com/");
+        URI loginUri = new URI("https://www.sendspace.com/");
+
+        httpGet = new NUHttpGet(loginUri);
         httpResponse = httpclient.execute(httpGet, httpContext);
         stringResponse = EntityUtils.toString(httpResponse.getEntity());
         sidcookie = CookieUtils.getCookieNameValue(httpContext, "SID");
@@ -90,7 +162,7 @@ public class SendSpace extends AbstractUploader {
 
     public void getDynamicSendSpaceValues() throws Exception {
         
-        httpGet = new NUHttpGet("http://www.sendspace.com/");
+        httpGet = new NUHttpGet("https://www.sendspace.com/");
         httpResponse = httpclient.execute(httpGet, httpContext);
         stringResponse = EntityUtils.toString(httpResponse.getEntity());
         
