@@ -14,9 +14,7 @@ import neembuu.uploader.httpclient.NUHttpClient;
 import neembuu.uploader.httpclient.httprequest.NUHttpPost;
 import neembuu.uploader.interfaces.abstractimpl.AbstractAccount;
 import neembuu.uploader.utils.CookieUtils;
-import neembuu.uploader.utils.NUHttpClientUtils;
 import neembuu.uploader.utils.NULogger;
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
@@ -32,7 +30,7 @@ import org.jsoup.nodes.Document;
 
 /**
  *
- * @author davidepastore
+ * @author Valentin Lafranca
  */
 public class ToutBoxAccount extends AbstractAccount{
      
@@ -71,12 +69,10 @@ public class ToutBoxAccount extends AbstractAccount{
             formparams.add(new BasicNameValuePair("FileId", "0"));
             formparams.add(new BasicNameValuePair("__RequestVerificationToken", "undefined"));
 
-
             UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
             httpPost.setEntity(entity);
             httpResponse = httpclient.execute(httpPost, httpContext);
             NULogger.getLogger().info(httpResponse.getStatusLine().toString());
-            
             
             if (CookieUtils.getCookieValue(httpContext, "RememberMe") != null) {
                 EntityUtils.consume(httpResponse.getEntity());
@@ -109,7 +105,6 @@ public class ToutBoxAccount extends AbstractAccount{
             showWarningMessage( Translation.T().loginerror(), HOSTNAME);
             accountUIShow().setVisible(true);
         }
-
     }
 
     private void initialize() throws Exception {
@@ -126,5 +121,4 @@ public class ToutBoxAccount extends AbstractAccount{
         username = "";
         password = "";
     }
-
 }
