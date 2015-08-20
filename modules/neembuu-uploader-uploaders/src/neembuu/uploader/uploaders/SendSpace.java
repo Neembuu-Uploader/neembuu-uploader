@@ -125,13 +125,15 @@ public class SendSpace extends AbstractUploader{
             MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("PROGRESS_URL", new StringBody(progressURL));
             mpEntity.addPart("js_enabled", new StringBody("1"));
-            mpEntity.addPart("terms", new StringBody("1"));
-            mpEntity.addPart("recpemail_fcbkinput", new StringBody("recipient@email.com"));
             mpEntity.addPart("signature", new StringBody(signature));
+            mpEntity.addPart("upload_files", new StringBody(""));
             if (userType.equals("reg")) {
                 mpEntity.addPart("userid", new StringBody(userID));
                 mpEntity.addPart("folder_id", new StringBody("0"));
             }
+            mpEntity.addPart("terms", new StringBody("1"));
+            mpEntity.addPart("file[]", new StringBody(""));
+            mpEntity.addPart("description[]", new StringBody(""));
             mpEntity.addPart("upload_file[]", createMonitoredFileBody());
             httpPost.setEntity(mpEntity);
             
