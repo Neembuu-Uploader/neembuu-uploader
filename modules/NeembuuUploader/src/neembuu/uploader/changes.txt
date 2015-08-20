@@ -6,6 +6,7 @@
 * Fixed some project property entries (changed target Java version back to 1.7).
 * Added ToutBox.fr (account only).
 * Made small changes to the ToutBox.fr plugin.
+* Updated SendSpace.com (plugin re-written from scratch).
 
 ==== v 3.4.0 ====
 * Updated Uploaded.net (now generates descriptive links instead of the short ul.to links).

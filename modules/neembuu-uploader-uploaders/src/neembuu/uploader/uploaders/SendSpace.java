@@ -3,42 +3,26 @@
  * and open the template in the editor.
  */
 package neembuu.uploader.uploaders;
-import java.net.URI;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
+
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 import neembuu.uploader.accounts.SendSpaceAccount;
 import neembuu.uploader.exceptions.NUException;
 import neembuu.uploader.exceptions.uploaders.NUMaxFileSizeException;
 import neembuu.uploader.httpclient.NUHttpClient;
-import neembuu.uploader.httpclient.httprequest.NUHttpGet;
 import neembuu.uploader.httpclient.httprequest.NUHttpPost;
 import neembuu.uploader.interfaces.UploadStatus;
 import neembuu.uploader.interfaces.abstractimpl.AbstractUploader;
-import neembuu.uploader.uploaders.common.SSLUtils;
 import neembuu.uploader.uploaders.common.StringUtils;
-import neembuu.uploader.utils.CookieUtils;
 import neembuu.uploader.utils.NUHttpClientUtils;
 import neembuu.uploader.utils.NULogger;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.protocol.ClientContext;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
@@ -46,229 +30,135 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 /**
  *
- * @author Dinesh
+ * @author Paralytic
  */
 @SmallModule(
     exports={SendSpace.class,SendSpaceAccount.class},
     interfaces={Uploader.class,Account.class},
     name="SendSpace.com"
 )
-public class SendSpace extends AbstractUploader {
-
+public class SendSpace extends AbstractUploader{
+    
     SendSpaceAccount sendSpaceAccount = (SendSpaceAccount) getAccountsProvider().getAccount("SendSpace.com");
     
-    private HttpClient httpclient = NUHttpClient.getHttpClient();
+    private final HttpClient httpclient = NUHttpClient.getHttpClient();
     private HttpContext httpContext = new BasicHttpContext();
     private HttpResponse httpResponse;
     private NUHttpPost httpPost;
-    private NUHttpGet httpGet;
-    private String stringResponse;
-    
-    private String sidcookie = "", ssuicookie = "";
+    private CookieStore cookieStore;
+    private String responseString;
+    private Document doc;
+    private String uploadURL;
+    private String userType;
     private String progressURL = "";
-    private String postURL;
-    private String uploadID;
-    private String destinationDir;
-    private String signature;
-    private String userID;
-    private String uploadresponse;
-    private String downloadlink;
-    private String deletelink;
-    private long fileSizeLimit = 314572800l; //300 MB
+    private String signature = "";
+    private int formSequence = 0;
+    private String userID = "";
+    private String host = "";
+    
+    private String downloadlink = "";
+    private String deletelink = "";
 
     public SendSpace() {
-        host = "SendSpace.com";
         downURL = UploadStatus.PLEASEWAIT.getLocaleSpecificString();
         delURL = UploadStatus.PLEASEWAIT.getLocaleSpecificString();
+        host = "SendSpace.com";
         if (sendSpaceAccount.loginsuccessful) {
-            //  login = true;
             host = sendSpaceAccount.username + " | SendSpace.com";
         }
-        //setupSsl();
-        //disableCertificateValidation();
-    }
-    
-    public static void disableCertificateValidation() {
-        // Create a trust manager that does not validate certificate chains
-        TrustManager[] trustAllCerts = new TrustManager[] { 
-          new X509TrustManager() {
-              @Override
-            public X509Certificate[] getAcceptedIssuers() { 
-              return new X509Certificate[0]; 
-            }
-              @Override
-            public void checkClientTrusted(X509Certificate[] certs, String authType) {}
-              @Override
-            public void checkServerTrusted(X509Certificate[] certs, String authType) {}
-        }};
-
-        // Ignore differences between given hostname and certificate hostname
-        HostnameVerifier hv = new HostnameVerifier() {
-            @Override
-          public boolean verify(String hostname, SSLSession session) { 
-              return true; }
-        };
-
-        // Install the all-trusting trust manager
-        try {
-          SSLContext sc = SSLContext.getInstance("TLS");
-          sc.init(null, trustAllCerts, new SecureRandom());
-          HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-          HttpsURLConnection.setDefaultHostnameVerifier(hv);
-        } catch (Exception e) {}
-    }
-    
-        private void setupSsl() {
-        SSLSocketFactory sf = null;
-        SSLContext sslContext = null;
-
-        try {
-            sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, null, null);
-        } catch (NoSuchAlgorithmException e) {
-            NULogger.getLogger().log(Level.SEVERE, "FileCloud.io -> SSL error", e);
-        } catch (KeyManagementException e) {
-            NULogger.getLogger().log(Level.SEVERE, "FileCloud.io -> SSL error", e);
-        }
-
-        try {
-            sf = new SSLSocketFactory(sslContext, SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-            
-        } catch (Exception e) {
-            NULogger.getLogger().log(Level.SEVERE, "FileCloud.io -> SSL error", e);
-        }
-
-        Scheme scheme = new Scheme("https", 443, sf);
-        httpclient.getConnectionManager().getSchemeRegistry().register(scheme);
-    }
+        maxFileSizeLimit = 314572800; // 300 MB (default)
         
+    }
+
     private void initialize() throws Exception {
-        NULogger.getLogger().info("Getting startup cookie from sendspace.com");
-        URI loginUri = new URI("https://www.sendspace.com/");
-
-        httpGet = new NUHttpGet(loginUri);
-        httpResponse = httpclient.execute(httpGet, httpContext);
-        stringResponse = EntityUtils.toString(httpResponse.getEntity());
-        sidcookie = CookieUtils.getCookieNameValue(httpContext, "SID");
-        ssuicookie = CookieUtils.getCookieNameValue(httpContext, "ssui");
+        responseString = NUHttpClientUtils.getData("https://www.sendspace.com/", httpContext);
+        doc = Jsoup.parse(responseString);
         
-        NULogger.getLogger().log(Level.INFO, "sidcookie: {0}", sidcookie);
-        NULogger.getLogger().log(Level.INFO, "ssuicookie: {0}", ssuicookie);
-
-    }
-
-    public void getDynamicSendSpaceValues() throws Exception {
-        
-        httpGet = new NUHttpGet("https://www.sendspace.com/");
-        httpResponse = httpclient.execute(httpGet, httpContext);
-        stringResponse = EntityUtils.toString(httpResponse.getEntity());
-        
-        //FileUtils.saveInFile("SendSpace.html", stringResponse);
-        
-        progressURL = StringUtils.stringBetweenTwoStrings(stringResponse, "name=\"PROGRESS_URL\" value=\"", "\"", false);
-        NULogger.getLogger().log(Level.INFO, "Progress URL : {0}", progressURL);
-        String tmpDomain = progressURL.substring(0, progressURL.indexOf("progress"));
-        uploadID = progressURL.substring(progressURL.indexOf("UPLOAD_IDENTIFIER"));
-        NULogger.getLogger().log(Level.INFO, "Upload ID : {0}", uploadID);
-        destinationDir = StringUtils.stringBetweenTwoStrings(stringResponse, "var upload_form_destination_dir = '", "'", false);
-        NULogger.getLogger().log(Level.INFO, "destinationdir : {0}", destinationDir);
-        signature = StringUtils.stringBetweenTwoStrings(stringResponse, "\"signature\" value=\"", "\"", false);
-        NULogger.getLogger().log(Level.INFO, "signature : {0}", signature);
-        //\"userid\" value=\"
-        if (sendSpaceAccount.loginsuccessful) {
-            userID = StringUtils.stringBetweenTwoStrings(stringResponse, "\"userid\" value=\"", "\"", false);
-            NULogger.getLogger().log(Level.INFO, "User ID : {0}", userID);
+        if (userType.equals("reg")) {
+            formSequence = 1;
+            userID = doc.select("form").eq(formSequence).select("input[name=userid]").attr("value");
+        } else {
+            formSequence = 3;
         }
-
-        postURL = tmpDomain + "upload?SPEED_LIMIT=0&MAX_FILE_SIZE=314572800&" + uploadID + "&DESTINATION_DIR=" + destinationDir;
-        NULogger.getLogger().log(Level.INFO, "Post URL {0}", postURL);
-
-    }
-
-    private void fileUpload() throws Exception {
-        httpPost = new NUHttpPost(postURL);
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-        mpEntity.addPart("PROGRESS_URL", new StringBody(progressURL));
-        mpEntity.addPart("DESTINATION_DIR", new StringBody(destinationDir));
-        mpEntity.addPart("js_enabled", new StringBody("1"));
-        mpEntity.addPart("signature", new StringBody(signature));
-        mpEntity.addPart("upload_files", new StringBody(""));
-        if (sendSpaceAccount.loginsuccessful) {
-            mpEntity.addPart("userid", new StringBody(userID));
-        }
-
-        mpEntity.addPart("terms", new StringBody("1"));
-        mpEntity.addPart("file[]", new StringBody(""));
-        mpEntity.addPart("description[]", new StringBody(""));
-        mpEntity.addPart("upload_file[]", createMonitoredFileBody());
-        httpPost.setEntity(mpEntity);
-        NULogger.getLogger().log(Level.INFO, "executing request {0}", httpPost.getRequestLine());
-        uploading();
-        NULogger.getLogger().info("Now uploading your file into sendspace.com");
-        httpResponse = httpclient.execute(httpPost, httpContext);
-        HttpEntity resEntity = httpResponse.getEntity();
-        NULogger.getLogger().info(httpResponse.getStatusLine().toString());
-        if (resEntity != null) {
-            gettingLink();
-            uploadresponse = EntityUtils.toString(resEntity);
-        }
-//        if (resEntity != null) {
-//            resEntity.consumeContent();
-//        }
-
-
-        NULogger.getLogger().log(Level.INFO, "resp : {0}", uploadresponse);
-
-        downloadlink = StringUtils.stringBetweenTwoStrings(uploadresponse, "Download Link", "target", false);
-        deletelink = StringUtils.stringBetweenTwoStrings(uploadresponse, "Delete File Link", "target", false);
-        downloadlink = downloadlink.replaceAll("\\s+", " ");
-        deletelink = deletelink.replaceAll("\\s+", " ");
-        downloadlink = StringUtils.stringBetweenTwoStrings(downloadlink, "<a href=\"", "\"", false);
-        deletelink = StringUtils.stringBetweenTwoStrings(deletelink, "href=\"", "\"", false);
-        NULogger.getLogger().log(Level.INFO, "Download link : {0}", downloadlink);
-        NULogger.getLogger().log(Level.INFO, "Delete link : {0}", deletelink);
-        downURL = downloadlink;
-        delURL = deletelink;
-
-        uploadFinished();
-
+        
+        uploadURL = doc.select("form").eq(formSequence).attr("action");
+        signature = doc.select("form").eq(formSequence).select("input[name=signature]").attr("value");
+        progressURL = doc.select("form").eq(formSequence).select("input[name=PROGRESS_URL]").attr("value");
     }
 
     @Override
     public void run() {
         try {
             if (sendSpaceAccount.loginsuccessful) {
-                host = sendSpaceAccount.username + " | SendSpace.com";
-            } else {
-                host = "SendSpace.com";
-            }
-
-            if (file.length() > fileSizeLimit) {
-                throw new NUMaxFileSizeException(fileSizeLimit, file.getName(), sendSpaceAccount.getHOSTNAME());
-            }
-
-
-            uploadInitialising();
-            if (sendSpaceAccount.loginsuccessful) {
+                userType = "reg";
                 httpContext = sendSpaceAccount.getHttpContext();
-            }
-            else{
-                CookieStore cookieStore = new BasicCookieStore();
+                maxFileSizeLimit = 314572800; // 300 MB
+            } else {
+                userType = "anon";
+                cookieStore = new BasicCookieStore();
                 httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
-                initialize();
+                maxFileSizeLimit = 314572800; // 300 MB
             }
+
+            if (file.length() > maxFileSizeLimit) {
+                throw new NUMaxFileSizeException(maxFileSizeLimit, file.getName(), host);
+            }
+            uploadInitialising();
+            initialize();
             
-            getDynamicSendSpaceValues();
-            fileUpload();
+            // https://fs08u.sendspace.com/upload?SPEED_LIMIT=0&MAX_FILE_SIZE=314572800&UPLOAD_IDENTIFIER=x.x.x.x.0&DESTINATION_DIR=xx
+            // fs08u.sendspace.com/upload?SPEED_LIMIT=0&MAX_FILE_SIZE=314572800&UPLOAD_IDENTIFIER=x.x.x.x.0&DESTINATION_DIR=xx
+            host = StringUtils.stringStartingFromString(uploadURL, "https://");
+            // fs08u.sendspace.com
+            host = StringUtils.stringUntilString(host, "sendspace.com") + "sendspace.com";
+            
+            // https://fs08u.sendspace.com/upload?SPEED_LIMIT=0&MAX_FILE_SIZE=314572800&UPLOAD_IDENTIFIER=910609187.1440099567.3BB289C9.22.0&DESTINATION_DIR=22
+            httpPost = new NUHttpPost(uploadURL);
+            httpPost.setHeader("Host", host);
+            httpPost.setHeader("Referer", "https://www.sendspace.com/");
+            
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+            mpEntity.addPart("PROGRESS_URL", new StringBody(progressURL));
+            mpEntity.addPart("js_enabled", new StringBody("1"));
+            mpEntity.addPart("terms", new StringBody("1"));
+            mpEntity.addPart("recpemail_fcbkinput", new StringBody("recipient@email.com"));
+            mpEntity.addPart("signature", new StringBody(signature));
+            if (userType.equals("reg")) {
+                mpEntity.addPart("userid", new StringBody(userID));
+                mpEntity.addPart("folder_id", new StringBody("0"));
+            }
+            mpEntity.addPart("upload_file[]", createMonitoredFileBody());
+            httpPost.setEntity(mpEntity);
+            
+            NULogger.getLogger().log(Level.INFO, "executing request {0}", httpPost.getRequestLine());
+            NULogger.getLogger().info("Now uploading your file into SendSpace.com");
+            uploading();
+            httpResponse = httpclient.execute(httpPost, httpContext);
+            responseString = EntityUtils.toString(httpResponse.getEntity());
+            
+            doc = Jsoup.parse(responseString);
+            
+            //Read the links
+            gettingLink();
+            downloadlink = doc.select("div[class=file_description]").select("a").first().attr("href");
+            deletelink = doc.select("a[class=link]").attr("href");
+
+            NULogger.getLogger().log(Level.INFO, "Delete link : {0}", deletelink);
+            NULogger.getLogger().log(Level.INFO, "Download link : {0}", downloadlink);
+            downURL = downloadlink;
+            delURL = deletelink;
+
+            uploadFinished();
         } catch(NUException ex){
             ex.printError();
             uploadInvalid();
         } catch (Exception e) {
-            Logger.getLogger(SendSpace.class.getName()).log(Level.SEVERE, null, e);
-
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, e);
             uploadFailed();
         }
     }

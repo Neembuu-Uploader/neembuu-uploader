@@ -11,10 +11,8 @@ import neembuu.uploader.translation.Translation;
 import neembuu.uploader.exceptions.NUException;
 import neembuu.uploader.exceptions.accounts.NUInvalidLoginException;
 import neembuu.uploader.httpclient.NUHttpClient;
-import neembuu.uploader.httpclient.httprequest.NUHttpGet;
 import neembuu.uploader.httpclient.httprequest.NUHttpPost;
 import neembuu.uploader.interfaces.abstractimpl.AbstractAccount;
-import neembuu.uploader.utils.CookieUtils;
 import neembuu.uploader.utils.NULogger;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -28,22 +26,22 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import neembuu.uploader.utils.NUHttpClientUtils;
 
 /**
  *
- * @author Dinesh
+ * @author Paralytic
  */
-public class SendSpaceAccount extends AbstractAccount {
+public class SendSpaceAccount extends AbstractAccount{
     
-    private HttpClient httpclient = NUHttpClient.getHttpClient();
+    private final HttpClient httpclient = NUHttpClient.getHttpClient();
     private HttpResponse httpResponse;
     private NUHttpPost httpPost;
-    private NUHttpGet httpGet;
     private CookieStore cookieStore;
-    private String stringResponse;
-
-    private static String sidcookie = "";
-    private static String ssuicookie = "", ssalcookie = "";
+    private String responseString;
+    
+    private Document doc;
+    private String target;
 
     public SendSpaceAccount() {
         KEY_USERNAME = "ssusername";
@@ -57,110 +55,79 @@ public class SendSpaceAccount extends AbstractAccount {
         NULogger.getLogger().log(Level.INFO, "{0} account disabled", getHOSTNAME());
     }
 
-    private void initialize() throws Exception {
-        NULogger.getLogger().info("Getting startup cookie from sendspace.com");
-        httpGet = new NUHttpGet("http://www.sendspace.com/");
-        httpResponse = httpclient.execute(httpGet, httpContext);
-        stringResponse = EntityUtils.toString(httpResponse.getEntity());
-        
-        sidcookie = CookieUtils.getCookieNameValue(httpContext, "SID");
-        ssuicookie = CookieUtils.getCookieNameValue(httpContext, "ssui");
-
-        NULogger.getLogger().log(Level.INFO, "sidcookie: {0}", sidcookie);
-        NULogger.getLogger().log(Level.INFO, "ssuicookie: {0}", ssuicookie);
-
-    }
-
-    public void loginSendSpace() throws Exception {
-        loginsuccessful = false;
-
-        NULogger.getLogger().info("Trying to log in to sendspace");
-        httpPost = new NUHttpPost("http://www.sendspace.com/login.html");
-        
-        List<NameValuePair> formparams = new ArrayList<NameValuePair>();
-        formparams.add(new BasicNameValuePair("action", "login"));
-        formparams.add(new BasicNameValuePair("submit", "login"));
-        formparams.add(new BasicNameValuePair("target", "%252F"));
-        formparams.add(new BasicNameValuePair("action_type", "login"));
-        formparams.add(new BasicNameValuePair("remember", "1"));
-        formparams.add(new BasicNameValuePair("username", getUsername()));
-        formparams.add(new BasicNameValuePair("password", getPassword()));
-        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
-        httpPost.setEntity(entity);
-        httpResponse = httpclient.execute(httpPost, httpContext);
-        stringResponse = EntityUtils.toString(httpResponse.getEntity());
-
-        NULogger.getLogger().info("Getting cookies........");
-
-        if (CookieUtils.existCookie(httpContext, "ssal")) {
-            ssalcookie = CookieUtils.getCookieNameValue(httpContext, "ssal");
-            NULogger.getLogger().info(ssalcookie);
-            loginsuccessful = true;
-            username = getUsername();
-            password = getPassword();
-            NULogger.getLogger().info("SendSpace login success :)");
-        } else {
-            //Handle errors
-            String error;
-            Document doc;
-            
-            doc = Jsoup.parse(stringResponse);
-            error = doc.select("div#content div.msg").text();
-            
-            if(error.contains("Login failed. Please check your username and password.")){
-                throw new NUInvalidLoginException(getUsername(), getHOSTNAME());
-            }
-            
-            //Other errors here
-            
-            //FileUtils.saveInFile("SendSpaceAccount.html", stringResponse);
-            
-            //Generic error
-            throw new Exception("Exception in SendSpace login: "+error);
-            
-        }
-
-    }
-
-    public static String getSidcookie() {
-        return sidcookie;
-    }
-
-    public static String getSsalcookie() {
-        return ssalcookie;
-    }
-
-    public static String getSsuicookie() {
-        return ssuicookie;
-    }
-
     @Override
     public void login() {
+        loginsuccessful = false;
         try {
-            httpContext = new BasicHttpContext();
-            cookieStore = new BasicCookieStore();
-            httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
             initialize();
-            loginSendSpace();
+
+            NULogger.getLogger().info("Trying to log in to SendSpace.com");
+            httpPost = new NUHttpPost("https://www.sendspace.com/login.html");
+
+            List<NameValuePair> formparams = new ArrayList<NameValuePair>();
+            formparams.add(new BasicNameValuePair("action", "login"));
+            formparams.add(new BasicNameValuePair("action_type", "login"));
+            formparams.add(new BasicNameValuePair("submit", "login"));
+            formparams.add(new BasicNameValuePair("remember", "1"));
+            formparams.add(new BasicNameValuePair("target", target));
+            formparams.add(new BasicNameValuePair("username", getUsername()));
+            formparams.add(new BasicNameValuePair("password", getPassword()));
+            
+            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
+            httpPost.setEntity(entity);
+            httpResponse = httpclient.execute(httpPost, httpContext);
+            NULogger.getLogger().info(httpResponse.getStatusLine().toString());
+            responseString = EntityUtils.toString(httpResponse.getEntity());
+            
+            responseString = NUHttpClientUtils.getData("https://www.sendspace.com/", httpContext);
+
+            if (responseString.contains(getUsername())) {
+                EntityUtils.consume(httpResponse.getEntity());
+                loginsuccessful = true;
+                username = getUsername();
+                password = getPassword();
+                NULogger.getLogger().info("SendSpace.com login successful!");
+
+            } else {
+                //Get error message
+                responseString = EntityUtils.toString(httpResponse.getEntity());
+                //FileUtils.saveInFile("SendSpaceAccount.html", responseString);
+                Document doc = Jsoup.parse(responseString);
+                String error = doc.select(".err").first().text();
+                
+                if("Incorrect Login or Password".equals(error)){
+                    throw new NUInvalidLoginException(getUsername(), HOSTNAME);
+                }
+
+                //Generic exception
+                throw new Exception("Login error: " + error);
+            }
         } catch(NUException ex){
             resetLogin();
             ex.printError();
             accountUIShow().setVisible(true);
         } catch (Exception e) {
-            NULogger.getLogger().log(Level.SEVERE, "Error in SendSpace Login {0}", e);
             resetLogin();
+            NULogger.getLogger().log(Level.SEVERE, "{0}: {1}", new Object[]{getClass().getName(), e});
             showWarningMessage( Translation.T().loginerror(), HOSTNAME);
             accountUIShow().setVisible(true);
         }
+    }
 
+    private void initialize() throws Exception {
+        httpContext = new BasicHttpContext();
+        cookieStore = new BasicCookieStore();
+        httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+
+        NULogger.getLogger().info("Getting startup cookies & link from SendSpace.com");
+        responseString = NUHttpClientUtils.getData("https://www.sendspace.com/", httpContext);
+        doc = Jsoup.parse(responseString);
+        target = doc.select("form").eq(1).select("input[name=target]").attr("value");
     }
     
     private void resetLogin(){
         loginsuccessful = false;
         username = "";
         password = "";
-        sidcookie = "";
-        ssalcookie = "";
-        ssuicookie = "";
     }
 }
