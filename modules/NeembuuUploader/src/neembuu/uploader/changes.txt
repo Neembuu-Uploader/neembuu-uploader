@@ -8,6 +8,8 @@
 * Made small changes to the ToutBox.fr plugin.
 * Updated SendSpace.com (plugin re-written from scratch).
 * Fixed SendSpace.com (upload logic).
+* Added a new callable utility class to remove cryptography restrictions.
+* Updated SendSpace.com (cryptography restrictions removed).
 
 ==== v 3.4.0 ====
 * Updated Uploaded.net (now generates descriptive links instead of the short ul.to links).

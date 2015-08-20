@@ -27,6 +27,7 @@ import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import neembuu.uploader.utils.NUHttpClientUtils;
+import neembuu.uploader.utils.RemoveCryptographyRestrictions;
 
 /**
  *
@@ -115,6 +116,7 @@ public class SendSpaceAccount extends AbstractAccount{
     }
 
     private void initialize() throws Exception {
+        RemoveCryptographyRestrictions.removeCryptographyRestrictions();
         httpContext = new BasicHttpContext();
         cookieStore = new BasicCookieStore();
         httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);

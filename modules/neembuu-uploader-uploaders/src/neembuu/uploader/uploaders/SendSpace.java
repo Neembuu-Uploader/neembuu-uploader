@@ -32,6 +32,7 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import neembuu.uploader.utils.RemoveCryptographyRestrictions;
 
 /**
  *
@@ -59,7 +60,7 @@ public class SendSpace extends AbstractUploader{
     private String signature = "";
     private int formSequence = 0;
     private String userID = "";
-    private String host = "";
+    private String hostName = "";
     
     private String downloadlink = "";
     private String deletelink = "";
@@ -73,6 +74,7 @@ public class SendSpace extends AbstractUploader{
         }
         maxFileSizeLimit = 314572800; // 300 MB (default)
         
+        RemoveCryptographyRestrictions.removeCryptographyRestrictions();
     }
 
     private void initialize() throws Exception {
@@ -113,13 +115,13 @@ public class SendSpace extends AbstractUploader{
             
             // https://fs08u.sendspace.com/upload?SPEED_LIMIT=0&MAX_FILE_SIZE=314572800&UPLOAD_IDENTIFIER=x.x.x.x.0&DESTINATION_DIR=xx
             // fs08u.sendspace.com/upload?SPEED_LIMIT=0&MAX_FILE_SIZE=314572800&UPLOAD_IDENTIFIER=x.x.x.x.0&DESTINATION_DIR=xx
-            host = StringUtils.stringStartingFromString(uploadURL, "https://");
+            hostName = StringUtils.stringStartingFromString(uploadURL, "https://");
             // fs08u.sendspace.com
-            host = StringUtils.stringUntilString(host, "sendspace.com") + "sendspace.com";
+            hostName = StringUtils.stringUntilString(hostName, "sendspace.com") + "sendspace.com";
             
             // https://fs08u.sendspace.com/upload?SPEED_LIMIT=0&MAX_FILE_SIZE=314572800&UPLOAD_IDENTIFIER=910609187.1440099567.3BB289C9.22.0&DESTINATION_DIR=22
             httpPost = new NUHttpPost(uploadURL);
-            httpPost.setHeader("Host", host);
+            httpPost.setHeader("Host", hostName);
             httpPost.setHeader("Referer", "https://www.sendspace.com/");
             
             MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
