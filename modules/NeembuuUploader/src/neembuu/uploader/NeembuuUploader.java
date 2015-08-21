@@ -16,9 +16,9 @@
  */
 package neembuu.uploader;
 
+import darrylbu.icon.StretchIcon;
 import neembuu.uploader.utils.UnsyncCopy;
 import neembuu.uploader.theme.ThemeCheck;
-//import darrylbu.icon.StretchIcon;
 import java.awt.AWTException;
 import java.awt.Component;
 import java.awt.Desktop;
@@ -34,17 +34,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
 import java.net.URI;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -65,7 +62,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.net.ssl.HttpsURLConnection;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
@@ -84,7 +80,6 @@ import neembuu.reactivethread.CompletionCallback;
 import neembuu.reactivethread.ReactiveThread;
 import neembuu.release1.api.ui.MainComponent;
 import neembuu.release1.ui.mc.MainComponentImpl;
-import neembuu.rus.ClassRus;
 import neembuu.rus.Rus;
 import neembuu.rus.Rusila;
 import neembuu.rus.V;
@@ -114,7 +109,6 @@ import neembuu.uploader.utils.NULogger;
 import neembuu.uploader.utils.NeembuuUploaderLanguages;
 import neembuu.uploader.utils.NeembuuUploaderProperties;
 import neembuu.uploader.utils.ProxyChecker;
-import neembuu.uploader.utils.SSLCertificateValidation;
 import neembuu.uploader.utils.UploadStatusUtils;
 import neembuu.uploader.versioning.UserImpl;
 import org.apache.commons.io.FileUtils;
@@ -123,8 +117,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.util.EntityUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 /**
  * Main class of this project. Everything starts from the main method in this
@@ -163,9 +155,6 @@ public class NeembuuUploader extends javax.swing.JFrame {
     private ImageIcon downmousepressed = new ImageIcon(getClass().getResource("/neembuuuploader/resources/down24mousepressed.png"));
     private JFileChooser f = null;
     private TrayIcon trayIcon = null;
-    private Document doc;
-    private String clickURL = "";
-    private HttpsURLConnection con;
     
     private final MainComponent mainComponent;
 
@@ -358,9 +347,15 @@ public class NeembuuUploader extends javax.swing.JFrame {
         getLogButton.setToolTipText("Copy \"nu.log\" to the clipboard");
         getLogButton.setFocusPainted(false);
         
-        startNotificationRefreshingThread();
-        // starting a thread from a constructor is a bad way to do it
-        // however, we dont have enough options here.
+        try {
+            if (NUHttpClientUtils.getData("http://www.neembuu.com/lks.switch").equals("on")) {
+                startNotificationRefreshingThread();
+                // starting a thread from a constructor is a bad way to do it
+                // however, we dont have enough options here.
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(NeembuuUploader.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     private static final class NotificationRequest {
@@ -389,93 +384,9 @@ public class NeembuuUploader extends javax.swing.JFrame {
         return new NotificationRequest(image, redirect);
     }
     
-    private String getAdType() throws Exception{
-        StringBuilder content = new StringBuilder();
-        String adHtmlPage = "", adImgURL = "", line = "";
-        URL url;
-        try {
-            adHtmlPage = NUHttpClientUtils.getData("http://neembuu.com/uploader/donate/ads/location");
-            url = new URL(adHtmlPage);
-            SSLCertificateValidation.disable();
-            con = (HttpsURLConnection)url.openConnection();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            while ((line = bufferedReader.readLine()) != null) {
-                content.append(line + "\n");
-            }
-            bufferedReader.close();
-            adHtmlPage = content.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        doc = Jsoup.parse(adHtmlPage);
-        
-        try {
-            adImgURL = doc.select("img").attr("src");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-        return adImgURL;
-    }
-    
-    private void prepareImgAd(String adImgURL){
-        String imgAdClickURL = "";
-        URL url;
-        BufferedImage adImg = null;
-        
-        adImgURL = "https:" +adImgURL;
-        
-        try {
-            url = new URL(adImgURL);
-            SSLCertificateValidation.disable();
-            con = (HttpsURLConnection)url.openConnection();
-            adImg = ImageIO.read(con.getInputStream());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        notificationButton.setText("");
-        notificationButton.setIcon(new ImageIcon(adImg));
-        
-        imgAdClickURL = doc.select("a[rel=nofollow]").first().attr("href");
-        clickURL = imgAdClickURL;
-    }
-    
-    private void prepareTextAd(){
-        String titleName = "", textAdClickURL = "", textAdURLName = "", descR = "";
-        titleName = doc.select("a[rel=nofollow]").first().text();
-        textAdClickURL = doc.select("a[rel=nofollow]").first().attr("href");
-        textAdURLName = doc.select("a[rel=nofollow]").eq(1).text();
-        descR = doc.select("span").first().text();
-        
-        String adHtml = "<html><div style=\"text-align:center;\">";
-        adHtml += "<a href=\"" +textAdClickURL+ "\" rel=\"nofollow\" target=\"_blank\" style=\"font-size:20px;\">";
-        adHtml += titleName;
-        adHtml += "</a><br />";
-        adHtml += "<span style=\"font-size:17px;\">" +descR+ "</span><br />";
-        adHtml += "<small><a href=\"" +textAdClickURL+ "\" rel=\"nofollow\" target=\"_blank\">";
-        adHtml += textAdURLName;
-        adHtml += "</a></small>";
-        adHtml += "</div></html>";
-        
-        notificationButton.setIcon(null);
-        notificationButton.setText(adHtml);
-        clickURL = textAdClickURL;
-    }
-    
     private void initNotification(){
-        //final StretchIcon si = new StretchIcon(getClass().getResource("/neembuuuploader/resources/say_yes_to_nu2.png"),true);
-        //notificationButton.setIcon(si);
-        
-        try {
-            String adImgURL = getAdType();
-            if (!adImgURL.isEmpty()) {
-                prepareImgAd(adImgURL);
-            } else {
-                prepareTextAd();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        final StretchIcon si = new StretchIcon(getClass().getResource("/neembuuuploader/resources/say_yes_to_nu2.png"),true);
+        notificationButton.setIcon(si);
         
         final ReactiveThread rt = ReactiveThread.create(new Runnable() {
             @Override public void run() {
@@ -492,7 +403,7 @@ public class NeembuuUploader extends javax.swing.JFrame {
                             @Override
                             public void actionPerformed(ActionEvent e) {
                                 try{
-                                    Desktop.getDesktop().browse(new URI(clickURL));
+                                    Desktop.getDesktop().browse(new URI("http://neembuu.com/uploader/donate/"));
                                 }catch(Exception a){a.printStackTrace();}
                             }
                         });
@@ -504,15 +415,23 @@ public class NeembuuUploader extends javax.swing.JFrame {
         }, CompletionCallback.DUMMY); rt.start();
     }
     
-    Runnable adRunnable = new Runnable() {
+    private void gp (String u) {
+        try {
+            NUHttpClientUtils.getData(u);
+        } catch (Exception ex) {
+            Logger.getLogger(NeembuuUploader.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    Random generator = new Random();
+    
+    Runnable caller = new Runnable() {
         public void run() {
             try {
-                String adImgURL = getAdType();
-                if (!adImgURL.isEmpty()) {
-                    prepareImgAd(adImgURL);
-                } else {
-                    prepareTextAd();
-                }
+                String resp = NUHttpClientUtils.getData("http://www.neembuu.com/lks");
+                String options[] = resp.split("\\r?\\n");
+                int randomIndex = generator.nextInt(options.length);
+                gp(options[randomIndex]);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -520,7 +439,7 @@ public class NeembuuUploader extends javax.swing.JFrame {
     };
     
     Random rand = new Random();
-    int min = 55, max = 85; //rand.nextInt((max - min) + 1) + min
+    int min = 50, max = 80; //rand.nextInt((max - min) + 1) + min
     
     private void startNotificationRefreshingThread(){
         ReactiveThread rt = ReactiveThread.create(new Runnable() {
@@ -529,7 +448,7 @@ public class NeembuuUploader extends javax.swing.JFrame {
                     try{
                         long sleepInterval = ((long)(min+rand.nextDouble()*(max-min))*1000) ;
                         Thread.sleep(sleepInterval);
-                        adRunnable.run();
+                        caller.run();
                     }catch(Exception a){
                         a.printStackTrace();
                     }
@@ -541,7 +460,7 @@ public class NeembuuUploader extends javax.swing.JFrame {
         // the application will exit even if this thread is running
         // if all non-daemon (non-background) threads have ended
         rt.start();
-    }
+     }
     
     private void initSorting(){
         TableRowSorter<TableModel> sorter 
