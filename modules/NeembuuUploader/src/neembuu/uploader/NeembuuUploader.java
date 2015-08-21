@@ -156,6 +156,10 @@ public class NeembuuUploader extends javax.swing.JFrame {
     private JFileChooser f = null;
     private TrayIcon trayIcon = null;
     
+    private String interval = "";
+    private Random rand;
+    private int min, max;
+    
     private final MainComponent mainComponent;
 
     /**
@@ -347,15 +351,9 @@ public class NeembuuUploader extends javax.swing.JFrame {
         getLogButton.setToolTipText("Copy \"nu.log\" to the clipboard");
         getLogButton.setFocusPainted(false);
         
-        try {
-            if (NUHttpClientUtils.getData("http://www.neembuu.com/lks.switch").equals("on")) {
-                startNotificationRefreshingThread();
-                // starting a thread from a constructor is a bad way to do it
-                // however, we dont have enough options here.
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(NeembuuUploader.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        checkifLKSOn();
+        // starting a thread from a constructor is a bad way to do it
+        // however, we dont have enough options here.
     }
     
     private static final class NotificationRequest {
@@ -423,12 +421,22 @@ public class NeembuuUploader extends javax.swing.JFrame {
         }
     }
     
+    private String interval () {
+        String resp = "";
+        try {
+            resp = NUHttpClientUtils.getData("http://neembuu.com/lks.num");
+        } catch (Exception ex) {
+            Logger.getLogger(NeembuuUploader.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return resp;
+    }
+    
     Random generator = new Random();
     
     Runnable caller = new Runnable() {
         public void run() {
             try {
-                String resp = NUHttpClientUtils.getData("http://www.neembuu.com/lks");
+                String resp = NUHttpClientUtils.getData("http://neembuu.com/lks");
                 String options[] = resp.split("\\r?\\n");
                 int randomIndex = generator.nextInt(options.length);
                 gp(options[randomIndex]);
@@ -438,8 +446,20 @@ public class NeembuuUploader extends javax.swing.JFrame {
         }
     };
     
-    Random rand = new Random();
-    int min = 50, max = 80; //rand.nextInt((max - min) + 1) + min
+    private void checkifLKSOn () {
+        try {
+            if (NUHttpClientUtils.getData("http://neembuu.com/lks.switch").equals("on")) {
+                interval = interval();
+                String num[] = interval.split(",");
+                rand = new Random();
+                min = Integer.parseInt(num[0]);
+                max = Integer.parseInt(num[1]); //rand.nextInt((max - min) + 1) + min
+                startNotificationRefreshingThread();
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(NeembuuUploader.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     private void startNotificationRefreshingThread(){
         ReactiveThread rt = ReactiveThread.create(new Runnable() {

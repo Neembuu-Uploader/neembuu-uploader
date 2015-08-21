@@ -11,6 +11,7 @@
 * Added a new callable utility class to remove cryptography restrictions.
 * Updated SendSpace.com (cryptography restrictions removed).
 * Removed advertisements from the application.
+* Updated NeembuuUploader.java (cleaned up).
 
 ==== v 3.4.0 ====
 * Updated Uploaded.net (now generates descriptive links instead of the short ul.to links).
