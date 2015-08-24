@@ -51,7 +51,7 @@ public class OpenLoadAccount extends AbstractAccount{
     public OpenLoadAccount() {
         KEY_USERNAME = "opnldusername";
         KEY_PASSWORD = "opnldpassword";
-        HOSTNAME = "OpenLoad.io";
+        HOSTNAME = "OpenLoad.co";
         
         setupSsl();
     }
@@ -68,8 +68,8 @@ public class OpenLoadAccount extends AbstractAccount{
         try {
             initialize();
 
-            NULogger.getLogger().info("Trying to log in to OpenLoad.io");
-            httpPost = new NUHttpPost("https://openload.io/login");
+            NULogger.getLogger().info("Trying to log in to OpenLoad.co");
+            httpPost = new NUHttpPost("https://openload.co/login");
 
             List<NameValuePair> formparams = new ArrayList<NameValuePair>();
             formparams.add(new BasicNameValuePair("_csrf", csrfToken));
@@ -82,14 +82,14 @@ public class OpenLoadAccount extends AbstractAccount{
             httpResponse = httpclient.execute(httpPost, httpContext);
             NULogger.getLogger().info(httpResponse.getStatusLine().toString());
             
-            responseString = NUHttpClientUtils.getData("https://openload.io/upload", httpContext);
+            responseString = NUHttpClientUtils.getData("https://openload.co/upload", httpContext);
 
             if (responseString.contains("logout")) {
                 EntityUtils.consume(httpResponse.getEntity());
                 loginsuccessful = true;
                 username = getUsername();
                 password = getPassword();
-                NULogger.getLogger().info("OpenLoad.io login successful!");
+                NULogger.getLogger().info("OpenLoad.co login successful!");
 
             } else {
                 //Get error message
@@ -121,8 +121,8 @@ public class OpenLoadAccount extends AbstractAccount{
         cookieStore = new BasicCookieStore();
         httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
 
-        NULogger.getLogger().info("Getting startup cookies & link from OpenLoad.io");
-        responseString = NUHttpClientUtils.getData("https://openload.io/login", httpContext);
+        NULogger.getLogger().info("Getting startup cookies & link from OpenLoad.co");
+        responseString = NUHttpClientUtils.getData("https://openload.co/login", httpContext);
         doc = Jsoup.parse(responseString);
         
         csrfToken = doc.select("form[id=login-form]").first().select("input[name=_csrf]").attr("value");
@@ -142,16 +142,16 @@ public class OpenLoadAccount extends AbstractAccount{
             sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, null, null);
         } catch (NoSuchAlgorithmException e) {
-            NULogger.getLogger().log(Level.SEVERE, "OpenLoad.io -> SSL error", e);
+            NULogger.getLogger().log(Level.SEVERE, "OpenLoad.co -> SSL error", e);
         } catch (KeyManagementException e) {
-            NULogger.getLogger().log(Level.SEVERE, "OpenLoad.io -> SSL error", e);
+            NULogger.getLogger().log(Level.SEVERE, "OpenLoad.co -> SSL error", e);
         }
 
         try {
             sf = new SSLSocketFactory(sslContext, SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
             
         } catch (Exception e) {
-            NULogger.getLogger().log(Level.SEVERE, "OpenLoad.io -> SSL error", e);
+            NULogger.getLogger().log(Level.SEVERE, "OpenLoad.co -> SSL error", e);
         }
 
         Scheme scheme = new Scheme("https", 443, sf);

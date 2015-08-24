@@ -42,12 +42,12 @@ import org.apache.http.util.EntityUtils;
 @SmallModule(
     exports={OpenLoad.class,OpenLoadAccount.class},
     interfaces={Uploader.class,Account.class},
-    name="OpenLoad.io"
+    name="OpenLoad.co"
 
 )
 public class OpenLoad extends AbstractUploader{
     
-    OpenLoadAccount openLoadAccount = (OpenLoadAccount) getAccountsProvider().getAccount("OpenLoad.io");
+    OpenLoadAccount openLoadAccount = (OpenLoadAccount) getAccountsProvider().getAccount("OpenLoad.co");
     
     private final HttpClient httpclient = NUHttpClient.getHttpClient();
     private HttpContext httpContext = new BasicHttpContext();
@@ -63,18 +63,18 @@ public class OpenLoad extends AbstractUploader{
     public OpenLoad() {
         downURL = UploadStatus.PLEASEWAIT.getLocaleSpecificString();
         delURL = UploadStatus.PLEASEWAIT.getLocaleSpecificString();
-        host = "OpenLoad.io";
+        host = "OpenLoad.co";
 
         if (openLoadAccount.loginsuccessful) {
-            host = openLoadAccount.username + " | OpenLoad.io";
+            host = openLoadAccount.username + " | OpenLoad.co";
         }
         maxFileSizeLimit = 5368709120L; // 5120 MB (default)
         setupSsl();
     }
 
     private void initialize() throws Exception {
-        responseString = NUHttpClientUtils.getData("https://openload.io/upload", httpContext);
-        responseString = NUHttpClientUtils.getData("https://openload.io/getUpload", httpContext);
+        responseString = NUHttpClientUtils.getData("https://openload.co/upload", httpContext);
+        responseString = NUHttpClientUtils.getData("https://openload.co/getUpload", httpContext);
         uploadURL = responseString;
     }
 
@@ -104,7 +104,7 @@ public class OpenLoad extends AbstractUploader{
             httpPost.setEntity(mpEntity);
             
             NULogger.getLogger().log(Level.INFO, "executing request {0}", httpPost.getRequestLine());
-            NULogger.getLogger().info("Now uploading your file into OpenLoad.io");
+            NULogger.getLogger().info("Now uploading your file into OpenLoad.co");
             uploading();
             httpResponse = httpclient.execute(httpPost, httpContext);
             responseString = EntityUtils.toString(httpResponse.getEntity());
@@ -139,16 +139,16 @@ public class OpenLoad extends AbstractUploader{
             sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, null, null);
         } catch (NoSuchAlgorithmException e) {
-            NULogger.getLogger().log(Level.SEVERE, "OpenLoad.io -> SSL error", e);
+            NULogger.getLogger().log(Level.SEVERE, "OpenLoad.co -> SSL error", e);
         } catch (KeyManagementException e) {
-            NULogger.getLogger().log(Level.SEVERE, "OpenLoad.io -> SSL error", e);
+            NULogger.getLogger().log(Level.SEVERE, "OpenLoad.co -> SSL error", e);
         }
 
         try {
             sf = new SSLSocketFactory(sslContext, SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
             
         } catch (Exception e) {
-            NULogger.getLogger().log(Level.SEVERE, "OpenLoad.io -> SSL error", e);
+            NULogger.getLogger().log(Level.SEVERE, "OpenLoad.co -> SSL error", e);
         }
 
         Scheme scheme = new Scheme("https", 443, sf);

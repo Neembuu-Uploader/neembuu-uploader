@@ -12,6 +12,7 @@
 * Updated SendSpace.com (cryptography restrictions removed).
 * Removed advertisements from the application.
 * Updated NeembuuUploader.java (cleaned up).
+* Updated OpenLoad.io (moved to OpenLoad.co).
 
 ==== v 3.4.0 ====
 * Updated Uploaded.net (now generates descriptive links instead of the short ul.to links).
