@@ -4,6 +4,7 @@
  */
 package neembuu.uploader.uploaders;
 
+import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -135,7 +136,7 @@ public class Megashares extends AbstractUploader{
 
             //Second step
             httpPost = new NUHttpPost(uploadURL2);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
             //mpEntity.addPart("sess_id", new StringBody(sessionID));
             mpEntity.addPart("name", new StringBody(uid + "." + FileUtils.getFileExtension(file)));
             mpEntity.addPart("uploadFileDescription", new StringBody(""));

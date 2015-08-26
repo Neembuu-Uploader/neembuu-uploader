@@ -4,6 +4,7 @@
  */
 package neembuu.uploader.uploaders;
 
+import java.nio.charset.Charset;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import shashaank.smallmodule.SmallModule;
@@ -99,7 +100,7 @@ public class OpenLoad extends AbstractUploader{
             initialize();
             
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
             mpEntity.addPart("file1", createMonitoredFileBody());
             httpPost.setEntity(mpEntity);
             

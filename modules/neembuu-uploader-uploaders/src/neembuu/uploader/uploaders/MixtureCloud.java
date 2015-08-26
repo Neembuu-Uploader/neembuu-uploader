@@ -4,6 +4,7 @@
  */
 package neembuu.uploader.uploaders;
 
+import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -104,7 +105,7 @@ public class MixtureCloud extends AbstractUploader implements UploaderAccountNec
         NULogger.getLogger().log(Level.INFO, "uploadUrl is {0}", uploadUrl);
         
         httpPost = new NUHttpPost(uploadUrl);
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
         mpEntity.addPart("cmd", new StringBody("upload"));
         mpEntity.addPart("target", new StringBody("mcm1_MA"));
         mpEntity.addPart("upload[]", createMonitoredFileBody());

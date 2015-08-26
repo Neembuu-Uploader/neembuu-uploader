@@ -4,6 +4,7 @@
  */
 package neembuu.uploader.uploaders;
 
+import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -113,7 +114,7 @@ public class FileJoker extends AbstractUploader implements UploaderAccountNecess
             //https://fs01.filejoker.net/upload/2/?X-Progress-ID=8426262479780
             
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
             mpEntity.addPart("upload_type", new StringBody("file"));
             mpEntity.addPart("srv_id", new StringBody(srv_id));
             mpEntity.addPart("sess_id", new StringBody(sess_id));

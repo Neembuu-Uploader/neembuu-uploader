@@ -4,9 +4,7 @@
  */
 package neembuu.uploader.uploaders;
 
-import shashaank.smallmodule.SmallModule;
-import neembuu.uploader.interfaces.Uploader;
-import neembuu.uploader.interfaces.Account;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -17,7 +15,9 @@ import neembuu.uploader.exceptions.uploaders.NUFileExtensionException;
 import neembuu.uploader.exceptions.uploaders.NUMaxFileSizeException;
 import neembuu.uploader.httpclient.NUHttpClient;
 import neembuu.uploader.httpclient.httprequest.NUHttpPost;
+import neembuu.uploader.interfaces.Account;
 import neembuu.uploader.interfaces.UploadStatus;
+import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.abstractimpl.AbstractUploader;
 import neembuu.uploader.uploaders.common.FileUtils;
 import neembuu.uploader.uploaders.common.StringUtils;
@@ -40,6 +40,7 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import shashaank.smallmodule.SmallModule;
 
 /**
  *
@@ -131,7 +132,7 @@ public class AllMyVideos extends AbstractUploader{
 
             
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
             mpEntity.addPart("upload_type", new StringBody("file"));
             mpEntity.addPart("sess_id", new StringBody(sessionID));
             mpEntity.addPart("file_0", createMonitoredFileBody());

@@ -10,6 +10,7 @@ import neembuu.uploader.interfaces.Account;
 import java.io.BufferedReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.logging.Level;
 import neembuu.uploader.accounts.RapidGatorAccount;
@@ -138,7 +139,7 @@ public class RapidGator extends AbstractUploader implements UploaderAccountNeces
                 httppost.setHeader("Cookie", rapidGatorAccount.getLoginCookie());
             }
             */
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
             mpEntity.addPart("file", createMonitoredFileBody());
             httpPost.setEntity(mpEntity);
 //            NULogger.getLogger().info("executing request " + httppost.getRequestLine());

@@ -4,6 +4,7 @@
  */
 package neembuu.uploader.uploaders;
 
+import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -112,7 +113,7 @@ public class GoFourUp extends AbstractUploader{
                 responseString = NUHttpClientUtils.getData("http://go4up.com/api/getserver.php", httpContext);
                 
                 httpPost = new NUHttpPost(responseString);
-                MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+                MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
                 mpEntity.addPart("user", new StringBody(goFourUpAccount.username));
                 mpEntity.addPart("pass", new StringBody(goFourUpAccount.password));
                 mpEntity.addPart("filedata", createMonitoredFileBody());
@@ -143,7 +144,7 @@ public class GoFourUp extends AbstractUploader{
                 // http://u5.go4up.com/cgi-bin/upload.cgi
                 // http://u5.go4up.com/cgi-bin/upload.cgi?upload_id=509765818554&js_on=1&xpass=&xmode=1
                 httpPost = new NUHttpPost(uploadURL);
-                MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+                MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
                 mpEntity.addPart("uploadID", new StringBody(upload_id));
                 mpEntity.addPart("id_user", new StringBody(id_user));
                 mpEntity.addPart("server", new StringBody(server));

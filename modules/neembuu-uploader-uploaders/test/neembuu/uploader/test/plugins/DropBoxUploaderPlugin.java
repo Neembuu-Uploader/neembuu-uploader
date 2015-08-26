@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import org.apache.http.HttpEntity;
@@ -256,7 +257,7 @@ public class DropBoxUploaderPlugin {
         httppost.setHeader("Content-Type", "text/html");
 
 
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
         ContentBody cbFile = new FileBody(binaryFile);
 
 

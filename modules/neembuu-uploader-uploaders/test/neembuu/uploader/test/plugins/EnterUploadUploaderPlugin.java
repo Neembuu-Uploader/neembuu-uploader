@@ -12,6 +12,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import org.apache.http.HttpEntity;
@@ -217,7 +218,7 @@ public class EnterUploadUploaderPlugin {
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(postURL);
         file = new File("h:/UploadingdotcomUploaderPlugin.java");
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
         ContentBody cbFile = new FileBody(file);
         mpEntity.addPart("upload_type", new StringBody("file"));
         mpEntity.addPart("sess_id", new StringBody(sessid));

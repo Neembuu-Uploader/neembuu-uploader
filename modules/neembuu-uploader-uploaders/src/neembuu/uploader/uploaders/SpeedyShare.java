@@ -8,6 +8,7 @@ import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -136,7 +137,7 @@ public class SpeedyShare extends AbstractUploader {
 
     private void fileUpload() throws IOException {
         httpPost = new NUHttpPost(uploadURL);
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
         mpEntity.addPart("upload", createMonitoredFileBody());
         httpPost.setEntity(mpEntity);
         NULogger.getLogger().log(Level.INFO, "executing request {0}", httpPost.getRequestLine());

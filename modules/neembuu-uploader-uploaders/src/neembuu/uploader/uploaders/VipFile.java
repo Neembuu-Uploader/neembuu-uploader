@@ -30,6 +30,7 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.Random;
 
@@ -107,7 +108,7 @@ public class VipFile extends AbstractUploader implements UploaderAccountNecessar
             URL url = new URL(uploadURL);
             URI uri = url.toURI();
             httpPost = new NUHttpPost(uri);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
             mpEntity.addPart("MAX_FILE_SIZE", new StringBody("2147483647"));
             mpEntity.addPart("owner", new StringBody(vipFileAccount.username));
             mpEntity.addPart("pin", new StringBody(vip_pin));

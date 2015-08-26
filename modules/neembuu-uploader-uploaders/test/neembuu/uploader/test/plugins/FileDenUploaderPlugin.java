@@ -4,11 +4,8 @@
  */
 package neembuu.uploader.test.plugins;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -62,7 +59,7 @@ public class FileDenUploaderPlugin {
         HttpPost httppost = new HttpPost("http://www.fileden.com/upload_old.php");
         httppost.setHeader("Cookie", cookies.toString());
         file = new File("C:\\Documents and Settings\\dinesh\\Desktop\\ImageShackUploaderPlugin.java");
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
         ContentBody cbFile = new FileBody(file);
         mpEntity.addPart("Filename", new StringBody(file.getName()));
         mpEntity.addPart("action", new StringBody("upload"));

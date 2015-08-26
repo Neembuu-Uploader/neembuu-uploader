@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -156,7 +157,7 @@ public class SendSpaceUploaderPlugin {
         HttpPost httppost = new HttpPost(postURL);
         httppost.setHeader("Cookie", sidcookie + ";" + ssuicookie);
         file = new File("/home/vigneshwaran/Downloads/DropBoxUploaderPlugin.java");
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
         ContentBody cbFile = new FileBody(file);
         mpEntity.addPart("PROGRESS_URL", new StringBody(progressURL));
         mpEntity.addPart("DESTINATION_DIR", new StringBody(destinationDir));

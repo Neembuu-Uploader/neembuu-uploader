@@ -4,6 +4,7 @@
  */
 package neembuu.uploader.uploaders;
 
+import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -92,7 +93,7 @@ public class BayFiles extends AbstractUploader {
     private void fileUpload() throws Exception {
 
         HttpPost httpPost = new HttpPost(postURL);
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
         mpEntity.addPart("file", createMonitoredFileBody());
         httpPost.setEntity(mpEntity);
         NULogger.getLogger().log(Level.INFO, "executing request {0}", httpPost.getRequestLine());

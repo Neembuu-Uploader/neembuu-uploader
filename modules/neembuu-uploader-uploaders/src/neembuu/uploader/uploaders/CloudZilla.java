@@ -4,6 +4,7 @@
  */
 package neembuu.uploader.uploaders;
 
+import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -114,7 +115,7 @@ public class CloudZilla extends AbstractUploader implements UploaderAccountNeces
             
             // http://u1.cloudzilla.to/server_process_upload.php?l=en
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
             mpEntity.addPart("folder", new StringBody(folder));
             mpEntity.addPart("uid", new StringBody(uid));
             mpEntity.addPart("user_hash", new StringBody(user_hash));

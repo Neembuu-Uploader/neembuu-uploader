@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import neembuu.uploader.translation.Translation;
@@ -139,7 +140,7 @@ public class Badongo extends AbstractUploader {
             postURL = "http://upload.badongo.com/mpu_upload.php";
         }
         HttpPost httppost = new HttpPost(postURL);
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
         mpEntity.addPart("Filename", new StringBody(file.getName()));
         if (badongoAccount.loginsuccessful) {
             mpEntity.addPart("PHPSESSID", new StringBody(dataid));

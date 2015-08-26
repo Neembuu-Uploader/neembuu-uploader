@@ -4,6 +4,7 @@
  */
 package neembuu.uploader.uploaders;
 
+import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import java.util.logging.Level;
@@ -86,7 +87,7 @@ public class LoadTo extends AbstractUploader{
             initialize();
 
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
             mpEntity.addPart("imbedded_progress_bar", new StringBody("0"));
             mpEntity.addPart("upload_range", new StringBody("1"));
             mpEntity.addPart("email", new StringBody(""));

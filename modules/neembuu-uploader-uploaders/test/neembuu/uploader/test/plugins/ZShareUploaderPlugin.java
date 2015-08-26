@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -84,7 +85,7 @@ public class ZShareUploaderPlugin {
         if (login) {
             httppost.setHeader("Cookie", xfsscookie);
         }
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
         mpEntity.addPart("fn", new StringBody(fnvalue));
         mpEntity.addPart("op", new StringBody("upload_result"));
         mpEntity.addPart("st", new StringBody("OK"));
@@ -118,7 +119,7 @@ public class ZShareUploaderPlugin {
         httppost.setHeader("Cookie", xfsscookie);
 
         file = new File("/home/vigneshwaran/VIGNESH/naruto.txt");
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
         ContentBody cbFile = new FileBody(file);
         //mpEntity.addPart("sess_id", new StringBody(xfsscookie.replaceAll("xfss=", "")));
         mpEntity.addPart("file_0", cbFile);

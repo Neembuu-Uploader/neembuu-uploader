@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -91,7 +92,7 @@ public class CrockoUploaderPlugin {
 //        httppost.setHeader("Host", "upload.crocko.com");
 //        httppost.setHeader("User-Agent", "Shockwave Flash");
         file = new File("C:\\Documents and Settings\\dinesh\\Desktop\\MegaUploadUploaderPlugin.java");
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
         ContentBody cbFile = new FileBody(file);
         mpEntity.addPart("Filename", new StringBody(file.getName()));
         if (login) {

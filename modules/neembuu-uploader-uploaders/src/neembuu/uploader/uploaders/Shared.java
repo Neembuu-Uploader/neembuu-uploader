@@ -4,6 +4,7 @@
  */
 package neembuu.uploader.uploaders;
 
+import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -102,7 +103,7 @@ public class Shared extends AbstractUploader implements UploaderAccountNecessary
             httpPost.setHeader("X-CSRF-TOKEN", authenticity_token);
             httpPost.setHeader("X-Requested-With", "XMLHttpRequest");
             
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
             mpEntity.addPart("files[]", createMonitoredFileBody());
             httpPost.setEntity(mpEntity);
             

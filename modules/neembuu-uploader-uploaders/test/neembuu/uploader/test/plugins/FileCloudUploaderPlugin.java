@@ -7,6 +7,7 @@ package neembuu.uploader.test.plugins;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -106,7 +107,7 @@ public class FileCloudUploaderPlugin {
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(uploadURL);
         file = new File("/home/vigneshwaran/VIGNESH/Obito-Tobi.jpg");
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
         ContentBody cbFile = new FileBody(file);
         mpEntity.addPart("akey", new StringBody(apiKey));
 

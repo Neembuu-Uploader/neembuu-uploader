@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -68,7 +69,7 @@ public class MegaShareUploaderPlugin {
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(postURL);
         file = new File("h:/UploadingdotcomUploaderPlugin.java");
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
         ContentBody cbFile = new FileBody(file);
         mpEntity.addPart("emai", new StringBody("Free"));
         mpEntity.addPart("upload_range", new StringBody("1"));

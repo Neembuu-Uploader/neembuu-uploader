@@ -4,6 +4,7 @@
  */
 package neembuu.uploader.uploaders;
 
+import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -13,7 +14,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.JOptionPane;
 import neembuu.uploader.translation.Translation;
 import neembuu.uploader.accounts.FreakShareAccount;
 import neembuu.uploader.exceptions.NUException;
@@ -23,7 +23,6 @@ import neembuu.uploader.httpclient.httprequest.NUHttpPost;
 import neembuu.uploader.interfaces.UploadStatus;
 import neembuu.uploader.interfaces.abstractimpl.AbstractUploader;
 import neembuu.uploader.uploaders.common.CommonUploaderTasks;
-import neembuu.uploader.uploaders.common.FileUtils;
 import neembuu.uploader.uploaders.common.FormBodyPartUtils;
 import neembuu.uploader.utils.CookieUtils;
 import neembuu.uploader.utils.NUHttpClientUtils;
@@ -139,7 +138,7 @@ public class FreakShare extends AbstractUploader {
 
             
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
             mpEntity.addPart("APC_UPLOAD_PROGRESS", new StringBody(progressKey));
             mpEntity.addPart("APC_UPLOAD_USERGROUP", new StringBody(userGroupKey));
             mpEntity.addPart("UPLOAD_IDENTIFIER", new StringBody(uploadIdentifier));

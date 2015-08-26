@@ -9,8 +9,8 @@ import neembuu.uploader.interfaces.Uploader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.logging.Level;
-import neembuu.uploader.exceptions.NUException;
 import neembuu.uploader.exceptions.uploaders.NUMaxFileSizeException;
 import neembuu.uploader.httpclient.NUHttpClient;
 import neembuu.uploader.httpclient.httprequest.NUHttpPost;
@@ -63,7 +63,7 @@ public class ShareSend extends AbstractUploader {
         //NULogger.getLogger().log(Level.INFO, "Content type: {0}", contentType);
         
         httpPost = new NUHttpPost("http://sharesend.com/api/get_upload_url");
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
         mpEntity.addPart("name", new StringBody(file.getName()));
         mpEntity.addPart("content_type", new StringBody(contentType));
         mpEntity.addPart("size", new StringBody(Long.toString(file.length())));

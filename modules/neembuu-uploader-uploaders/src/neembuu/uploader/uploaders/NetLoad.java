@@ -8,6 +8,7 @@ import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import neembuu.uploader.accounts.NetLoadAccount;
@@ -171,7 +172,7 @@ public class NetLoad extends AbstractUploader {
 
             httpPost = new NUHttpPost(postURL);
 
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
             if (netLoadAccount.loginsuccessful) {
                 mpEntity.addPart("upload_hash", new StringBody(upload_hash));
             }

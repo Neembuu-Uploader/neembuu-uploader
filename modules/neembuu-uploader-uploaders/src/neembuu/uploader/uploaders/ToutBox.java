@@ -4,6 +4,7 @@
  */
 package neembuu.uploader.uploaders;
 
+import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -77,7 +78,7 @@ public class ToutBox extends AbstractUploader {
         accNo = doc.select("input[name=__accno]").attr("value");
 
         httpPost = new NUHttpPost("http://toutbox.fr/action/Upload/GetUrl/");
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
         mpEntity.addPart("accountId", new StringBody(accNo));
         mpEntity.addPart("folderId", new StringBody("0"));
         mpEntity.addPart("__RequestVerificationToken", new StringBody("undefined"));

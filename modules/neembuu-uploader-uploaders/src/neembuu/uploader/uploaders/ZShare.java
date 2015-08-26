@@ -4,6 +4,7 @@ import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -16,7 +17,6 @@ import neembuu.uploader.httpclient.httprequest.NUHttpGet;
 import neembuu.uploader.httpclient.httprequest.NUHttpPost;
 import neembuu.uploader.interfaces.UploadStatus;
 import neembuu.uploader.interfaces.abstractimpl.AbstractUploader;
-import neembuu.uploader.uploaders.common.FileUtils;
 import neembuu.uploader.uploaders.common.StringUtils;
 import neembuu.uploader.utils.NULogger;
 import org.apache.http.HttpEntity;
@@ -89,7 +89,7 @@ public class ZShare extends AbstractUploader {
         }
         NULogger.getLogger().log(Level.INFO, "Upload link: {0}", zshareuploadlink);
 
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
         mpEntity.addPart("upload_type", new StringBody("file"));
         mpEntity.addPart("sess_id", new StringBody(zShareAccount.getXfsscookie().replaceAll("xfss=", "")));
         mpEntity.addPart("file_0", createMonitoredFileBody());

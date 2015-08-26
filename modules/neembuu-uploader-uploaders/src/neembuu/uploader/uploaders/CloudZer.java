@@ -4,6 +4,7 @@
  */
 package neembuu.uploader.uploaders;
 
+import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -93,7 +94,7 @@ public class CloudZer extends AbstractUploader implements UploaderAccountNecessa
             
             uploading();
             httpPost = new NUHttpPost(uploadUrl);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
             mpEntity.addPart("Filename", new StringBody(file.getName()));
             mpEntity.addPart("Filedata", createMonitoredFileBody());
             mpEntity.addPart("Upload", new StringBody("Submit Query"));

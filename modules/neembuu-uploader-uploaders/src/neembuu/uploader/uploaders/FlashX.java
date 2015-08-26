@@ -4,6 +4,7 @@
  */
 package neembuu.uploader.uploaders;
 
+import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -129,7 +130,7 @@ public class FlashX extends AbstractUploader implements UploaderAccountNecessary
             uploadURL += uploadid_s + "&disk_id=" + disk_id;
             // http://u03.flashx.tv/upload/01?X-Progress-ID=044716963128&disk_id=01
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
             mpEntity.addPart("utype", new StringBody(userType));
             mpEntity.addPart("sess_id", new StringBody(sessionID));
             mpEntity.addPart("srv_id", new StringBody(srv_id));

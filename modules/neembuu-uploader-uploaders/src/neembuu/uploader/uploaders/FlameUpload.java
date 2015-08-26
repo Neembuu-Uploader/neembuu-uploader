@@ -11,9 +11,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.logging.Level;
-import javax.swing.JOptionPane;
 import neembuu.uploader.translation.Translation;
 import neembuu.uploader.interfaces.UploadStatus;
 import neembuu.uploader.interfaces.abstractimpl.AbstractUploader;
@@ -125,7 +125,7 @@ public class FlameUpload extends AbstractUploader {
         HttpPost httppost = new HttpPost("http://flameupload.com/cgi/ubr_upload.pl?upload_id=" + uploadid);
 
 
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
         mpEntity.addPart("upfile_0", createMonitoredFileBody());
         mpEntity.addPart("uploaded", new StringBody("on"));
         mpEntity.addPart("wupload", new StringBody("on"));

@@ -11,15 +11,14 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import javax.swing.JOptionPane;
 import neembuu.uploader.translation.Translation;
 import neembuu.uploader.accounts.UGotFileAccount;
 import neembuu.uploader.interfaces.UploadStatus;
 import neembuu.uploader.interfaces.abstractimpl.AbstractUploader;
-import neembuu.uploader.uploaders.common.CommonUploaderTasks;
 import neembuu.uploader.uploaders.common.StringUtils;
 import neembuu.uploader.utils.NULogger;
 import org.apache.http.HttpResponse;
@@ -96,7 +95,7 @@ public class UGotFile extends AbstractUploader {
 
         DefaultHttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(postURL);
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
         mpEntity.addPart("Filename", new StringBody(file.getName()));
         mpEntity.addPart("Filedata", createMonitoredFileBody());
 //        mpEntity.addPart("server", new StringBody(server));
