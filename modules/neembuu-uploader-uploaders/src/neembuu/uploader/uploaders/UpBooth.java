@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -22,6 +21,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
@@ -61,7 +61,7 @@ public class UpBooth extends AbstractUploader {
             httpContext = upBoothAccount.getHttpContext();
         }
         
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
         
 
         

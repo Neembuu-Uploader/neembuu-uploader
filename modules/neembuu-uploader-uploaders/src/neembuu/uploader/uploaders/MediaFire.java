@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -99,7 +98,7 @@ public class MediaFire extends AbstractUploader implements UploaderAccountNecess
             initialize();
             
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("Filedata", createMonitoredFileBody());
             httpPost.setEntity(mpEntity);
             

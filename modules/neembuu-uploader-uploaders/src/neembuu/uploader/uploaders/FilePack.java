@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -98,7 +97,7 @@ public class FilePack extends AbstractUploader implements UploaderAccountNecessa
             
             // http://s6.filepack.pl/core/page/ajax/file_upload_handler.ajax.php?r=filepack.pl&p=http&csaKey1=somestring&csaKey2=somestring
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("cTracker", new StringBody(cTracker));
             mpEntity.addPart("_sessionid", new StringBody(sessionID));
             mpEntity.addPart("maxChunkSize", new StringBody(maxChunkSize));

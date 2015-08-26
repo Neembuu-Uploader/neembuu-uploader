@@ -12,14 +12,15 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import javax.swing.JOptionPane;
 import neembuu.uploader.translation.Translation;
 import neembuu.uploader.accounts.UploadBoxAccount;
 import neembuu.uploader.interfaces.UploadStatus;
 import neembuu.uploader.interfaces.abstractimpl.AbstractUploader;
+import neembuu.uploader.uploaders.common.CommonUploaderTasks;
 import neembuu.uploader.uploaders.common.StringUtils;
 import neembuu.uploader.utils.NULogger;
 import org.apache.http.HttpResponse;
@@ -123,7 +124,7 @@ public class UploadBox extends AbstractUploader {
         } else {
             httppost.setHeader("Cookie", sidcookie);
         }
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
         mpEntity.addPart("filepc", createMonitoredFileBody());
         mpEntity.addPart("server", new StringBody(server));
         httppost.setEntity(mpEntity);

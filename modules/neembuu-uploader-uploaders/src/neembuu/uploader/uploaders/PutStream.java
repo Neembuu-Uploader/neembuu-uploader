@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -125,7 +124,7 @@ public class PutStream extends AbstractUploader implements UploaderAccountNecess
             // http://103.43.94.4/upload/01?upload_id=
             // http://103.43.94.4/upload/01?X-Progress-ID=874304335248&disk_id=01
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("utype", new StringBody("reg"));
             mpEntity.addPart("sess_id", new StringBody(sessionID));
             //mpEntity.addPart("srv_tmp_url", new StringBody(srv_tmp_url));

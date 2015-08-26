@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -108,7 +107,7 @@ public class DropVideo extends AbstractUploader implements UploaderAccountNecess
             
             // http://213.163.67.175/cgi-bin/upload.cgi?upload_id=178986301204&utype=reg&disk_id=01
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("doupload", new StringBody("1"));
             mpEntity.addPart("user_hash", new StringBody(user_hash));
             mpEntity.addPart("files", createMonitoredFileBody());

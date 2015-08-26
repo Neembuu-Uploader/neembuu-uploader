@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -19,6 +18,7 @@ import neembuu.uploader.httpclient.NUHttpClient;
 import neembuu.uploader.httpclient.httprequest.NUHttpPost;
 import neembuu.uploader.interfaces.UploadStatus;
 import neembuu.uploader.interfaces.abstractimpl.AbstractUploader;
+import neembuu.uploader.utils.CookieUtils;
 import neembuu.uploader.utils.NUHttpClientUtils;
 import neembuu.uploader.utils.NULogger;
 import org.apache.http.HttpResponse;
@@ -37,6 +37,7 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import neembuu.uploader.uploaders.common.StringUtils;
 import java.util.Random;
 
 /**
@@ -118,7 +119,7 @@ public class UploadBoy extends AbstractUploader{
             uploadURL += uploadid_s + "&js_on=1&utype=" + userType + "&upload_type=file";
             // http://filevice.com/cgi-bin/upload.cgi?upload_id=080464290989&js_on=1&utype=anon&upload_type=file
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("upload_type", new StringBody("file"));
             mpEntity.addPart("sess_id", new StringBody(sessionID));
             mpEntity.addPart("srv_tmp_url", new StringBody(srv_tmp_url));

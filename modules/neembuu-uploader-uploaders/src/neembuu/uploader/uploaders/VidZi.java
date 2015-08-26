@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -129,7 +128,7 @@ public class VidZi extends AbstractUploader implements UploaderAccountNecessary{
             // http://95.211.148.75/cgi-bin/upload.cgi?upload_id=
             // http://95.211.148.75/cgi-bin/upload.cgi?upload_id=075265058821&utype=reg&disk_id=01
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("upload_type", new StringBody("file"));
             mpEntity.addPart("sess_id", new StringBody(sessionID));
             mpEntity.addPart("srv_tmp_url", new StringBody(srv_tmp_url));

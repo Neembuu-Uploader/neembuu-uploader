@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -151,7 +150,7 @@ public class DivShareUploaderPlugin {
         HttpPost httppost = new HttpPost(downURL + "cgi-bin/upload.cgi?sid=" + sid);
 
 
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
         ContentBody cbFile = new FileBody(file);
         mpEntity.addPart("file[0]", cbFile);
 

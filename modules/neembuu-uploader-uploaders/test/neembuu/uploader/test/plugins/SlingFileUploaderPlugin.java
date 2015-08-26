@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -146,7 +145,7 @@ public class SlingFileUploaderPlugin {
         HttpPost httppost = new HttpPost(postURL);
 
 
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
         ContentBody cbFile = new FileBody(file);
         mpEntity.addPart("Filename", new StringBody(file.getName()));
         mpEntity.addPart("ssd", new StringBody(ssd));

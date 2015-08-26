@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.Charset;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
@@ -90,7 +89,7 @@ public class BayFilesUploaderPlugin {
         DefaultHttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(postURL);
         file = new File("/home/vigneshwaran/Documents/TNEB Online Payment 3.pdf");
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
         ContentBody cbFile = new FileBody(file);
         mpEntity.addPart("file", cbFile);
         httppost.setEntity(mpEntity);

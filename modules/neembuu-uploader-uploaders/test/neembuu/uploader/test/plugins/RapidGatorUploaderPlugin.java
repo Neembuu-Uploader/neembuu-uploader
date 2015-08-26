@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -105,7 +104,7 @@ public class RapidGatorUploaderPlugin {
         HttpPost httppost = new HttpPost(uploadURL);
         httppost.setHeader("Cookie", loginCookie.toString());
         file = new File("/media/backup/Projects/NU/NeembuuUploader/test/neembuuuploader/test/plugins/RapidShareUploaderPlugin.java");
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
         ContentBody cbFile = new FileBody(file);
         mpEntity.addPart("file", cbFile);
         httppost.setEntity(mpEntity);

@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -114,7 +113,7 @@ public class BitShare extends AbstractUploader{
 
             
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("APC_UPLOAD_PROGRESS", new StringBody(progressKey));
             mpEntity.addPart("APC_UPLOAD_USERGROUP", new StringBody(userGroupKey));
             mpEntity.addPart("UPLOAD_IDENTIFIER", new StringBody(uploadIdentifier));

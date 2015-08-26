@@ -13,9 +13,9 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import neembuu.uploader.translation.Translation;
 import neembuu.uploader.accounts.EnterUploadAccount;
 import neembuu.uploader.interfaces.UploadStatus;
@@ -106,7 +106,7 @@ public class EnterUpload extends AbstractUploader implements UploaderAccountNece
     private void fileUpload() throws Exception {
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(postURL);
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
         mpEntity.addPart("upload_type", new StringBody("file"));
         mpEntity.addPart("sess_id", new StringBody(sessid));
         mpEntity.addPart("srv_tmp_url", new StringBody(servertmpurl));

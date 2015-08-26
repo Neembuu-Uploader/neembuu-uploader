@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -115,7 +114,7 @@ public class UploadBoxUploaderPlugin {
         HttpPost httppost = new HttpPost(postURL);
         httppost.setHeader("Cookie", sidcookie);
         file = new File("h:/install.txt");
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
         ContentBody cbFile = new FileBody(file);
         mpEntity.addPart("filepc", cbFile);
         mpEntity.addPart("server", new StringBody(server));

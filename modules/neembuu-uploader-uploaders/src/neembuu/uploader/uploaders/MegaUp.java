@@ -7,7 +7,6 @@ package neembuu.uploader.uploaders;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import neembuu.uploader.httpclient.NUHttpClient;
@@ -93,7 +92,7 @@ public class MegaUp extends AbstractUploader{
             NULogger.getLogger().log(Level.INFO, "postUrl: {0}", postUrl);
 
             httpPost = new NUHttpPost(postUrl);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("sessionid", new StringBody(sessionID));
             mpEntity.addPart("AccessKey", new StringBody(accessKey));
             mpEntity.addPart("maxfilesize", new StringBody(maxFileSize));

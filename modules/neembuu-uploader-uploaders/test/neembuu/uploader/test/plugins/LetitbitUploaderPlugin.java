@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -168,7 +167,7 @@ public class LetitbitUploaderPlugin {
         // httppost.setHeader("Referer", "https://www.dropbox.com/home/Public");
         //httppost.setHeader("Cookie", phpsessioncookie);
         file = new File("h:\\Fantastic face.jpg");
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
         ContentBody cbFile = new FileBody(file);
         mpEntity.addPart("MAX_FILE_SIZE", new StringBody("2147483647"));
         mpEntity.addPart("owner", new StringBody(""));

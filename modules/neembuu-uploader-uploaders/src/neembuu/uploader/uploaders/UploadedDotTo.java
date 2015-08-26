@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -83,7 +82,7 @@ public class UploadedDotTo extends AbstractUploader implements UploaderAccountNe
 
     private void fileUpload() throws Exception {
         httpPost = new NUHttpPost(postURL);
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
         mpEntity.addPart("Filename", new StringBody(file.getName()));
         mpEntity.addPart("Filedata", createMonitoredFileBody());
         httpPost.setEntity(mpEntity);

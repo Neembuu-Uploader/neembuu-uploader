@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -104,7 +103,7 @@ public class VideoWood extends AbstractUploader{
             // http://upl.videowood.tv/
             uploadURL = StringUtils.stringBetweenTwoStrings(responseString, "url : '", "'");
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("name", new StringBody(file.getName()));
             mpEntity.addPart("upload_id", new StringBody(uploadid_s));
             mpEntity.addPart("file", createMonitoredFileBody());

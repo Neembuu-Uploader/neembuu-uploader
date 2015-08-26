@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -130,7 +129,7 @@ public class VShare extends AbstractUploader{
             uploadURL = StringUtils.removeLastChars(uploadURL, 3) + "cgi-bin/upload.cgi?upload_id=" + uploadid_s + "&js_on=1&utype=" + userType + "&upload_type=file";
 			
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("js_on", new StringBody("1"));
             mpEntity.addPart("upload_id", new StringBody(uploadid_s));
             mpEntity.addPart("upload_type", new StringBody("file"));

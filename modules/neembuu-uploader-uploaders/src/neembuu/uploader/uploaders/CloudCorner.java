@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -105,7 +104,7 @@ public class CloudCorner extends AbstractUploader implements UploaderAccountNece
             httpPost.setHeader("Referer", "https://www.cloudcorner.com/cloud");
             httpPost.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:36.0) Gecko/20100101 Firefox/36.0");
             
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("id_folder", new StringBody("0"));
             mpEntity.addPart("session_id", new StringBody(cloudCornerAccount.session_id));
             mpEntity.addPart("master_key", new StringBody(cloudCornerAccount.master_key));

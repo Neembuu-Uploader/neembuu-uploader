@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -103,7 +102,7 @@ public class Uploadiz extends AbstractUploader {
             String newPostUrl = String.format(urlPostUpload, uid, utype);
             NULogger.getLogger().log(Level.INFO, "New Post URL : {0}", newPostUrl);
             NUHttpPost httpPost = new NUHttpPost(newPostUrl);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("upload_type", new StringBody("file"));
             mpEntity.addPart("sess_id", new StringBody(sess_id));
             mpEntity.addPart("file_0", createMonitoredFileBody());

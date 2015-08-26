@@ -12,12 +12,13 @@ import java.util.logging.Level;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.Charset;
+import javax.swing.JOptionPane;
 import neembuu.uploader.translation.Translation;
 import neembuu.uploader.accounts.IFileAccount;
 import neembuu.uploader.interfaces.UploadStatus;
 import neembuu.uploader.interfaces.UploaderAccountNecessary;
 import neembuu.uploader.interfaces.abstractimpl.AbstractUploader;
+import neembuu.uploader.uploaders.common.CommonUploaderTasks;
 import neembuu.uploader.uploaders.common.StringUtils;
 import neembuu.uploader.utils.NULogger;
 import org.apache.http.HttpEntity;
@@ -102,7 +103,7 @@ public class IFile extends AbstractUploader implements UploaderAccountNecessary 
 
             DefaultHttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(postURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("akey", new StringBody(properties().getEncryptedProperty("ifile_api_key")));
             mpEntity.addPart("Filedata", createMonitoredFileBody());
             httppost.setEntity(mpEntity);

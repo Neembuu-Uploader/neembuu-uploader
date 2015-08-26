@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
@@ -123,7 +122,7 @@ public class GameFront extends AbstractUploader{
             
             // http://uploads.gamefront.com/api/upload
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("Filename", new StringBody(file.getName()));
             mpEntity.addPart("ttl", new StringBody("30"));
             mpEntity.addPart("key", new StringBody(key));

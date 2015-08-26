@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
@@ -106,7 +105,7 @@ public class SharedSx extends AbstractUploader implements UploaderAccountNecessa
             
             // action=upload&size=248842&session=alphanumeric
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("action", new StringBody("upload"));
             mpEntity.addPart("size", new StringBody(Long.toString(file.length())));
             mpEntity.addPart("session", new StringBody(sessionID));

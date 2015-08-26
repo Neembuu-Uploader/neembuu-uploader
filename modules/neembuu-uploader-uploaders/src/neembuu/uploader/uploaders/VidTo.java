@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -128,7 +127,7 @@ public class VidTo extends AbstractUploader implements UploaderAccountNecessary{
             uploadURL += uploadid_s + "&js_on=1&utype=" + userType + "&upload_type=file&disk_id=" + disk_id;
             // http://web1.vidto.me/cgi-bin/upload.cgi?upload_id=923378493487&js_on=1&utype=reg&upload_type=file&disk_id=01
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("upload_type", new StringBody("file"));
             mpEntity.addPart("sess_id", new StringBody(sessionID));
             mpEntity.addPart("srv_tmp_url", new StringBody(srv_tmp_url));

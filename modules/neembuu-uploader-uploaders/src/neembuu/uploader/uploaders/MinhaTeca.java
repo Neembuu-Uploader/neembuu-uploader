@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -92,7 +91,7 @@ public class MinhaTeca extends AbstractUploader implements UploaderAccountNecess
         
         uploadURL = "http://minhateca.com.br/action/Upload/GetUrl/";
         httpPost = new NUHttpPost(uploadURL);
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
         mpEntity.addPart("__RequestVerificationToken", new StringBody(vToken));
         mpEntity.addPart("accountid", new StringBody(accountid));
         mpEntity.addPart("folderid", new StringBody("0"));
@@ -149,7 +148,7 @@ public class MinhaTeca extends AbstractUploader implements UploaderAccountNecess
             
             // http://s8231.minhateca.com.br/UploadHandler.aspx?e=string&pv=2&ms=1436872028634
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("files[]", createMonitoredFileBody());
             httpPost.setEntity(mpEntity);
             

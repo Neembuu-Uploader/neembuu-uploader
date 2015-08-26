@@ -9,7 +9,6 @@ import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -124,7 +123,7 @@ public class ShareOnline extends AbstractUploader{
 
             
             httpPost = new NUHttpPost(uploadServer);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("username", new StringBody(username));
             mpEntity.addPart("password", new StringBody(password));
             mpEntity.addPart("upload_session", new StringBody(sessionName));

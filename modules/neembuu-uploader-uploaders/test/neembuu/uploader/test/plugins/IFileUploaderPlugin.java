@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.http.HttpEntity;
@@ -100,7 +99,7 @@ public class IFileUploaderPlugin {
         DefaultHttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(postURL);
         file = new File("C:\\Documents and Settings\\dinesh\\Desktop\\FileSonicUploaderPlugin.java");
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
         ContentBody cbFile = new FileBody(file);
         mpEntity.addPart("akey", new StringBody(apikey));
         mpEntity.addPart("Filedata", cbFile);

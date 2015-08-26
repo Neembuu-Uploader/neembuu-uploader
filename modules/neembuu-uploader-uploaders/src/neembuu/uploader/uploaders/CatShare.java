@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -104,7 +103,7 @@ public class CatShare extends AbstractUploader implements UploaderAccountNecessa
             httpPost.removeHeaders("Pragma");
             httpPost.setHeader("User-Agent", "Shockwave Flash");
             
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("Filename", new StringBody(file.getName()));
             mpEntity.addPart("session", new StringBody(sessionID));
             mpEntity.addPart("Filedata", createMonitoredFileBody());

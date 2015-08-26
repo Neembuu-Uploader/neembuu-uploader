@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -18,6 +17,8 @@ import neembuu.uploader.httpclient.httprequest.NUHttpPost;
 import neembuu.uploader.interfaces.UploadStatus;
 import neembuu.uploader.interfaces.UploaderAccountNecessary;
 import neembuu.uploader.interfaces.abstractimpl.AbstractUploader;
+import neembuu.uploader.uploaders.common.FileUtils;
+import neembuu.uploader.uploaders.common.StringUtils;
 import neembuu.uploader.utils.NUHttpClientUtils;
 import neembuu.uploader.utils.NULogger;
 import org.apache.http.HttpResponse;
@@ -112,7 +113,7 @@ public class KeepTwoShare extends AbstractUploader implements UploaderAccountNec
 
             
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("catalog", new StringBody(catalog));
             mpEntity.addPart("userId", new StringBody(Integer.toString(userId)));
             mpEntity.addPart("expires", new StringBody(Long.toString(expires)));

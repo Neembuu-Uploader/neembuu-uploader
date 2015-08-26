@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -111,7 +110,7 @@ public class RockFile extends AbstractUploader implements UploaderAccountNecessa
             uploadURL += uploadid_s + "&js_on=1&utype=reg&upload_type=file";
             // http://rok003.rockfile.eu/cgi-bin/upload.cgi?upload_id=731853882760&js_on=1&utype=reg&upload_type=file
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("upload_type", new StringBody("file"));
             mpEntity.addPart("sess_id", new StringBody(sess_id));
             mpEntity.addPart("srv_tmp_url", new StringBody(srv_tmp_url));

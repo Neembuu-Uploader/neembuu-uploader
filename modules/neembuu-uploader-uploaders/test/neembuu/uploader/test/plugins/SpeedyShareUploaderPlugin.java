@@ -6,10 +6,11 @@ package neembuu.uploader.test.plugins;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -18,6 +19,7 @@ import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
@@ -107,7 +109,7 @@ public class SpeedyShareUploaderPlugin {
         HttpPost httppost = new HttpPost(uploadURL);
         httppost.setHeader("Cookie", scookie);
         file = new File("/media/backup/Projects/NU/NeembuuUploader/test/neembuuuploader/test/plugins/DropBoxUploaderPlugin.java");
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
         ContentBody cbFile = new FileBody(file);
 //        mpEntity.addPart("Filename", new StringBody(file.getName()));
 

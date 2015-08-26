@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import java.util.logging.Level;
@@ -87,7 +86,7 @@ public class FreeFr extends AbstractUploader{
             // http://dl.free.fr/upload.pl?a08421676692470426803629975451717
             uploadURL = "http://dl.free.fr" + uploadURL;
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("ufile", createMonitoredFileBody());
             httpPost.setEntity(mpEntity);
             

@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.Charset;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -75,7 +74,7 @@ public class ZippyShareUploaderPlugin {
         //httppost.setHeader("Cookie", sidcookie+";"+mysessioncookie);
 
         file = new File("h:/UploadingdotcomUploaderPlugin.java");
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
         ContentBody cbFile = new FileBody(file);
         mpEntity.addPart("Filename", new StringBody(file.getName()));
         mpEntity.addPart("notprivate", new StringBody("false"));

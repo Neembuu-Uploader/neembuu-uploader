@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -19,6 +18,7 @@ import neembuu.uploader.httpclient.NUHttpClient;
 import neembuu.uploader.httpclient.httprequest.NUHttpPost;
 import neembuu.uploader.interfaces.UploadStatus;
 import neembuu.uploader.interfaces.abstractimpl.AbstractUploader;
+import neembuu.uploader.uploaders.common.FileUtils;
 import neembuu.uploader.uploaders.common.StringUtils;
 import neembuu.uploader.utils.CookieUtils;
 import neembuu.uploader.utils.NUHttpClientUtils;
@@ -121,7 +121,7 @@ public class Uptobox extends AbstractUploader{
 
             
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("upload_type", new StringBody("file"));
             mpEntity.addPart("sess_id", new StringBody(sessionID));
             mpEntity.addPart("srv_tmp_url", new StringBody("http://www20.uptobox.com/tmp"));

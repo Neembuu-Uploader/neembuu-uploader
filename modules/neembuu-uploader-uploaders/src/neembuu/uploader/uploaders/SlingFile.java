@@ -8,11 +8,11 @@ import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
 import java.net.URI;
-import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import neembuu.uploader.accounts.SlingFileAccount;
+import neembuu.uploader.exceptions.NUException;
 import neembuu.uploader.exceptions.uploaders.NUMaxFileSizeException;
 import neembuu.uploader.httpclient.NUHttpClient;
 import neembuu.uploader.httpclient.httprequest.NUHttpGet;
@@ -130,7 +130,7 @@ public class SlingFile extends AbstractUploader {
 
             
             httpPost = new NUHttpPost(postURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("X-Progress-ID", new StringBody(progressID));
             mpEntity.addPart("uFileID", new StringBody(progressID));
             mpEntity.addPart("uid", new StringBody(encUserID));

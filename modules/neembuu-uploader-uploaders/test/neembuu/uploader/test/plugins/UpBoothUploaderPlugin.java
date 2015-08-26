@@ -5,7 +5,6 @@
 package neembuu.uploader.test.plugins;
 
 import java.io.File;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import static neembuu.uploader.test.plugins.BayFilesUploaderPlugin.parseResponse;
@@ -99,7 +98,7 @@ public class UpBoothUploaderPlugin {
         HttpPost httppost = new HttpPost("http://upbooth.com/uploadHandler.php?r=upbooth.com&p=http?aff=1db2f3b654350bf4");
         httppost.addHeader("Cookie", fileHostingCookie);
         file = new File("c:/Dinesh/Naruto_Face.jpg");
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
         ContentBody cbFile = new FileBody(file);
         String cookie = fileHostingCookie.substring(fileHostingCookie.indexOf("=") + 1);
         cookie = cookie.substring(0, cookie.indexOf(";"));

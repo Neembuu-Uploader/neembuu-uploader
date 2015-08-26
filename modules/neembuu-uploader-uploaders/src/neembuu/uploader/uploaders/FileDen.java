@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -95,7 +94,7 @@ public class FileDen extends AbstractUploader implements UploaderAccountNecessar
 
             httpPost = new NUHttpPost("http://www.fileden.com/upload_old.php");
             httpPost.setHeader("Cookie", fileDenAccount.getCookies().toString());
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("Filename", new StringBody(file.getName()));
             mpEntity.addPart("action", new StringBody("upload"));
             mpEntity.addPart("upload_to", new StringBody(""));

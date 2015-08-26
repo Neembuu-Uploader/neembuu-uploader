@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -81,7 +80,7 @@ public class ZippyShare extends AbstractUploader {
 
     private void fileUpload() throws Exception {
         httpPost = new NUHttpPost(postURL);
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
         mpEntity.addPart("Filename", new StringBody(file.getName()));
         mpEntity.addPart("notprivate", new StringBody("false"));
         mpEntity.addPart("folder", new StringBody("/"));

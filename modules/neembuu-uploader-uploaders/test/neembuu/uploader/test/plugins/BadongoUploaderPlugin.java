@@ -13,7 +13,6 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import org.apache.http.HttpEntity;
@@ -127,7 +126,7 @@ public class BadongoUploaderPlugin {
         }
         HttpPost httppost = new HttpPost(postURL);
         file = new File("g:/S2SClient.7z");
-        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+        MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
         ContentBody cbFile = new FileBody(file);
         mpEntity.addPart("Filename", new StringBody(file.getName()));
         if (login) {

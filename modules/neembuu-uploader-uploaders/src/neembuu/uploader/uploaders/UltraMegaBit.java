@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -18,6 +17,7 @@ import neembuu.uploader.httpclient.httprequest.NUHttpPost;
 import neembuu.uploader.interfaces.UploadStatus;
 import neembuu.uploader.interfaces.UploaderAccountNecessary;
 import neembuu.uploader.interfaces.abstractimpl.AbstractUploader;
+import neembuu.uploader.utils.CookieUtils;
 import neembuu.uploader.utils.NUHttpClientUtils;
 import neembuu.uploader.utils.NULogger;
 import org.apache.http.HttpResponse;
@@ -103,7 +103,7 @@ public class UltraMegaBit extends AbstractUploader implements UploaderAccountNec
             initialize();
             
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("csrf_token", new StringBody(csrf_token));
             mpEntity.addPart("folder_id", new StringBody(folder_id));
             mpEntity.addPart("user_id", new StringBody(user_id));

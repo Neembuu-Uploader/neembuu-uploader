@@ -4,7 +4,6 @@
  */
 package neembuu.uploader.uploaders;
 
-import java.nio.charset.Charset;
 import shashaank.smallmodule.SmallModule;
 import neembuu.uploader.interfaces.Uploader;
 import neembuu.uploader.interfaces.Account;
@@ -97,7 +96,7 @@ public class FileNuke extends AbstractUploader{
 
             // http://185.56.28.40/upload/?s=1&u=somevalue&gt=somevalue
             httpPost = new NUHttpPost(uploadURL);
-            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName("UTF-8"));
+            MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("", createMonitoredFileBody());
             httpPost.setEntity(mpEntity);
             httpPost.setHeader("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
