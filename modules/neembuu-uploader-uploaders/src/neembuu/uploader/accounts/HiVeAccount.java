@@ -4,6 +4,10 @@
  */
 package neembuu.uploader.accounts;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -28,16 +32,18 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import neembuu.uploader.utils.CookieUtils;
 //--
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Map;
+import java.util.Set;
+import java.util.zip.GZIPInputStream;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.impl.client.DefaultHttpClient;
+import neembuu.uploader.utils.RemoveCryptographyRestrictions;
 
 /**
  *
@@ -121,13 +127,43 @@ public class HiVeAccount extends AbstractAccount{
     }
 
     private void initialize() throws Exception {
+        RemoveCryptographyRestrictions.removeCryptographyRestrictions();
         httpContext = new BasicHttpContext();
         cookieStore = new BasicCookieStore();
         httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
 
         NULogger.getLogger().info("Getting startup cookies & link from HiVe.im");
         //responseString = NUHttpClientUtils.getData("https://www.hive.im/", httpContext);
-        System.out.println(shouldAcceptUnsafeCerts());
+        //System.out.println(shouldAcceptUnsafeCerts());
+        
+        URL url = new URL("https://www.hive.im/");
+        HttpsURLConnection.setDefaultHostnameVerifier(DO_NOT_VERIFY);
+        HttpsURLConnection con = (HttpsURLConnection)url.openConnection();
+        con.setHostnameVerifier(DO_NOT_VERIFY);
+        con.setRequestProperty("Accept-Encoding", "gzip");
+        con.setRequestProperty("Content-type", "application/x-www-form-urlencoded;charset=windows-1251");
+        
+        Map<String, List<String>> headers = con.getHeaderFields();
+        Set<Map.Entry<String, List<String>>> entrySet = headers.entrySet();
+        
+        for (Map.Entry<String, List<String>> entry : entrySet) {
+            String resp = "";
+            String headerName = entry.getKey();
+            List<String> headerValues = entry.getValue();
+            for (String value : headerValues) {
+                resp = headerName +": "+ value;
+            }
+            System.out.println(resp);
+        }
+        
+        InputStream inStream = new GZIPInputStream(con.getInputStream());
+        BufferedReader br = new BufferedReader(new InputStreamReader(inStream));
+        String input, htmlResponse = "";
+        while ((input = br.readLine()) != null){
+            htmlResponse += input;
+            //System.out.println(input);
+        }
+        br.close();
     }
     
     private void resetLogin(){
@@ -136,7 +172,51 @@ public class HiVeAccount extends AbstractAccount{
         password = "";
     }
     
-    private String shouldAcceptUnsafeCerts() throws Exception {
+    public static void main(String[] args) {
+        neembuu.uploader.paralytics_tests.GenericPluginTester.test(
+                neembuu.uploader.uploaders.HiVe.class,
+                neembuu.uploader.accounts.HiVeAccount.class
+        );
+    }
+    
+    // always verify the host - dont check for certificate
+    final static HostnameVerifier DO_NOT_VERIFY = new HostnameVerifier() {
+            public boolean verify(String hostname, SSLSession session) {
+                    return true;
+            }
+    };
+    
+    /**
+     * Trust every server - dont check for any certificate
+     */
+    private static void trustAllHosts() {
+            // Create a trust manager that does not validate certificate chains
+            TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+                    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                            return new java.security.cert.X509Certificate[] {};
+                    }
+
+                    public void checkClientTrusted(X509Certificate[] chain,
+                                    String authType) throws CertificateException {
+                    }
+
+                    public void checkServerTrusted(X509Certificate[] chain,
+                                    String authType) throws CertificateException {
+                    }
+            } };
+
+            // Install the all-trusting trust manager
+            try {
+                    SSLContext sc = SSLContext.getInstance("SSL");
+                    sc.init(null, trustAllCerts, new java.security.SecureRandom());
+                    HttpsURLConnection
+                                    .setDefaultSSLSocketFactory(sc.getSocketFactory());
+            } catch (Exception e) {
+                    e.printStackTrace();
+            }
+    }
+    
+    /*private String shouldAcceptUnsafeCerts() throws Exception {
         DefaultHttpClient httpclient = httpClientTrustingAllSSLCerts();
         HttpGet httpGet = new HttpGet("https://www.hive.im/");
         HttpResponse response = httpclient.execute(httpGet);
@@ -174,5 +254,5 @@ public class HiVeAccount extends AbstractAccount{
 
         } };
         return trustAllCerts;
-    }
+    }*/
 }
