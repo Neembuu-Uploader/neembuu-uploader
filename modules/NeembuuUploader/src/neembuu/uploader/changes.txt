@@ -1,4 +1,6 @@
 ==== v x.y.z ====
+
+==== v 3.5.0 ====
 * Disabled several (18) dead file-hosts from NU's interface.
 * Fixed CatShare.net (plugin was outdated).
 * NU-CMD: Developed a minimalist command-line version of NU (WIP).
@@ -14,6 +16,7 @@
 * Updated NeembuuUploader.java (cleaned up).
 * Updated OpenLoad.io (moved to OpenLoad.co).
 * Updated HiVe.im (WIP).
+* Updated changes.txt and preparing for v3.5 release.
 
 ==== v 3.4.0 ====
 * Updated Uploaded.net (now generates descriptive links instead of the short ul.to links).
