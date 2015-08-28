@@ -1,5 +1,5 @@
 # Neembuu Uploader
-Neembuu Uploader _*v3.4.0*_ is a free and open-source Java application that uploads files simultaneously to multiple file-hosts and lets you manage the download and delete URLs. Currently 186 major hosts are supported.
+Neembuu Uploader _*v3.5.0*_ is a free and open-source Java application that uploads files simultaneously to multiple file-hosts and lets you manage the download and delete URLs. Currently 187 major hosts are supported.
 
 * Official Website: http://neembuu.com/uploader/
 * Official Forum: http://www.neembuu.com/uploader/forum/
