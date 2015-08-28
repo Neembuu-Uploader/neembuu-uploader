@@ -4,10 +4,10 @@
  */
 package neembuu.uploader.accounts;
 
-import java.io.BufferedReader;
+/*import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
+import java.net.URL;*/
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -28,11 +28,9 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.util.EntityUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import neembuu.uploader.utils.CookieUtils;
+import neembuu.uploader.uploaders.common.StringUtils;
 //--
-import java.security.cert.CertificateException;
+/*import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Map;
 import java.util.Set;
@@ -42,7 +40,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
+import javax.net.ssl.X509TrustManager;*/
 import neembuu.uploader.utils.RemoveCryptographyRestrictions;
 
 /**
@@ -56,6 +54,9 @@ public class HiVeAccount extends AbstractAccount{
     private NUHttpPost httpPost;
     private CookieStore cookieStore;
     private String responseString;
+    
+    private String uploadStatus = "";
+    private String token = "";
 
     public HiVeAccount() {
         KEY_USERNAME = "hiveusername";
@@ -79,19 +80,25 @@ public class HiVeAccount extends AbstractAccount{
             initialize();
 
             NULogger.getLogger().info("Trying to log in to HiVe.im");
-            httpPost = new NUHttpPost("");
+            httpPost = new NUHttpPost("https://api.hive.im/api/user/sign-in/");
+            httpPost.setHeader("Client-Type", "Browser");
+            httpPost.setHeader("Host", "api.hive.im");
+            httpPost.setHeader("Origin", "https://touch.hive.im");
 
             List<NameValuePair> formparams = new ArrayList<NameValuePair>();
-            formparams.add(new BasicNameValuePair("op", "login"));
-            formparams.add(new BasicNameValuePair("login", getUsername()));
+            formparams.add(new BasicNameValuePair("email", getUsername()));
             formparams.add(new BasicNameValuePair("password", getPassword()));
             
             UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
             httpPost.setEntity(entity);
             httpResponse = httpclient.execute(httpPost, httpContext);
             NULogger.getLogger().info(httpResponse.getStatusLine().toString());
+            responseString = EntityUtils.toString(httpResponse.getEntity());
+            
+            uploadStatus = StringUtils.stringBetweenTwoStrings(responseString, "\"status\":\"", "\"");
+            token = StringUtils.stringBetweenTwoStrings(responseString, "\"token\":\"", "\"");
 
-            if (!CookieUtils.getCookieValue(httpContext, "xfss").isEmpty() && !CookieUtils.getCookieValue(httpContext, "login").isEmpty()) {
+            if (uploadStatus.equals("success") && !token.isEmpty()) {
                 EntityUtils.consume(httpResponse.getEntity());
                 loginsuccessful = true;
                 username = getUsername();
@@ -101,10 +108,7 @@ public class HiVeAccount extends AbstractAccount{
 
             } else {
                 //Get error message
-                responseString = EntityUtils.toString(httpResponse.getEntity());
-                //FileUtils.saveInFile("HiVeAccount.html", responseString);
-                Document doc = Jsoup.parse(responseString);
-                String error = doc.select(".err").first().text();
+                String error = uploadStatus;
                 
                 if("Incorrect Login or Password".equals(error)){
                     throw new NUInvalidLoginException(getUsername(), HOSTNAME);
@@ -132,7 +136,7 @@ public class HiVeAccount extends AbstractAccount{
         cookieStore = new BasicCookieStore();
         httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
 
-        NULogger.getLogger().info("Getting startup cookies & link from HiVe.im");
+        /*NULogger.getLogger().info("Getting startup cookies & link from HiVe.im");
         //responseString = NUHttpClientUtils.getData("https://www.hive.im/", httpContext);
         //System.out.println(shouldAcceptUnsafeCerts());
         
@@ -163,7 +167,7 @@ public class HiVeAccount extends AbstractAccount{
             htmlResponse += input;
             //System.out.println(input);
         }
-        br.close();
+        br.close();*/
     }
     
     private void resetLogin(){
@@ -180,16 +184,16 @@ public class HiVeAccount extends AbstractAccount{
     }
     
     // always verify the host - dont check for certificate
-    final static HostnameVerifier DO_NOT_VERIFY = new HostnameVerifier() {
+    /*final static HostnameVerifier DO_NOT_VERIFY = new HostnameVerifier() {
             public boolean verify(String hostname, SSLSession session) {
                     return true;
             }
-    };
+    };*/
     
     /**
      * Trust every server - dont check for any certificate
      */
-    private static void trustAllHosts() {
+    /*private static void trustAllHosts() {
             // Create a trust manager that does not validate certificate chains
             TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
                     public java.security.cert.X509Certificate[] getAcceptedIssuers() {
@@ -214,7 +218,7 @@ public class HiVeAccount extends AbstractAccount{
             } catch (Exception e) {
                     e.printStackTrace();
             }
-    }
+    }*/
     
     /*private String shouldAcceptUnsafeCerts() throws Exception {
         DefaultHttpClient httpclient = httpClientTrustingAllSSLCerts();

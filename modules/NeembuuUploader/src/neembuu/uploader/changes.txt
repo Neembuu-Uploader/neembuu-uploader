@@ -1,4 +1,9 @@
 ==== v x.y.z ====
+* Updated HiVe.im (WIP).
+  -- login works, however, a premium account is required for further testing, since the host has disabled free accounts and only allows trials (which don't really work).
+  -- furthermore, there are rumors that all files uploaded to this file-host can only be downloaded if the recipient is logged into their website.
+  -- for these reasons, further development of this plugin has been suspended indefinitely, until someone provides a premium account for testing (for just a couple of hours).
+  -- this plugin currently only supports accounts created with Hive itself. oAuth based authentication (using Google and the like) is therefore, not supported.
 
 ==== v 3.5.0 ====
 * Disabled several (18) dead file-hosts from NU's interface.
