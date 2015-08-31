@@ -38,7 +38,11 @@ public class MonitoredFileBody extends FileBody {
 
     @Override
     public InputStream getInputStream() throws IOException {
-        return new MonitoredInputStream(new FileInputStream(this.file),file.length(),jp,speed);
+        FileInputStream fis = new FileInputStream(file);
+        int n = 0;//number of zeros to append
+        ZeroAppendingInputStream zais = new ZeroAppendingInputStream(fis,n,file.length());
+        return new MonitoredInputStream(zais,file.length()+n,jp,speed);
+        //return new MonitoredInputStream(new FileInputStream(this.file),file.length(),jp,speed);
     }
 
     @Override
