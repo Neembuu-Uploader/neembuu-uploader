@@ -18,7 +18,6 @@ import neembuu.uploader.httpclient.NUHttpClient;
 import neembuu.uploader.httpclient.httprequest.NUHttpPost;
 import neembuu.uploader.interfaces.abstractimpl.AbstractAccount;
 import neembuu.uploader.utils.NULogger;
-//import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
@@ -30,12 +29,13 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.util.EntityUtils;
 import neembuu.uploader.uploaders.common.StringUtils;
-//import org.jsoup.Jsoup;
-//import org.jsoup.nodes.Document;
 
 /**
  *
  * @author MNidhal
+ * @author Paralytic
+ * (plugin fixed 31/08/2015)
+ * 
  */
 public class OboomAccount extends AbstractAccount{
     
@@ -45,6 +45,8 @@ public class OboomAccount extends AbstractAccount{
     private CookieStore cookieStore;
     private String responseString;
     public String api_key = "";
+    
+    private String oboomCookie = "";
     
 
     public OboomAccount() {
@@ -68,7 +70,7 @@ public class OboomAccount extends AbstractAccount{
         try {
             initialize();
             NULogger.getLogger().info("Trying to log in to Oboom.com");
-            httpPost = new NUHttpPost("https://www.oboom.com/1.0/login");
+            httpPost = new NUHttpPost("http://www.oboom.com/1/login");
             String pass = new StringBuffer(getPassword()).reverse().toString();
             
             byte[] salt = pass.getBytes();
@@ -85,17 +87,16 @@ public class OboomAccount extends AbstractAccount{
             responseString = EntityUtils.toString(httpResponse.getEntity());
             //FileUtils.saveInFile("OboomAccount.html", responseString);
             NULogger.getLogger().info(httpResponse.getStatusLine().toString());
+            oboomCookie = StringUtils.stringBetweenTwoStrings(responseString, "\"cookie\":\"", "\"");
 
-            if (responseString != null && responseString.contains("cookie")) {
+            if (responseString != null && !oboomCookie.isEmpty()) {
                 EntityUtils.consume(httpResponse.getEntity());
                 loginsuccessful = true;
                 username = getUsername();
                 password = getPassword();
-                api_key = StringUtils.stringBetweenTwoStrings(responseString, "api_key\":\"", "\",");
+                api_key = StringUtils.stringBetweenTwoStrings(responseString, "\"api_key\":\"", "\"");
                 hostsAccountUI().hostUI(HOSTNAME).setEnabled(true);
                 NULogger.getLogger().info("Oboom.com login successful!");
-                
-
             } else {
                 //Get error message
                 //FileUtils.saveInFile("OboomAccount.html", responseString);
@@ -117,7 +118,6 @@ public class OboomAccount extends AbstractAccount{
             showWarningMessage( Translation.T().loginerror(), HOSTNAME);
             accountUIShow().setVisible(true);
         }
-
     }
 
     private void initialize() throws Exception {
@@ -134,5 +134,4 @@ public class OboomAccount extends AbstractAccount{
         username = "";
         password = "";
     }
-
 }

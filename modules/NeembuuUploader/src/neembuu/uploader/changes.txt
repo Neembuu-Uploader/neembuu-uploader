@@ -4,6 +4,7 @@
   -- furthermore, there are rumors that all files uploaded to this file-host can only be downloaded if the recipient is logged into their website.
   -- for these reasons, further development of this plugin has been suspended indefinitely, until someone provides a premium account for testing (for just a couple of hours).
   -- this plugin currently only supports accounts created with Hive itself. oAuth based authentication (using Google and the like) is therefore, not supported.
+* Updated Oboom.com (plugin was broken/outdated).
 
 ==== v 3.5.0 ====
 * Disabled several (18) dead file-hosts from NU's interface.

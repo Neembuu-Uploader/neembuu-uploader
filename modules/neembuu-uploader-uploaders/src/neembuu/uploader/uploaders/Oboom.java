@@ -27,11 +27,8 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
@@ -40,11 +37,14 @@ import org.apache.http.util.EntityUtils;
 /**
  *
  * @author MNidhal
+ * @author Paralytic
+ * (plugin fixed 31/08/2015)
+ * 
  */
 @SmallModule(
     exports={Oboom.class,OboomAccount.class},
     interfaces={Uploader.class,Account.class},
-    name="obOom.com"
+    name="Oboom.com"
 )
 public class Oboom extends AbstractUploader implements UploaderAccountNecessary{
     
@@ -67,9 +67,9 @@ public class Oboom extends AbstractUploader implements UploaderAccountNecessary{
     public Oboom() {
         downURL = UploadStatus.PLEASEWAIT.getLocaleSpecificString();
         delURL = UploadStatus.PLEASEWAIT.getLocaleSpecificString();
-        host = "obOom.com";
+        host = "Oboom.com";
         if (oboomAccount.loginsuccessful) {
-            host = oboomAccount.username + " | obOom.com";
+            host = oboomAccount.username + " | Oboom.com";
         }
         maxFileSizeLimit = 5368709120l; //5 GB
         
@@ -84,9 +84,8 @@ public class Oboom extends AbstractUploader implements UploaderAccountNecessary{
         httpPost.setEntity(entity);
         httpResponse = httpclient.execute(httpPost, httpContext);
         responseString = EntityUtils.toString(httpResponse.getEntity());
-        token = StringUtils.stringBetweenTwoStrings(responseString, "200,\"", "\"]");
-        //doc = Jsoup.parse(responseString);
-        uploadURL = "https://upload.oboom.com/1.0/ul";
+        token = StringUtils.stringBetweenTwoStrings(responseString, "200,\"", "\"");
+        uploadURL = "http://upload.oboom.com/1/ul";
         uploadURL += "?token=" + token + "&parent=1&name_policy=rename";
     }
 
@@ -99,7 +98,7 @@ public class Oboom extends AbstractUploader implements UploaderAccountNecessary{
                 sessionID = CookieUtils.getCookieValue(httpContext, "user");
                 maxFileSizeLimit = 5368709120l; //5 GB
             } else {
-                host = "oboom.com";
+                host = "Oboom.com";
                 uploadInvalid();
                 return;
             }
@@ -109,17 +108,14 @@ public class Oboom extends AbstractUploader implements UploaderAccountNecessary{
             }
             uploadInitialising();
             initialize();
-
             
             httpPost = new NUHttpPost(uploadURL);
             MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-            mpEntity.addPart("token", new StringBody(token));
             mpEntity.addPart("file", createMonitoredFileBody());
-            mpEntity.addPart("parent", new StringBody("1"));
             httpPost.setEntity(mpEntity);
             
             NULogger.getLogger().log(Level.INFO, "executing request {0}", httpPost.getRequestLine());
-            NULogger.getLogger().info("Now uploading your file into obOom.com");
+            NULogger.getLogger().info("Now uploading your file into Oboom.com");
             uploading();
             httpResponse = httpclient.execute(httpPost, httpContext);
             responseString = EntityUtils.toString(httpResponse.getEntity());
@@ -128,7 +124,7 @@ public class Oboom extends AbstractUploader implements UploaderAccountNecessary{
             gettingLink();
             
             //file.getName()
-            String fid = StringUtils.stringBetweenTwoStrings(responseString, "\"id\":\"", "\",");
+            String fid = StringUtils.stringBetweenTwoStrings(responseString, "\"id\":\"", "\"");
             String dlink = "http://www.oboom.com/"+fid+"/"+file.getName();
             downloadlink = dlink;
             deletelink = UploadStatus.NA.getLocaleSpecificString();
@@ -144,9 +140,7 @@ public class Oboom extends AbstractUploader implements UploaderAccountNecessary{
             uploadInvalid();
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, e);
-
             uploadFailed();
         }
     }
-    
 }
