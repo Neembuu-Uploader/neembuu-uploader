@@ -6,6 +6,8 @@
   -- this plugin currently only supports accounts created with Hive itself. oAuth based authentication (using Google and the like) is therefore, not supported.
 * Updated Oboom.com (plugin was broken/outdated).
 * Adding support of FilePup.net (with and without account support).
+* Updated Letitbit.net (plugin was broken/outdated)
+* Added two new methods to http client util to decode gzip encoded pages.
 
 ==== v 3.5.0 ====
 * Disabled several (18) dead file-hosts from NU's interface.

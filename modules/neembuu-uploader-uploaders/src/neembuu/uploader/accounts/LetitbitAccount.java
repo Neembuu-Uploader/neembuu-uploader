@@ -102,27 +102,20 @@ public class LetitbitAccount extends AbstractAccount {
     }
 
     private void initialize() throws Exception {
-        NULogger.getLogger().info("Getting startup cookie from letitbit.net");
-        httpGet = new NUHttpGet("http://www.letitbit.net/");
+        // load startup cookie in httpcontext       
+        httpGet = new NUHttpGet("http://newlib.wm-panel.com/wm-panel/user/signin");
         httpResponse = httpclient.execute(httpGet, httpContext);
-        stringResponse = EntityUtils.toString(httpResponse.getEntity());
-        //CookieUtils.printCookie(httpContext);
-        
-        phpsessioncookie = CookieUtils.getCookieValue(httpContext, "PHPSESSID");
-        debugcookie = "";
-        NULogger.getLogger().log(Level.INFO, "phpsessioncookie: {0}", phpsessioncookie);
-        NULogger.getLogger().log(Level.INFO, "debugcookie : {0}", debugcookie);
     }
 
     public void loginLetitbit() throws Exception {
         loginsuccessful = false;
 
         NULogger.getLogger().info("Trying to log in to letitbit.com");
-        httpPost = new NUHttpPost("http://letitbit.net/");
+        httpPost = new NUHttpPost("http://newlib.wm-panel.com/wm-panel/user/signin-do");
         List<NameValuePair> formparams = new ArrayList<NameValuePair>();
-        formparams.add(new BasicNameValuePair("act", "login"));
-        formparams.add(new BasicNameValuePair("login", getUsername()));
-        formparams.add(new BasicNameValuePair("password", getPassword()));
+        formparams.add(new BasicNameValuePair("inout", ""));
+        formparams.add(new BasicNameValuePair("log", getUsername()));
+        formparams.add(new BasicNameValuePair("pas", getPassword()));
         UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
         httpPost.setEntity(entity);
         httpResponse = httpclient.execute(httpPost, httpContext);

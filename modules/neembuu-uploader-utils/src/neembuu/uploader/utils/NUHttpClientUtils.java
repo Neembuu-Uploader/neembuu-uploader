@@ -11,6 +11,7 @@ import neembuu.uploader.httpclient.NUHttpClient;
 import neembuu.uploader.httpclient.httprequest.NUHttpGet;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.entity.GzipDecompressingEntity;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
@@ -33,6 +34,18 @@ public class NUHttpClientUtils {
     }
     
     /**
+     * Get the content of a gzip encoded page
+     * @param url url from which to read
+     * @return the String content of the page
+     * @throws Exception 
+     */
+    public static String getGzipedData(String url) throws Exception {
+        NUHttpGet httpGet = new NUHttpGet(url);
+        HttpResponse httpResponse = NUHttpClient.getHttpClient().execute(httpGet);
+        return EntityUtils.toString(new GzipDecompressingEntity(httpResponse.getEntity()));
+    }
+    
+    /**
      * Get the content of a page.
      * @param url url from which to read
      * @param httpContext the httpContext in which to make the request
@@ -45,6 +58,18 @@ public class NUHttpClientUtils {
         return EntityUtils.toString(httpResponse.getEntity());
     }
     
+    /**
+     * Get the content of a gzip encoded page
+     * @param url url from which to read
+     * @param httpContext the httpContext in which to make the request
+     * @return the String content of the page
+     * @throws Exception 
+     */
+    public static String getGzipedData(String url, HttpContext httpContext) throws Exception {
+        NUHttpGet httpGet = new NUHttpGet(url);
+        HttpResponse httpResponse = NUHttpClient.getHttpClient().execute(httpGet, httpContext);
+        return EntityUtils.toString(new GzipDecompressingEntity(httpResponse.getEntity()));
+    }
     
     /**
      * Read the content of a page. It uses EntityUtils.consumeQuietly().
