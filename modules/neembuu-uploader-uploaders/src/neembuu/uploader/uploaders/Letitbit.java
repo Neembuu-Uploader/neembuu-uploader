@@ -65,7 +65,7 @@ public class Letitbit extends AbstractUploader implements UploaderAccountNecessa
     public Letitbit() {
 
         downURL = UploadStatus.PLEASEWAIT.getLocaleSpecificString();
-        delURL = UploadStatus.NA.getLocaleSpecificString();
+        delURL = UploadStatus.PLEASEWAIT.getLocaleSpecificString();
         host = "Letitbit.net";
         //It has to be successful.. as it won't work without login
         if (letitbitAccount.loginsuccessful) {
@@ -161,10 +161,12 @@ public class Letitbit extends AbstractUploader implements UploaderAccountNecessa
                     .append("/")
                     .append(getFileName())
                     .append(".html").toString();
+            deletelink = UploadStatus.NA.getLocaleSpecificString();
 
             NULogger.getLogger().log(Level.INFO, "Download Link : {0}", downloadlink);
             NULogger.getLogger().log(Level.INFO, "Delete Link : {0}", delURL);
             downURL = downloadlink;
+            delURL = deletelink;
 
             uploadFinished();
         } catch (NUException ex) {

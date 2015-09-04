@@ -8,6 +8,7 @@
 * Adding support of FilePup.net (with and without account support).
 * Updated Letitbit.net (plugin was broken/outdated)
 * Added two new methods to http client util to decode gzip encoded pages.
+* Fix delete status in Letitbit.net plugin.
 
 ==== v 3.5.0 ====
 * Disabled several (18) dead file-hosts from NU's interface.
