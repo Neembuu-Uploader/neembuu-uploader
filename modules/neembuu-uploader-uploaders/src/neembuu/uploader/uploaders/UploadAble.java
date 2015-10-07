@@ -67,7 +67,7 @@ public class UploadAble extends AbstractUploader{
     }
 
     private void initialize() throws Exception {
-        responseString = NUHttpClientUtils.getData("http://www.uploadable.ch/upload.php", httpContext);
+        responseString = NUHttpClientUtils.getData("https://www.uploadable.ch/upload.php", httpContext);
         uploadURL = StringUtils.stringBetweenTwoStrings(responseString, "var uploadUrl = '", "';");
     }
 
@@ -95,7 +95,7 @@ public class UploadAble extends AbstractUploader{
             httpPut.setEntity(fileEntity);
             
             //Set the headers
-            httpPut.setHeader("Origin", "http://www.uploadable.ch");
+            httpPut.setHeader("Origin", "https://www.uploadable.ch");
             httpPut.setHeader("X-File-Name", file.getName());
             httpPut.setHeader("X-File-Size", Long.toString(file.length()));
             
@@ -111,8 +111,8 @@ public class UploadAble extends AbstractUploader{
             delete_code = StringUtils.stringBetweenTwoStrings(responseString, "\"deleteCode\":\"", "\"");
             host_filename = StringUtils.stringBetweenTwoStrings(responseString, "\"fileName\":\"", "\"");
             
-            downloadlink = "http://www.uploadable.ch/file/" + upload_code + "/" + host_filename;
-            deletelink = "http://www.uploadable.ch/file/" + upload_code + "/delete/" + delete_code;
+            downloadlink = "https://www.uploadable.ch/file/" + upload_code + "/" + host_filename;
+            deletelink = "https://www.uploadable.ch/file/" + upload_code + "/delete/" + delete_code;
             
             NULogger.getLogger().log(Level.INFO, "Delete link : {0}", deletelink);
             NULogger.getLogger().log(Level.INFO, "Download link : {0}", downloadlink);
@@ -129,5 +129,4 @@ public class UploadAble extends AbstractUploader{
             uploadFailed();
         }
     }
-    
 }

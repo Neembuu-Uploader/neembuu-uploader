@@ -62,10 +62,10 @@ public class UploadAbleAccount extends AbstractAccount{
             initialize();
 
             NULogger.getLogger().info("Trying to log in to UploadAble.ch");
-            httpPost = new NUHttpPost("http://www.uploadAble.ch/login.php");
+            httpPost = new NUHttpPost("https://www.uploadAble.ch/login.php");
             httpPost.setHeader("Host", "www.uploadable.ch");
-            httpPost.setHeader("Referer", "http://www.uploadable.ch/login.php");
-            httpPost.setHeader("Origin", "http://www.uploadable.ch");
+            httpPost.setHeader("Referer", "https://www.uploadable.ch/login.php");
+            httpPost.setHeader("Origin", "https://www.uploadable.ch");
             
             List<NameValuePair> formparams = new ArrayList<NameValuePair>();
             formparams.add(new BasicNameValuePair("action__login", "normalLogin"));
@@ -118,7 +118,7 @@ public class UploadAbleAccount extends AbstractAccount{
         httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
 
         NULogger.getLogger().info("Getting startup cookies & link from UploadAble.ch");
-        responseString = NUHttpClientUtils.getData("http://www.uploadable.ch/login.php", httpContext);
+        responseString = NUHttpClientUtils.getData("https://www.uploadable.ch/login.php", httpContext);
     }
     
     private void resetLogin(){

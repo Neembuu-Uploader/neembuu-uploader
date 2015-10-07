@@ -9,6 +9,7 @@
 * Updated Letitbit.net (plugin was broken/outdated)
 * Added two new methods to http client util to decode gzip encoded pages.
 * Fix delete status in Letitbit.net plugin.
+* Fix uploadable.ch now using https
 
 ==== v 3.5.0 ====
 * Disabled several (18) dead file-hosts from NU's interface.
