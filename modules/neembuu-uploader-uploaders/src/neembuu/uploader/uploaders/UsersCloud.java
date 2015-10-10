@@ -83,9 +83,9 @@ public class UsersCloud extends AbstractUploader{
         responseString = NUHttpClientUtils.getData("https://userscloud.com/", httpContext);
         
         doc = Jsoup.parse(responseString);
-        uploadURL = doc.select("form").first().attr("action");
-        srv_tmp_url = doc.select("form").first().select("input[name=srv_tmp_url]").attr("value");
-        sessionID = doc.select("form").first().select("input[name=sess_id]").attr("value");
+        uploadURL = doc.select("form[name=file]").first().attr("action");
+        srv_tmp_url = doc.select("form[name=file]").first().select("input[name=srv_tmp_url]").attr("value");
+        sessionID = doc.select("form[name=file]").first().select("input[name=sess_id]").attr("value");
     }
 
     @Override
@@ -121,7 +121,6 @@ public class UsersCloud extends AbstractUploader{
             mpEntity.addPart("sess_id", new StringBody(sessionID));
             mpEntity.addPart("srv_tmp_url", new StringBody(srv_tmp_url));
             mpEntity.addPart("file_0", createMonitoredFileBody());
-            mpEntity.addPart("file_0_descr", new StringBody("Uploaded via Neembuu Uploader!"));
             mpEntity.addPart("submit_btn", new StringBody("Start Upload"));
             mpEntity.addPart("tos", new StringBody("1"));
             httpPost.setEntity(mpEntity);
@@ -136,6 +135,7 @@ public class UsersCloud extends AbstractUploader{
             
             //Read the links
             gettingLink();
+
             upload_fn = doc.select("textarea[name=fn]").val();
             if (upload_fn != null) {
                 httpPost = new NUHttpPost("https://userscloud.com/");

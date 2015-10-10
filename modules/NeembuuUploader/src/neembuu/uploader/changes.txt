@@ -10,6 +10,7 @@
 * Added two new methods to http client util to decode gzip encoded pages.
 * Fix delete status in Letitbit.net plugin.
 * Fix uploadable.ch now using https
+* Fix UsersCloud.com with v2 updates
 
 ==== v 3.5.0 ====
 * Disabled several (18) dead file-hosts from NU's interface.
