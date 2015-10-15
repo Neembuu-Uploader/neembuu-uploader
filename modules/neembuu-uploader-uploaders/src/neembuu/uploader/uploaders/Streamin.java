@@ -125,7 +125,7 @@ public class Streamin extends AbstractUploader implements UploaderAccountNecessa
             mpEntity.addPart("srv_tmp_url", new StringBody("http://5.79.69.179:8777/tmp"));
             mpEntity.addPart("srv_id", new StringBody(sv_id));
             mpEntity.addPart("disk_id", new StringBody(disk_id));
-            mpEntity.addPart("file_public", new StringBody("1"));
+            mpEntity.addPart("file_public", new StringBody("0"));
             mpEntity.addPart("tos", new StringBody("1"));
             mpEntity.addPart("file", createMonitoredFileBody());
             mpEntity.addPart("submit_btn", new StringBody("Upload!"));

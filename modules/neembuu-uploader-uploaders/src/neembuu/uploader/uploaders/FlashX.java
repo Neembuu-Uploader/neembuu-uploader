@@ -137,7 +137,7 @@ public class FlashX extends AbstractUploader implements UploaderAccountNecessary
             mpEntity.addPart("file", createMonitoredFileBody());
             mpEntity.addPart("fakefilepc", new StringBody(file.getName()));
             mpEntity.addPart("file_title", new StringBody(removeExtension(file.getName())));
-            mpEntity.addPart("file_descr", new StringBody("Uploaded via NeembuuUploader"));
+            //mpEntity.addPart("file_descr", new StringBody("Uploaded via NeembuuUploader"));
             mpEntity.addPart("cat_id", new StringBody("0"));
             mpEntity.addPart("file_public", new StringBody("0"));
             mpEntity.addPart("file_adult", new StringBody("0"));

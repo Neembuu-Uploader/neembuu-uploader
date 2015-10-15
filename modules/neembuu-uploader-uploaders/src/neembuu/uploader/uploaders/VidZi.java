@@ -139,7 +139,7 @@ public class VidZi extends AbstractUploader implements UploaderAccountNecessary{
             mpEntity.addPart("file_descr", new StringBody("Uploaded via neembuu.com uploader"));
             mpEntity.addPart("tags", new StringBody(""));
             mpEntity.addPart("file_category", new StringBody("0"));
-            mpEntity.addPart("file_public", new StringBody("1"));
+            mpEntity.addPart("file_public", new StringBody("0"));
             mpEntity.addPart("tos", new StringBody("1"));
             mpEntity.addPart("submit_btn", new StringBody("Upload!"));
             httpPost.setEntity(mpEntity);
