@@ -85,7 +85,8 @@ public class OneEightyUpload extends AbstractUploader{
     private void initialize() throws Exception {
         responseString = NUHttpClientUtils.getData("http://180upload.com", httpContext);
         doc = Jsoup.parse(responseString);
-        uploadURL = StringUtils.stringBetweenTwoStrings(responseString, "name=\"srv_tmp_url\" value=\"", "\"");
+        srv_tmp_url = StringUtils.stringBetweenTwoStrings(responseString, "name=\"srv_tmp_url\" value=\"", "\"");
+        uploadURL = StringUtils.stringBetweenTwoStrings(responseString, "enctype=\"multipart/form-data\" action=\"", "\" method=\"post\" onSubmit=");
     }
 
     @Override
@@ -115,9 +116,8 @@ public class OneEightyUpload extends AbstractUploader{
             uploadid_s = String.valueOf(uploadID);
             
             sess_id = StringUtils.stringBetweenTwoStrings(responseString, "name=\"sess_id\" value=\"", "\"");
-            srv_tmp_url = uploadURL;
             
-            uploadURL = StringUtils.removeLastChars(uploadURL, 6) + "cgi-bin/fg/upload.cgi?upload_id=" + uploadid_s + "&js_on=1&utype=" + userType + "&upload_type=file";
+            uploadURL = uploadURL  + uploadid_s + "&js_on=1&utype=" + userType + "&upload_type=file";
             httpPost = new NUHttpPost(uploadURL);
             MultipartEntity mpEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
             mpEntity.addPart("js_on", new StringBody("1"));
@@ -180,5 +180,4 @@ public class OneEightyUpload extends AbstractUploader{
             uploadFailed();
         }
     }
-    
 }

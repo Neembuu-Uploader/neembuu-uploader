@@ -39,7 +39,7 @@ public class NowDownloadAccount extends AbstractAccount{
     public NowDownloadAccount() {
         KEY_USERNAME = "nwdnusername";
         KEY_PASSWORD = "nwdnpassword";
-        HOSTNAME = "NowDownload.ch";
+        HOSTNAME = "NowDownload.to";
     }
 
     @Override
@@ -54,8 +54,8 @@ public class NowDownloadAccount extends AbstractAccount{
         try {
             initialize();
 
-            NULogger.getLogger().info("Trying to log in to NowDownload.ch");
-            httpPost = new NUHttpPost("http://www.nowdownload.ch/login.php");
+            NULogger.getLogger().info("Trying to log in to NowDownload.to");
+            httpPost = new NUHttpPost("http://www.nowdownload.to/login.php");
 
             List<NameValuePair> formparams = new ArrayList<NameValuePair>();
             formparams.add(new BasicNameValuePair("user", getUsername()));
@@ -72,7 +72,7 @@ public class NowDownloadAccount extends AbstractAccount{
                 loginsuccessful = true;
                 username = getUsername();
                 password = getPassword();
-                NULogger.getLogger().info("NowDownload.ch login successful!");
+                NULogger.getLogger().info("NowDownload.to login successful!");
 
             } else {
                 //Get error message
@@ -106,8 +106,8 @@ public class NowDownloadAccount extends AbstractAccount{
         cookieStore = new BasicCookieStore();
         httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
 
-        //NULogger.getLogger().info("Getting startup cookies & link from NowDownload.ch");
-        //responseString = NUHttpClientUtils.getData("http://www.nowdownload.ch", httpContext);
+        //NULogger.getLogger().info("Getting startup cookies & link from NowDownload.to");
+        //responseString = NUHttpClientUtils.getData("http://www.nowdownload.to", httpContext);
     }
     
     private void resetLogin(){

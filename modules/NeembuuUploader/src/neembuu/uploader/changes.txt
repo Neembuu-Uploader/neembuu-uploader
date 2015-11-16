@@ -12,6 +12,7 @@
 * Fix uploadable.ch now using https
 * Fix UsersCloud.com with v2 updates
 * Updated several hosts' file-public parameter, upon user request.
+* Fix nowDownload.to new domain & 180upload new temp url scheme
 
 ==== v 3.5.0 ====
 * Disabled several (18) dead file-hosts from NU's interface.

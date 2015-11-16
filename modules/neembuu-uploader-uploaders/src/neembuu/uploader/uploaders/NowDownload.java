@@ -38,11 +38,11 @@ import org.apache.http.util.EntityUtils;
 @SmallModule(
     exports={NowDownload.class,NowDownloadAccount.class},
     interfaces={Uploader.class,Account.class},
-    name="NowDownload.ch"
+    name="NowDownload.to"
 )
 public class NowDownload extends AbstractUploader{
     
-    NowDownloadAccount nowDownloadAccount = (NowDownloadAccount) getAccountsProvider().getAccount("NowDownload.ch");
+    NowDownloadAccount nowDownloadAccount = (NowDownloadAccount) getAccountsProvider().getAccount("NowDownload.to");
     
     private final HttpClient httpclient = NUHttpClient.getHttpClient();
     private HttpContext httpContext = new BasicHttpContext();
@@ -61,16 +61,16 @@ public class NowDownload extends AbstractUploader{
     public NowDownload() {
         downURL = UploadStatus.PLEASEWAIT.getLocaleSpecificString();
         delURL = UploadStatus.PLEASEWAIT.getLocaleSpecificString();
-        host = "NowDownload.ch";
+        host = "NowDownload.to";
         if (nowDownloadAccount.loginsuccessful) {
-            host = nowDownloadAccount.username + " | NowDownload.ch";
+            host = nowDownloadAccount.username + " | NowDownload.to";
         }
         maxFileSizeLimit = 2147483648l; //2 GB
         
     }
 
     private void initialize() throws Exception {
-        responseString = NUHttpClientUtils.getData("http://www.nowdownload.ch", httpContext);
+        responseString = NUHttpClientUtils.getData("http://www.nowdownload.to", httpContext);
         
         upload_key = StringUtils.stringBetweenTwoStrings(responseString, "var upload_key = '", "';");
         uid = StringUtils.stringBetweenTwoStrings(responseString, "var uid = ", ";");
@@ -106,17 +106,17 @@ public class NowDownload extends AbstractUploader{
             httpPost.setEntity(mpEntity);
             
             NULogger.getLogger().log(Level.INFO, "executing request {0}", httpPost.getRequestLine());
-            NULogger.getLogger().info("Now uploading your file into NowDownload.ch");
+            NULogger.getLogger().info("Now uploading your file into NowDownload.to");
             uploading();
             httpResponse = httpclient.execute(httpPost, httpContext);
             responseString = EntityUtils.toString(httpResponse.getEntity());
             String up_session = StringUtils.stringBetweenTwoStrings(responseString, "\"session\":\"", "\"}");          
-            String vid_url = "http://" + upload_server + "/upload.php?s=nowdownload&dd=nowdownload.ch&upload_key=" + upload_key + "&uid=" + uid + "&session_id="+up_session;
+            String vid_url = "http://" + upload_server + "/upload.php?s=nowdownload&dd=nowdownload.to&upload_key=" + upload_key + "&uid=" + uid + "&session_id="+up_session;
             responseString = NUHttpClientUtils.getData(vid_url, httpContext);
             
             //Read the links
             gettingLink();
-            downloadlink = "http://www.nowdownload.ch/dl/"+StringUtils.stringBetweenTwoStrings(responseString, "video_id\":\"", "\"}");
+            downloadlink = "http://www.nowdownload.to/dl/"+StringUtils.stringBetweenTwoStrings(responseString, "video_id\":\"", "\"}");
             deletelink = UploadStatus.NA.getLocaleSpecificString();
             
             NULogger.getLogger().log(Level.INFO, "Delete link : {0}", deletelink);
@@ -134,5 +134,4 @@ public class NowDownload extends AbstractUploader{
             uploadFailed();
         }
     }
-    
 }
