@@ -122,7 +122,7 @@ public class MegasharesAccount extends AbstractAccount{
         NULogger.getLogger().info("Getting startup cookies & link from Megashares.com");
         responseString = NUHttpClientUtils.getData("http://megashares.com/", httpContext);
         Document doc = Jsoup.parse(responseString);
-        loginUrl = doc.select("a.no_u").eq(1).first().attr("href");
+        loginUrl = doc.select("a.no_u").eq(1).first().attr("href").replace("http", "https");
     }
     
     private void resetLogin(){
