@@ -61,7 +61,7 @@ public class JheBergAccount extends AbstractAccount{
             initialize();
 
             NULogger.getLogger().info("** JheBerg.net ** => Attempting to login now ...");
-            httpPost = new NUHttpPost("http://jheberg.net/login/");
+            httpPost = new NUHttpPost("http://www.jheberg.net/login/");
 
             List<NameValuePair> formparams = new ArrayList<NameValuePair>();
             formparams.add(new BasicNameValuePair("csrfmiddlewaretoken", csrfmiddlewaretoken));
@@ -74,7 +74,7 @@ public class JheBergAccount extends AbstractAccount{
             httpResponse = httpclient.execute(httpPost, httpContext);
             NULogger.getLogger().info(httpResponse.getStatusLine().toString());
             responseString = EntityUtils.toString(httpResponse.getEntity());
-            responseString = NUHttpClientUtils.getData("http://jheberg.net/", httpContext);
+            responseString = NUHttpClientUtils.getData("http://www.jheberg.net/", httpContext);
             
             if (responseString.contains("Logout")) {
                 EntityUtils.consume(httpResponse.getEntity());
@@ -106,7 +106,7 @@ public class JheBergAccount extends AbstractAccount{
         httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
 
         NULogger.getLogger().info("** JheBerg.net ** => Initiating plugin, please wait ...");
-        responseString = NUHttpClientUtils.getData("http://jheberg.net/", httpContext);
+        responseString = NUHttpClientUtils.getData("http://www.jheberg.net/", httpContext);
         doc = Jsoup.parse(responseString);
         
         csrfmiddlewaretoken = doc.select("form").first().select("input[name=csrfmiddlewaretoken]").attr("value");
